@@ -19,7 +19,7 @@ import type { ApiError } from '@/common';
 import { vendorDetailsSchema } from '@/features/dashboard/forms/vendordetails';
 import type { AdminUpdateVendor } from '@/features/dashboard/types/admin';
 import type { Vendor } from '@/features/dashboard/types/vendor';
-import { getClientById, updateVendorByAdmin } from '@/services/admin-services';
+import { getClientById, updateClientByAdmin } from '@/services/admin-services';
 
 interface VendorDetailsDrawerProps {
   opened: boolean;
@@ -113,9 +113,9 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
 
     try {
       setLoading(true);
-      const updated = await updateVendorByAdmin(payload);
+      const updated = await updateClientByAdmin(payload);
       onUpdate(updated);
-      toast.success('Vendor updated successfully !');
+      toast.success('Client updated successfully !');
       onClose();
     } catch (error: unknown) {
       const err = error as ApiError;
@@ -151,7 +151,7 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
     };
 
     try {
-      const updated = await updateVendorByAdmin(payload);
+      const updated = await updateClientByAdmin(payload);
       onStatusChange(form.id, 'active');
       onUpdate(updated);
       onClose();
@@ -186,7 +186,7 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
     };
 
     try {
-      const updated = await updateVendorByAdmin(payload);
+      const updated = await updateClientByAdmin(payload);
       onStatusChange(form.id, 'inactive');
       onUpdate(updated);
       onClose();

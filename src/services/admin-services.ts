@@ -77,12 +77,12 @@ export const getClientById = async (clientId: string) => {
   }
 };
 
-export const updateVendorByAdmin = async (vendorData: AdminUpdateVendor) => {
+export const updateClientByAdmin = async (vendorData: AdminUpdateVendor) => {
   try {
-    const response = await apiClient.put('/updatevendorbyadmin', vendorData);
+    const response = await apiClient.put('/updateclientbyadmin', vendorData);
 
     if (!response.data?.success) {
-      throw new Error(response.data?.message || 'Failed to update vendor');
+      throw new Error(response.data?.message || 'Failed to update client');
     }
     return response.data.data;
   } catch (err) {
