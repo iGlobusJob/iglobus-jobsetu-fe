@@ -19,7 +19,7 @@ import type { ApiError } from '@/common';
 import { vendorDetailsSchema } from '@/features/dashboard/forms/vendordetails';
 import type { AdminUpdateVendor } from '@/features/dashboard/types/admin';
 import type { Vendor } from '@/features/dashboard/types/vendor';
-import { getVendorById, updateVendorByAdmin } from '@/services/admin-services';
+import { getClientById, updateVendorByAdmin } from '@/services/admin-services';
 
 interface VendorDetailsDrawerProps {
   opened: boolean;
@@ -50,10 +50,10 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
     const fetchVendor = async () => {
       setLoading(true);
       try {
-        const vendorDetails = await getVendorById(vendor.id);
+        const vendorDetails = await getClientById(vendor.id);
         setForm(vendorDetails);
       } catch {
-        toast.error('Failed to fetch vendor details');
+        toast.error('Failed to fetch client details');
       } finally {
         setLoading(false);
       }
@@ -74,12 +74,12 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
     setForm((prev) =>
       prev
         ? {
-            ...prev,
-            [parent]: {
-              ...prev[parent],
-              [key]: value,
-            },
-          }
+          ...prev,
+          [parent]: {
+            ...prev[parent],
+            [key]: value,
+          },
+        }
         : prev
     );
   };
