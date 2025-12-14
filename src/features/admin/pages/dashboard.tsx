@@ -27,7 +27,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { Vendor } from '@/features/dashboard/types/vendor';
-import { getAllClients, updateVendorByAdmin } from '@/services/admin-services';
+import { getAllClients, updateClientByAdmin } from '@/services/admin-services';
 
 import VendorDetailsDrawer from './VendorDetailsDrawer';
 
@@ -158,11 +158,11 @@ const AdminDashboard: React.FC = () => {
         },
       };
 
-      const response = await updateVendorByAdmin(payload);
+      const response = await updateClientByAdmin(payload);
 
       setVendors((prev) => prev.map((v) => (v.id === id ? response : v)));
 
-      toast.success(response.message || 'Vendor updated successfully !');
+      toast.success(response.message || 'Client updated successfully !');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update');
     } finally {
