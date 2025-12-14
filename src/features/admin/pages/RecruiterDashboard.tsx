@@ -461,65 +461,173 @@ const RecruiterDashboard: React.FC = () => {
                 <Modal
                     opened={modalOpened}
                     onClose={handleModalClose}
-                    title={<Title order={3}>Add New Recruiter</Title>}
-                    size="md"
+                    title={
+                        <Group gap="sm">
+                            <Box
+                                style={{
+                                    padding: '10px',
+                                    borderRadius: '8px',
+                                    backgroundColor: '#4dabf7',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <IconPlus size={20} color="white" strokeWidth={2.5} />
+                            </Box>
+                            <Stack gap={2}>
+                                <Title order={3} fw={700}>
+                                    Add New Recruiter
+                                </Title>
+                                <Text size="xs" c="dimmed">
+                                    Fill in the details to create a new recruiter account
+                                </Text>
+                            </Stack>
+                        </Group>
+                    }
+                    size="lg"
                     centered
+                    radius="md"
+                    padding="xl"
+                    styles={{
+                        header: {
+                            paddingBottom: '20px',
+                            borderBottom: '1px solid #e9ecef',
+                        },
+                        body: {
+                            paddingTop: '24px',
+                        },
+                    }}
                 >
-                    <Stack gap="md">
-                        <TextInput
-                            label="First Name"
-                            placeholder="Enter first name"
-                            value={form.firstName}
-                            onChange={(e) => handleChange('firstName', e.target.value)}
-                            error={errors.firstName}
-                            required
-                            disabled={submitting}
-                        />
+                    <Stack gap="lg">
+                        <Box>
+                            <Text size="sm" fw={600} mb="md" c="dimmed" tt="uppercase" lts={0.5}>
+                                Personal Information
+                            </Text>
+                            <Group grow gap="md" align="flex-start">
+                                <TextInput
+                                    label="First Name"
+                                    placeholder="Enter first name"
+                                    value={form.firstName}
+                                    onChange={(e) => handleChange('firstName', e.target.value)}
+                                    error={errors.firstName}
+                                    required
+                                    disabled={submitting}
+                                    size="md"
+                                    styles={{
+                                        label: { fontWeight: 500, marginBottom: '8px' },
+                                        input: {
+                                            borderRadius: '8px',
+                                            '&:focus': {
+                                                borderColor: '#4dabf7',
+                                            },
+                                        },
+                                    }}
+                                />
 
-                        <TextInput
-                            label="Last Name"
-                            placeholder="Enter last name"
-                            value={form.lastName}
-                            onChange={(e) => handleChange('lastName', e.target.value)}
-                            error={errors.lastName}
-                            required
-                            disabled={submitting}
-                        />
+                                <TextInput
+                                    label="Last Name"
+                                    placeholder="Enter last name"
+                                    value={form.lastName}
+                                    onChange={(e) => handleChange('lastName', e.target.value)}
+                                    error={errors.lastName}
+                                    required
+                                    disabled={submitting}
+                                    size="md"
+                                    styles={{
+                                        label: { fontWeight: 500, marginBottom: '8px' },
+                                        input: {
+                                            borderRadius: '8px',
+                                            '&:focus': {
+                                                borderColor: '#4dabf7',
+                                            },
+                                        },
+                                    }}
+                                />
+                            </Group>
+                        </Box>
 
-                        <TextInput
-                            label="Email"
-                            placeholder="Enter email address"
-                            value={form.email}
-                            onChange={(e) => handleChange('email', e.target.value)}
-                            type="email"
-                            error={errors.email}
-                            required
-                            disabled={submitting}
-                        />
+                        <Box>
+                            <Text size="sm" fw={600} mb="md" c="dimmed" tt="uppercase" lts={0.5}>
+                                Account Details
+                            </Text>
+                            <Stack gap="md">
+                                <TextInput
+                                    label="Email Address"
+                                    placeholder="recruiter@example.com"
+                                    value={form.email}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    type="email"
+                                    error={errors.email}
+                                    required
+                                    disabled={submitting}
+                                    size="md"
+                                    leftSection={<IconMail size={18} />}
+                                    styles={{
+                                        label: { fontWeight: 500, marginBottom: '8px' },
+                                        input: {
+                                            borderRadius: '8px',
+                                            '&:focus': {
+                                                borderColor: '#4dabf7',
+                                            },
+                                        },
+                                    }}
+                                />
 
-                        <PasswordInput
-                            label="Password"
-                            placeholder="Create a secure password"
-                            value={form.password}
-                            onChange={(e) => handleChange('password', e.target.value)}
-                            error={errors.password}
-                            required
-                            disabled={submitting}
-                        />
+                                <PasswordInput
+                                    label="Password"
+                                    placeholder="Minimum 6 characters"
+                                    value={form.password}
+                                    onChange={(e) => handleChange('password', e.target.value)}
+                                    error={errors.password}
+                                    required
+                                    disabled={submitting}
+                                    size="md"
+                                    description="Must be at least 6 characters long"
+                                    styles={{
+                                        label: { fontWeight: 500, marginBottom: '8px' },
+                                        input: {
+                                            borderRadius: '8px',
+                                            '&:focus': {
+                                                borderColor: '#4dabf7',
+                                            },
+                                        },
+                                        description: {
+                                            fontSize: '12px',
+                                            marginTop: '4px',
+                                        },
+                                    }}
+                                />
+                            </Stack>
+                        </Box>
 
-                        <Group justify="flex-end" mt="md">
+                        <Group
+                            justify="flex-end"
+                            mt="xl"
+                            pt="lg"
+                            style={{ borderTop: '1px solid #e9ecef' }}
+                        >
                             <Button
-                                variant="subtle"
+                                variant="light"
+                                color="gray"
                                 onClick={handleModalClose}
                                 disabled={submitting}
+                                size="md"
+                                radius="md"
                             >
                                 Cancel
                             </Button>
                             <Button
                                 onClick={handleSubmit}
                                 loading={submitting}
+                                leftSection={<IconPlus size={18} />}
+                                size="md"
+                                radius="md"
+                                style={{
+                                    background: 'linear-gradient(135deg, #4dabf7 0%, #339af0 100%)',
+                                }}
                             >
-                                Create
+                                Create Recruiter
                             </Button>
                         </Group>
                     </Stack>

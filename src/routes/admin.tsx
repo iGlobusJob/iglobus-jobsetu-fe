@@ -1,8 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import AddAdminPage from '@/features/admin/pages/AddAdminPage';
+import AnalyticsDashboard from '@/features/admin/pages/AnalyticsDashboard';
 import CandidateDashboard from '@/features/admin/pages/CandidateDashboard';
-import AdminDashboard from '@/features/admin/pages/dashboard';
+import VendorDashboard from '@/features/admin/pages/dashboard';
 import AllJobs from '@/features/admin/pages/jobs';
 import RecruiterDashboard from '@/features/admin/pages/RecruiterDashboard';
 
@@ -14,7 +15,8 @@ export const AdminRoutes = () => {
   return (
     <Routes>
       <Route element={<RoleRoute allowedRoles={['admin']} />}>
-        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="dashboard" element={<AnalyticsDashboard />} />
+        <Route path="vendors" element={<VendorDashboard />} />
         <Route path="candidates" element={<CandidateDashboard />} />
         <Route path="recruiters" element={<RecruiterDashboard />} />
         {/* Add more admin routes here */}
