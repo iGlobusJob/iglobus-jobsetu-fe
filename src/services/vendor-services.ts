@@ -49,7 +49,7 @@ export const registerVendor = async (
 ): Promise<{ data: VendorRegisterResponse }> => {
   const cleanedData = removeEmptyValues(data);
 
-  return apiClientPublic.post('/registervendor', cleanedData, {
+  return apiClientPublic.post('/registerclient', cleanedData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
