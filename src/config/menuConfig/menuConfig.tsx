@@ -115,12 +115,12 @@ export const MENU_CONFIG: MenuConfig = {
 
   // ===== ADMIN MENU =====
   admin: [
-    // {
-    //   id: 'dashboard',
-    //   label: 'Dashboard',
-    //   icon: <IconHome size={20} />,
-    //   path: '/admin/dashboard',
-    // },
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: <IconHome size={20} />,
+      path: '/admin/dashboard',
+    },
     {
       id: 'users',
       label: 'User Management',
@@ -135,15 +135,21 @@ export const MENU_CONFIG: MenuConfig = {
         // },
         {
           id: 'vendors',
-          label: 'Vendors',
+          label: 'Clients',
           icon: <IconBuilding size={18} />,
-          path: '/admin/dashboard',
+          path: '/admin/vendors',
         },
         {
           id: 'candidates',
           label: 'Candidates',
           icon: <IconUser size={18} />,
           path: '/admin/candidates',
+        },
+        {
+          id: 'recruiters',
+          label: 'Recruiters',
+          icon: <IconUsers size={18} />,
+          path: '/admin/recruiters',
         },
       ],
     },

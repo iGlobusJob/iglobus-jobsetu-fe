@@ -22,3 +22,10 @@ export interface CreateAdminInput {
   password: string;
   role: 'admin';
 }
+
+export interface CreateRecruiterInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
