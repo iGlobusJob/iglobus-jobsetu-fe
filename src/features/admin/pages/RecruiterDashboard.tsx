@@ -82,17 +82,22 @@ const RecruiterDashboard: React.FC = () => {
 
     const validateForm = (): boolean => {
         const newErrors: Partial<Record<keyof CreateRecruiterInput, string>> = {};
+        const nameRegex = /^[A-Za-z\s]+$/;
 
         if (!form.firstName.trim()) {
             newErrors.firstName = 'First name is required';
         } else if (form.firstName.trim().length < 2) {
             newErrors.firstName = 'First name must be at least 2 characters';
+        } else if (!nameRegex.test(form.firstName.trim())) {
+            newErrors.firstName = 'First name must contain only letters';
         }
 
         if (!form.lastName.trim()) {
             newErrors.lastName = 'Last name is required';
         } else if (form.lastName.trim().length < 2) {
             newErrors.lastName = 'Last name must be at least 2 characters';
+        } else if (!nameRegex.test(form.lastName.trim())) {
+            newErrors.lastName = 'Last name must contain only letters';
         }
 
         if (!form.email.trim()) {
