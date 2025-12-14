@@ -1,12 +1,15 @@
 import {
     Avatar,
     Box,
+    Button,
     Card,
     Center,
     Container,
     Group,
     LoadingOverlay,
+    Modal,
     Pagination,
+    PasswordInput,
     Select,
     Stack,
     Text,
@@ -18,12 +21,15 @@ import {
     IconCalendar,
     IconCalendarCheck,
     IconMail,
+    IconPlus,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import type { ApiError } from '@/common';
+import type { CreateRecruiterInput } from '@/features/dashboard/types/admin';
 import type { Recruiter } from '@/features/dashboard/types/recruiter';
-import { getAllRecruiters } from '@/services/admin-services';
+import { createRecruiter, getAllRecruiters } from '@/services/admin-services';
 
 const PAGE_SIZE = 10;
 
@@ -40,6 +46,17 @@ const RecruiterDashboard: React.FC = () => {
         'asc' | 'desc' | 'newest' | 'oldest'
     >('asc');
 
+    // Modal state
+    const [modalOpened, setModalOpened] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [form, setForm] = useState<CreateRecruiterInput>({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+    });
+    const [errors, setErrors] = useState<Partial<Record<keyof CreateRecruiterInput, string>>>({});
+
     useEffect(() => {
         const fetchRecruiters = async () => {
             setLoading(true);
@@ -54,6 +71,84 @@ const RecruiterDashboard: React.FC = () => {
         };
         fetchRecruiters();
     }, []);
+
+    const handleChange = (field: keyof CreateRecruiterInput, value: string) => {
+        setForm({ ...form, [field]: value });
+        // Clear error for this field
+        if (errors[field]) {
+            setErrors({ ...errors, [field]: undefined });
+        }
+    };
+
+    const validateForm = (): boolean => {
+        const newErrors: Partial<Record<keyof CreateRecruiterInput, string>> = {};
+
+        if (!form.firstName.trim()) {
+            newErrors.firstName = 'First name is required';
+        } else if (form.firstName.trim().length < 2) {
+            newErrors.firstName = 'First name must be at least 2 characters';
+        }
+
+        if (!form.lastName.trim()) {
+            newErrors.lastName = 'Last name is required';
+        } else if (form.lastName.trim().length < 2) {
+            newErrors.lastName = 'Last name must be at least 2 characters';
+        }
+
+        if (!form.email.trim()) {
+            newErrors.email = 'Email is required';
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(form.email)) {
+                newErrors.email = 'Please enter a valid email address';
+            }
+        }
+
+        if (!form.password) {
+            newErrors.password = 'Password is required';
+        } else if (form.password.length < 6) {
+            newErrors.password = 'Password must be at least 6 characters';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async () => {
+        if (!validateForm()) {
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            const response = await createRecruiter(form);
+
+            toast.success(response?.message || 'Recruiter created successfully!');
+
+            // Add the new recruiter to the list
+            const newRecruiters = await getAllRecruiters();
+            setRecruiters(newRecruiters);
+
+            // Reset form and close modal
+            setForm({ firstName: '', lastName: '', email: '', password: '' });
+            setErrors({});
+            setModalOpened(false);
+        } catch (error) {
+            const err = error as ApiError;
+            toast.error(err?.response?.data?.message || err?.message);
+            // Keep modal open on error
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleModalClose = () => {
+        if (!submitting) {
+            setModalOpened(false);
+            setForm({ firstName: '', lastName: '', email: '', password: '' });
+            setErrors({});
+        }
+    };
 
     const filtered = useMemo(() => {
         return recruiters
@@ -165,15 +260,26 @@ const RecruiterDashboard: React.FC = () => {
             }}
         >
             <Container size="xl" px={0}>
-                <Stack mb="md" gap={4}>
-                    <Title order={isMobile ? 4 : 2} fw={700}>
-                        Recruiter Directory
-                    </Title>
+                <Group justify="space-between" mb="md" align="flex-start">
+                    <Stack gap={4}>
+                        <Title order={isMobile ? 4 : 2} fw={700}>
+                            Recruiter Directory
+                        </Title>
 
-                    <Text size="sm" color="dimmed">
-                        Manage recruiters and view their profiles efficiently.
-                    </Text>
-                </Stack>
+                        <Text size="sm" color="dimmed">
+                            Manage recruiters and view their profiles efficiently.
+                        </Text>
+                    </Stack>
+
+                    <Button
+                        leftSection={<IconPlus size={18} />}
+                        onClick={() => setModalOpened(true)}
+                        size={isMobile ? 'sm' : 'md'}
+                    >
+                        Add Recruiter
+                    </Button>
+                </Group>
+
                 {/* FILTERS */}
                 <Card
                     radius="lg"
@@ -345,6 +451,74 @@ const RecruiterDashboard: React.FC = () => {
                         radius="md"
                     />
                 </Group>
+
+                {/* ADD RECRUITER MODAL */}
+                <Modal
+                    opened={modalOpened}
+                    onClose={handleModalClose}
+                    title={<Title order={3}>Add New Recruiter</Title>}
+                    size="md"
+                    centered
+                >
+                    <Stack gap="md">
+                        <TextInput
+                            label="First Name"
+                            placeholder="Enter first name"
+                            value={form.firstName}
+                            onChange={(e) => handleChange('firstName', e.target.value)}
+                            error={errors.firstName}
+                            required
+                            disabled={submitting}
+                        />
+
+                        <TextInput
+                            label="Last Name"
+                            placeholder="Enter last name"
+                            value={form.lastName}
+                            onChange={(e) => handleChange('lastName', e.target.value)}
+                            error={errors.lastName}
+                            required
+                            disabled={submitting}
+                        />
+
+                        <TextInput
+                            label="Email"
+                            placeholder="Enter email address"
+                            value={form.email}
+                            onChange={(e) => handleChange('email', e.target.value)}
+                            type="email"
+                            error={errors.email}
+                            required
+                            disabled={submitting}
+                        />
+
+                        <PasswordInput
+                            label="Password"
+                            placeholder="Create a secure password"
+                            value={form.password}
+                            onChange={(e) => handleChange('password', e.target.value)}
+                            error={errors.password}
+                            required
+                            disabled={submitting}
+                        />
+
+                        <Group justify="flex-end" mt="md">
+                            <Button
+                                variant="subtle"
+                                onClick={handleModalClose}
+                                disabled={submitting}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleSubmit}
+                                loading={submitting}
+                            >
+                                Create
+                            </Button>
+                        </Group>
+                    </Stack>
+                </Modal>
             </Container>
         </Box>
     );

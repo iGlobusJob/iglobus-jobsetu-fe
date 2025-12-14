@@ -161,20 +161,12 @@ export const Header = ({
             </Menu.Item>
           )}
           {isAdmin && (
-            <>
-              <Menu.Item
-                leftSection={<IconUserPlus size={16} />}
-                onClick={() => navigate(`/admin/add-admin`)}
-              >
-                Create New Admin
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconUserPlus size={16} />}
-                onClick={() => navigate(`/admin/add-recruiter`)}
-              >
-                Create New Recruiter
-              </Menu.Item>
-            </>
+            <Menu.Item
+              leftSection={<IconUserPlus size={16} />}
+              onClick={() => navigate(`/admin/add-admin`)}
+            >
+              Create New Admin
+            </Menu.Item>
           )}
 
           <Menu.Divider />
