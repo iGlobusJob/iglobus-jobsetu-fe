@@ -62,18 +62,18 @@ export const getAllClients = async () => {
   }
 };
 
-export const getVendorById = async (vendorId: string) => {
+export const getClientById = async (clientId: string) => {
   try {
     const response = await apiClient.get(
-      `/getvendordetailsbyadmin/${vendorId}`
+      `/getclientdetailsbyadmin/${clientId}`
     );
     if (!response.data?.success) {
-      throw new Error('Failed to fetch vendor details');
+      throw new Error('Failed to fetch client details');
     }
 
     return response.data.data;
   } catch {
-    throw new Error('Unable to fetch vendor details');
+    throw new Error('Unable to fetch client details');
   }
 };
 
