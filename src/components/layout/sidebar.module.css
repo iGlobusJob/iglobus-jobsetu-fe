@@ -1,0 +1,72 @@
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background-color: var(--mantine-color-body);
+  border-right: 1px solid var(--mantine-color-gray-3);
+  position: fixed;
+  left: 0;
+  top: 60px;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollArea {
+  height: calc(100vh - 60px);
+}
+
+/* ------------------ Nav Item Styles ------------------ */
+
+.navItem {
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 180ms ease;
+  position: relative;
+  padding: 12px 14px;
+}
+
+/* Active highlight bar */
+.navItem[data-active='true'] {
+  background-color: var(--mantine-color-blue-light);
+}
+
+.navItem[data-active='true']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  border-radius: 4px;
+  background-color: var(--mantine-color-blue-6);
+}
+
+/* Chevron animation */
+.chevron {
+  transition: transform 200ms ease;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+/* clickable wrapper for NavLink */
+.linkWrapper {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Mobile version */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    width: 240px;
+    height: 100vh;
+    top: 60px;
+    left: 0;
+    z-index: 999;
+    background-color: var(--mantine-color-body);
+    border-right: 1px solid var(--mantine-color-gray-3);
+    box-shadow: 2px 0px 12px rgba(0, 0, 0, 0.08);
+  }
+}
