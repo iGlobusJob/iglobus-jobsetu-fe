@@ -145,6 +145,12 @@ export const MENU_CONFIG: MenuConfig = {
           icon: <IconUser size={18} />,
           path: '/admin/candidates',
         },
+        {
+          id: 'recruiters',
+          label: 'Recruiters',
+          icon: <IconUsers size={18} />,
+          path: '/admin/recruiters',
+        },
       ],
     },
     {

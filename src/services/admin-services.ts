@@ -4,7 +4,9 @@ import type { ApiError } from '@/common';
 import type {
   AdminUpdateVendor,
   CreateAdminInput,
+  CreateRecruiterInput,
 } from '@/features/dashboard/types/admin';
+import type { Recruiter } from '@/features/dashboard/types/recruiter';
 import { useAuthStore } from '@/store/userDetails';
 
 export const apiClient = axios.create({
@@ -139,5 +141,34 @@ export const createAdmin = async (data: CreateAdminInput) => {
   } catch (error) {
     const err = error as ApiError;
     throw new Error(err?.response?.data?.message || err?.message);
+  }
+};
+
+export const createRecruiter = async (data: CreateRecruiterInput) => {
+  try {
+    const response = await apiClient.post('/createrecruiter', data);
+
+    if (!response.data?.success) {
+      throw new Error(response.data?.message || 'Failed to create recruiter');
+    }
+
+    return response.data;
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
+  }
+};
+
+export const getAllRecruiters = async (): Promise<Recruiter[]> => {
+  try {
+    const response = await apiClient.get('/getallrecruiters');
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch recruiters');
+    }
+
+    return response.data.recruiters;
+  } catch {
+    throw new Error('Unable to fetch recruiter list');
   }
 };
