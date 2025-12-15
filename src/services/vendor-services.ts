@@ -84,7 +84,7 @@ export const loginVendor = async (credentials: {
 export const createJob = async (
   data: JobPostFormData
 ): Promise<JobPostResponse> => {
-  const response = await apiClient.post('/createjobbyvendor', data);
+  const response = await apiClient.post('/createjobbyclient', data);
   return response.data;
 };
 
