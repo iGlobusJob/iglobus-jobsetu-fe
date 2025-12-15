@@ -15,12 +15,14 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
+import { CANDIDATE_PATHS } from '@/routes/config/userPath';
 import { candidateJoin, validateOtp } from '@/services/candidate-services';
 import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
 
 export const OTPmodal = () => {
   const open = useOtpModalStore((state) => state.open);
+  const redirectJobId = useOtpModalStore((state) => state.redirectJobId);
   const closeModal = useOtpModalStore((state) => state.closeModal);
 
   const [email, setEmail] = useState('');
@@ -82,7 +84,14 @@ export const OTPmodal = () => {
         setOtp('');
         setEmail('');
         setOtpSent(false);
-        navigate('/candidate/dashboard');
+        console.log(redirectJobId);
+        if (redirectJobId && redirectJobId.length) {
+          navigate(CANDIDATE_PATHS.JOB_DETAILS(redirectJobId));
+        } else {
+          navigate('/candidate/dashboard');
+        }
+
+        closeModal();
       } else {
         toast.error('Something went wrong! ');
       }

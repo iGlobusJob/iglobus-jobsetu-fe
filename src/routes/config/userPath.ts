@@ -4,5 +4,6 @@ export const CANDIDATE_PATHS = {
   PROFILE: '/candidate/profile',
   APPLICATIONS: '/candidate/applications',
   JOBS: '/candidate/jobs',
+  JOB_SEARCH: '/candidate/search',
   JOB_DETAILS: (id: string) => `/candidate/${id}/job-details`,
 } as const;

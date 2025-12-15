@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import type { CandidateProfileFormData } from '@/features/candidate/pages/candidateprofile';
+import type { CandidateJob } from '@/features/dashboard/types/candidatejobs';
 import type { ApiJob } from '@/features/dashboard/types/job';
 import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
@@ -86,6 +87,7 @@ export const updateCandidateProfile = async (data: {
   gender?: string;
   category?: string;
   resumeFile?: File | null;
+  profilePictureFile?: File | null;
 }): Promise<CandidateProfileFormData> => {
   try {
     const formData = new FormData();
@@ -96,6 +98,7 @@ export const updateCandidateProfile = async (data: {
     formData.append('dateOfBirth', data.dateOfBirth || '');
     formData.append('gender', data.gender || '');
     formData.append('category', data.category || '');
+    formData.append('profilepicture', data.profilePictureFile || '');
 
     if (data.resumeFile instanceof File) {
       formData.append('profile', data.resumeFile);
@@ -130,5 +133,41 @@ export const getJobDetailsById = async (jobId: string) => {
     return response.data.data;
   } catch {
     throw new Error('Unable to fetch job details');
+  }
+};
+
+export const applyToJob = async ({ jobId }: { jobId: string }) => {
+  try {
+    const response = await apiClient.post('/applytojob', { jobId });
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to apply ');
+  }
+};
+
+export const saveToJob = async ({ jobId }: { jobId: string }) => {
+  try {
+    const response = await apiClient.post('/savejob', { jobId });
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to save ');
+  }
+};
+
+export const unSaveToJob = async ({ jobId }: { jobId: string }) => {
+  try {
+    const response = await apiClient.put('/unsavejob', { jobId });
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to unsave ');
+  }
+};
+
+export const getMyJobs = async (): Promise<CandidateJob[]> => {
+  try {
+    const response = await apiClient.get('/getmyjobs');
+    return response.data.data;
+  } catch {
+    throw new Error('failed to get my jobs ');
   }
 };

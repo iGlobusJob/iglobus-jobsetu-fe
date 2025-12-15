@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   Button,
   Card,
@@ -10,13 +9,15 @@ import {
   Text,
   ThemeIcon,
   Title,
+  Loader,
+  Center,
+  Grid,
 } from '@mantine/core';
 import {
   IconArrowRight,
   IconBriefcase,
   IconCheck,
   IconClock,
-  IconMapPin,
   IconTarget,
   IconTrendingUp,
   IconUsers,
@@ -24,14 +25,30 @@ import {
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { JobCard } from '@/common/pages/jobCard';
+import { JobGrid } from '@/common/pages/jobGrid';
 import type { CandidateJobs } from '@/features/dashboard/types/candidate';
 import type { ApiJob } from '@/features/dashboard/types/job';
-import { getAllJobs } from '@/services/candidate-services';
+import { CANDIDATE_PATHS } from '@/routes/config/userPath';
+import {
+  getAllJobs,
+  getMyJobs,
+  saveToJob,
+  unSaveToJob,
+} from '@/services/candidate-services';
+
+interface JobWithStatus extends CandidateJobs {
+  bookmarked: boolean;
+  applied: boolean;
+}
 
 export default function JobPortalDashboard() {
-  const [featuredJobs, setFeaturedJobs] = useState<CandidateJobs[]>([]);
+  const [featuredJobs, setFeaturedJobs] = useState<JobWithStatus[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [allJobs, setAllJobs] = useState<CandidateJobs[]>([]);
+  const [bookmarkedJobs, setBookmarkedJobs] = useState<Set<string>>(new Set());
+  const [appliedJobs, setAppliedJobs] = useState<Set<string>>(new Set());
 
   const mapJob = (job: ApiJob): CandidateJobs => ({
     id: job.id,
@@ -39,7 +56,7 @@ export default function JobPortalDashboard() {
     jobDescription: job.jobDescription,
     organizationName: job.organizationName,
     jobLocation: job.jobLocation,
-    salaryRange: `₹${job.minimumSalary} - ₹${job.maximumSalary}`,
+    salaryRange: `₹${job.minimumSalary.toLocaleString()} - ₹${job.maximumSalary.toLocaleString()}`,
     salaryMin: job.minimumSalary,
     salaryMax: job.maximumSalary,
     experienceLevel: `${job.minimumExperience} - ${job.maximumExperience} years`,
@@ -52,13 +69,40 @@ export default function JobPortalDashboard() {
   useEffect(() => {
     const loadJobs = async () => {
       try {
-        const jobs = await getAllJobs();
-        const mapped = jobs.map(mapJob);
+        setLoading(true);
+        setError(null);
 
+        const [jobs, myJobsResponse] = await Promise.all([
+          getAllJobs(),
+          getMyJobs(),
+        ]);
+
+        const mapped = jobs.map(mapJob);
         setAllJobs(mapped);
-        setFeaturedJobs(mapped.slice(0, 3));
+
+        const bookmarkedSet = new Set<string>();
+        const appliedSet = new Set<string>();
+
+        myJobsResponse?.forEach((item) => {
+          const jobId = item.jobId?.id;
+          if (!jobId) return;
+
+          if (item.isJobSaved) bookmarkedSet.add(jobId);
+          if (item.isJobApplied) appliedSet.add(jobId);
+        });
+
+        setBookmarkedJobs(bookmarkedSet);
+        setAppliedJobs(appliedSet);
+
+        const featuredWithStatus = mapped.slice(0, 3).map((job) => ({
+          ...job,
+          bookmarked: bookmarkedSet.has(job.id),
+          applied: appliedSet.has(job.id),
+        }));
+        setFeaturedJobs(featuredWithStatus);
       } catch (err) {
         console.error('Failed to load jobs', err);
+        setError('Failed to load jobs. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -66,6 +110,37 @@ export default function JobPortalDashboard() {
 
     loadJobs();
   }, []);
+
+  const handleBookmark = async (
+    jobId: string,
+    isBookmarked: boolean
+  ): Promise<void> => {
+    try {
+      if (isBookmarked) {
+        await unSaveToJob({ jobId });
+        setBookmarkedJobs((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(jobId);
+          return newSet;
+        });
+        setFeaturedJobs((prev) =>
+          prev.map((job) =>
+            job.id === jobId ? { ...job, bookmarked: false } : job
+          )
+        );
+      } else {
+        await saveToJob({ jobId });
+        setBookmarkedJobs((prev) => new Set(prev).add(jobId));
+        setFeaturedJobs((prev) =>
+          prev.map((job) =>
+            job.id === jobId ? { ...job, bookmarked: true } : job
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Failed to bookmark job:', err);
+    }
+  };
 
   const stats = [
     {
@@ -82,7 +157,7 @@ export default function JobPortalDashboard() {
           ? '₹' +
             Math.floor(
               allJobs.reduce(
-                (acc, j) => acc + (j.salaryMin + j.salaryMax) / 2,
+                (acc, j) => acc + ((j.salaryMin || 0) + (j.salaryMax || 0)) / 2,
                 0
               ) / allJobs.length
             ).toLocaleString()
@@ -118,6 +193,12 @@ export default function JobPortalDashboard() {
     },
   ];
 
+  const enrichedFeaturedJobs = featuredJobs.map((job) => ({
+    ...job,
+    bookmarked: bookmarkedJobs.has(job.id),
+    applied: appliedJobs.has(job.id),
+  }));
+
   return (
     <Box>
       {/* Header Section */}
@@ -139,7 +220,7 @@ export default function JobPortalDashboard() {
                 Opportunity
               </Text>
             </Title>
-            <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
+            <Text size="sm" c="dimmed">
               Discover thousands of jobs from top companies. Apply now and get
               hired faster with our AI-powered matching.
             </Text>
@@ -155,7 +236,20 @@ export default function JobPortalDashboard() {
                   withBorder
                   p="lg"
                   radius="md"
-                  className="transition-all hover:shadow-lg"
+                  style={{
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow =
+                      '0 8px 16px rgba(0,0,0,0.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow =
+                      '0 1px 3px rgba(0,0,0,0.05)';
+                  }}
                 >
                   <Group justify="space-between" mb="md">
                     <ThemeIcon
@@ -166,11 +260,7 @@ export default function JobPortalDashboard() {
                     >
                       <Icon size={24} />
                     </ThemeIcon>
-                    <IconArrowRight
-                      size={20}
-                      opacity={0}
-                      className="transition-opacity hover:opacity-100"
-                    />
+                    <IconArrowRight size={20} opacity={0.5} />
                   </Group>
                   <Text size="sm" c="dimmed" fw={500} mb={4}>
                     {stat.label}
@@ -196,7 +286,7 @@ export default function JobPortalDashboard() {
           </div>
           <Button
             component={Link}
-            to="/candidate/search"
+            to={CANDIDATE_PATHS.JOB_SEARCH}
             rightSection={<IconArrowRight size={18} />}
             variant="light"
           >
@@ -204,118 +294,48 @@ export default function JobPortalDashboard() {
           </Button>
         </Group>
 
+        {error && (
+          <Card
+            p="md"
+            radius="md"
+            mb={40}
+            style={{ backgroundColor: '#ffe0e0', borderColor: '#ff6b6b' }}
+            withBorder
+          >
+            <Text c="#cc0000" size="sm">
+              {error}
+            </Text>
+          </Card>
+        )}
+
         {loading ? (
-          <Text>Loading jobs...</Text>
-        ) : (
-          <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
-            {featuredJobs.map((job) => (
-              <Card
-                key={job.id}
-                radius="md"
-                withBorder
-                shadow="sm"
-                p="lg"
-                style={{
-                  overflow: 'hidden',
-                  position: 'relative',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow =
-                    '0 12px 24px rgba(0,0,0,0.15)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-                }}
-              >
-                <Group align="flex-start" gap="lg" mb="md">
-                  <Box
-                    style={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: '12px',
-                      overflow: 'hidden',
-                      background:
-                        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 24,
-                      fontWeight: 700,
-                      color: '#fff',
-                      flexShrink: 0,
-                    }}
-                  >
-                    {job.logo ? (
-                      <img
-                        src={job.logo}
-                        alt={job.organizationName}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                      />
-                    ) : (
-                      (job.organizationName?.[0]?.toUpperCase() ?? '?')
-                    )}
-                  </Box>
-
-                  <Box style={{ flex: 1, minWidth: 0 }}>
-                    <Title order={4} size="h5" fw={600} lineClamp={1}>
-                      {job.jobTitle}
-                    </Title>
-                    <Text size="sm" c="dimmed" fw={500} lineClamp={1}>
-                      {job.organizationName}
-                    </Text>
-                  </Box>
-                </Group>
-                <Group gap="md" mb="md">
-                  <Group gap={4}>
-                    <IconMapPin size={16} stroke={1.5} />
-                    <Text size="xs" c="dimmed" lineClamp={1}>
-                      {job.jobLocation}
-                    </Text>
-                  </Group>
-                  <Badge size="sm" variant="light" color="blue">
-                    {job.jobType}
-                  </Badge>
-                </Group>
-                <Text size="sm" c="dimmed" lineClamp={2} mb="md">
-                  {job.jobDescription}
-                </Text>
-
-                <Group justify="space-between" align="center" mb="md">
-                  <Box>
-                    <Text size="xs" c="dimmed">
-                      Experience
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {job.experienceLevel}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Text size="xs" c="dimmed">
-                      Salary
-                    </Text>
-                    <Text size="sm" fw={600} c="blue">
-                      {job.salaryRange}
-                    </Text>
-                  </Box>
-                </Group>
-                <Button
-                  variant="light"
-                  fullWidth
-                  size="sm"
-                  rightSection={<IconArrowRight size={14} />}
-                >
-                  Apply Now
-                </Button>
-              </Card>
+          <Center py={80}>
+            <Loader size="lg" />
+          </Center>
+        ) : enrichedFeaturedJobs.length > 0 ? (
+          <JobGrid>
+            {enrichedFeaturedJobs.map((job) => (
+              <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                <JobCard
+                  job={job}
+                  onBookmark={(jobId) =>
+                    handleBookmark(jobId, bookmarkedJobs.has(jobId))
+                  }
+                />
+              </Grid.Col>
             ))}
-          </SimpleGrid>
+          </JobGrid>
+        ) : (
+          <Card p={60} radius="md" withBorder>
+            <Center>
+              <Stack gap="md" align="center">
+                <Title order={3} size="h4">
+                  No jobs available
+                </Title>
+                <Text c="dimmed">Check back soon for more opportunities</Text>
+              </Stack>
+            </Center>
+          </Card>
         )}
       </Container>
 
@@ -339,7 +359,19 @@ export default function JobPortalDashboard() {
                 withBorder
                 p="lg"
                 radius="md"
-                className="hover:shadow-lg"
+                style={{
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow =
+                    '0 8px 16px rgba(0,0,0,0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow =
+                    '0 1px 3px rgba(0,0,0,0.05)';
+                }}
               >
                 <ThemeIcon
                   size="lg"
@@ -377,10 +409,15 @@ export default function JobPortalDashboard() {
             </div>
 
             <Group>
-              <Button size="md" component="a" href="/candidate/profile">
+              <Button size="md" component={Link} to={CANDIDATE_PATHS.PROFILE}>
                 Complete Profile
               </Button>
-              <Button size="md" component="a" href="/candidate/search">
+              <Button
+                size="md"
+                component={Link}
+                to={CANDIDATE_PATHS.JOB_SEARCH}
+                variant="light"
+              >
                 Browse All Jobs
               </Button>
             </Group>

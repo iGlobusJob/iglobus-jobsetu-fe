@@ -24,14 +24,20 @@ import {
   IconStar,
   IconUsers,
 } from '@tabler/icons-react';
-import { useEffect, useState, type JSX, type MouseEvent } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { getJobDetailsById } from '@/services/candidate-services';
+import {
+  applyToJob,
+  getJobDetailsById,
+  getMyJobs,
+  saveToJob,
+  unSaveToJob,
+} from '@/services/candidate-services';
 
 interface JobDetail {
-  _id: string;
+  id: string;
   vendorId: string;
   organizationName: string;
   primaryContactFirstName: string;
@@ -70,24 +76,6 @@ const formatDate = (dateString: string): string => {
   });
 };
 
-// const parseHtmlContent = (htmlString: string): string => {
-//   const tmp = document.createElement('DIV');
-//   tmp.innerHTML = htmlString;
-//   return tmp.textContent || tmp.innerText || '';
-// };
-
-// const sanitizeHtml = (htmlString: string): string => {
-//   const div = document.createElement('div');
-//   div.innerHTML = htmlString;
-
-//   // Convert HTML to readable text with basic formatting
-//   const paragraphs = div.querySelectorAll('p, div, li, h1, h2, h3, h4, h5, h6');
-//   if (paragraphs.length > 0) {
-//     return htmlString;
-//   }
-//   return htmlString;
-// };
-
 export const JobDetailPage = (): JSX.Element => {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
@@ -95,21 +83,33 @@ export const JobDetailPage = (): JSX.Element => {
 
   const [job, setJob] = useState<JobDetail>();
   const [bookmarked, setBookmarked] = useState(false);
+  const [applied, setApplied] = useState(false);
   const [applyModalOpen, setApplyModalOpen] = useState(false);
 
-  const handleBookmark = (e: MouseEvent<HTMLButtonElement>): void => {
-    e.stopPropagation();
+  const handleBookmark = async () => {
+    if (!job) {
+      return;
+    }
     setBookmarked(!bookmarked);
-    toast.success(bookmarked ? 'Removed from bookmarks' : 'Added to bookmarks');
+    if (bookmarked) {
+      await unSaveToJob({ jobId: job.id });
+    } else {
+      await saveToJob({ jobId: job.id });
+    }
   };
 
   const handleApply = (): void => {
     setApplyModalOpen(true);
   };
 
-  const handleApplyConfirm = (): void => {
+  const handleApplyConfirm = async () => {
+    if (!job) {
+      return;
+    }
+    await applyToJob({ jobId: job.id });
     toast.success(`Applied successfully for ${job?.jobTitle}`);
     setApplyModalOpen(false);
+    setApplied(true);
   };
 
   const handleShare = (): void => {
@@ -127,14 +127,29 @@ export const JobDetailPage = (): JSX.Element => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const jobDetails = await getJobDetailsById(jobId as string);
+        const [jobDetails, myJobs] = await Promise.all([
+          getJobDetailsById(jobId as string),
+          getMyJobs(),
+        ]);
+
         setJob(jobDetails);
+
+        const isSaved = myJobs.some(
+          (myJob) => myJob.jobId.id === jobId && myJob.isJobSaved
+        );
+        const isApplied = myJobs.some(
+          (myJob) => myJob.jobId.id === jobId && myJob.isJobApplied
+        );
+        setApplied(isApplied);
+        setBookmarked(isSaved);
       } catch (error) {
         console.error('Failed to load job details', error);
       }
     };
 
-    fetchJobDetails();
+    if (jobId) {
+      fetchJobDetails();
+    }
   }, [jobId]);
 
   const salaryRange = job
@@ -161,7 +176,7 @@ export const JobDetailPage = (): JSX.Element => {
       </Container>
     );
   }
-
+  console.log(applied, bookmarked);
   return (
     <Box
       component="section"
@@ -403,9 +418,14 @@ export const JobDetailPage = (): JSX.Element => {
                     fullWidth
                     size="md"
                     onClick={handleApply}
-                    disabled={daysLeft <= 0}
+                    disabled={daysLeft <= 0 || applied}
+                    variant={applied ? 'light' : 'filled'}
                   >
-                    {daysLeft > 0 ? 'Apply Now' : 'Position Closed'}
+                    {daysLeft <= 0
+                      ? 'Position Closed'
+                      : applied
+                        ? 'Applied'
+                        : 'Apply Now'}
                   </Button>
 
                   {daysLeft <= 0 && (

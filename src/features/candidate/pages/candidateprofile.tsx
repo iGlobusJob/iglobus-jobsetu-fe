@@ -29,7 +29,6 @@ import {
   updateCandidateProfile,
 } from '@/services/candidate-services';
 
-// Validation Schema - FIXED: Changed resume validation
 const candidateProfileSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
@@ -43,12 +42,13 @@ const candidateProfileSchema = z.object({
   dateOfBirth: z.string().optional(),
   address: z.string().min(5).optional().or(z.literal('')),
   category: z.enum(['IT', 'Non-IT']),
-  // FIXED: File validation - can't use instanceof File in Zod directly
   resume: z
     .union([z.instanceof(File), z.string()])
     .optional()
     .nullable(),
   profileUrl: z.string().url().optional().nullable(),
+  profilePictureFile: z.instanceof(File).optional().nullable(),
+  profilePictureUrl: z.string().url().optional().nullable(),
 });
 
 export type CandidateProfileFormData = z.infer<typeof candidateProfileSchema>;
@@ -136,6 +136,12 @@ const CandidateProfilePage = (): JSX.Element => {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [resumeFileName, setResumeFileName] = useState<string | null>(null);
   const [showPdfViewer, setShowPdfViewer] = useState(true);
+  const [profilePicturePreview, setProfilePicturePreview] = useState<
+    string | null
+  >(null);
+  const [profilePictureFile, setProfilePictureFile] = useState<File | null>(
+    null
+  );
 
   const {
     control,
@@ -186,6 +192,8 @@ const CandidateProfilePage = (): JSX.Element => {
           address: data.address || '',
           category: data.category || 'IT',
           resume: data.profileUrl || null,
+          profileUrl: data.profileUrl || null,
+          profilePictureUrl: data.profilePictureUrl || null,
         };
         setProfile(formData);
         reset(formData);
@@ -195,8 +203,12 @@ const CandidateProfilePage = (): JSX.Element => {
           setResumeUrl(data.profileUrl);
           setResumeFileName(extractFileName(data.profileUrl));
         }
-      } catch (error) {
-        console.error('Failed to fetch candidate profile:', error);
+
+        // Set profile picture if available
+        if (data.profilePictureUrl) {
+          setProfilePicturePreview(data.profilePictureUrl);
+        }
+      } catch {
         toast.error('Unable to fetch candidate details');
       } finally {
         setLoading(false);
@@ -220,6 +232,8 @@ const CandidateProfilePage = (): JSX.Element => {
         resumeFile:
           data.resume instanceof File ? data.resume : (null as File | null),
         profileUrl: data.profileUrl,
+        profilePictureFile: profilePictureFile || (null as File | null),
+        profilePictureUrl: profilePicturePreview || null,
       };
       const updated = await updateCandidateProfile(payload);
       setProfile(updated);
@@ -230,6 +244,12 @@ const CandidateProfilePage = (): JSX.Element => {
         setResumeFileName(extractFileName(updated.profileUrl));
       }
 
+      // Update profile picture if new file was uploaded
+      if (updated.profilePictureUrl) {
+        setProfilePicturePreview(updated.profilePictureUrl);
+      }
+
+      setProfilePictureFile(null);
       setEditMode(false);
       toast.success('Profile updated successfully !');
     } catch (error) {
@@ -247,6 +267,10 @@ const CandidateProfilePage = (): JSX.Element => {
 
   const handleCancel = (): void => {
     setEditMode(false);
+    setProfilePictureFile(null);
+    if (profile?.profilePictureUrl) {
+      setProfilePicturePreview(profile.profilePictureUrl);
+    }
     reset();
   };
 
@@ -268,6 +292,21 @@ const CandidateProfilePage = (): JSX.Element => {
     }
   };
 
+  const handleProfilePictureChange = (file: File | null): void => {
+    if (file) {
+      setProfilePictureFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setProfilePicturePreview(result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setProfilePictureFile(null);
+      setProfilePicturePreview(null);
+    }
+  };
+
   const category = watch('category');
 
   if (loading || !profile) {
@@ -277,6 +316,7 @@ const CandidateProfilePage = (): JSX.Element => {
       </Center>
     );
   }
+
   const getFileExtension = (url: string) => {
     const cleanUrl = url.split('?')[0] as string;
     return cleanUrl ? (cleanUrl.split('.').pop() ?? '').toLowerCase() : '';
@@ -290,6 +330,82 @@ const CandidateProfilePage = (): JSX.Element => {
 
     // For ALL other docs → use Microsoft Office Viewer
     return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+  };
+
+  const ProfilePictureUploadOverlay = () => {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: 'fit-content',
+        }}
+      >
+        <Avatar
+          size={80}
+          radius="xl"
+          color="blue"
+          src={profilePicturePreview || undefined}
+          name={`${profile.firstName?.[0] ?? '?'}${profile.lastName?.[0] ?? ''}`}
+          style={{
+            transition: 'filter 0.2s ease',
+            filter: editMode ? 'brightness(0.7)' : 'brightness(1)',
+          }}
+        />
+        {editMode && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '0.625rem',
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ position: 'relative', cursor: 'pointer' }}>
+              <FileInput
+                placeholder=""
+                leftSection={<IconUpload size={24} />}
+                accept="image/jpeg,image/jpg,image/png"
+                clearable
+                onChange={handleProfilePictureChange}
+                style={{ cursor: 'pointer' }}
+                styles={{
+                  input: {
+                    opacity: 0,
+                    cursor: 'pointer',
+                    width: '80px',
+                    height: '80px',
+                  },
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  pointerEvents: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+              >
+                <IconUpload size={24} color="white" />
+                <Text size="xs" fw={600} c="white">
+                  Change
+                </Text>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -326,12 +442,7 @@ const CandidateProfilePage = (): JSX.Element => {
           </Group>
 
           <Group mt="xl" align="center">
-            <Avatar
-              size={80}
-              radius="xl"
-              color="blue"
-              name={`${profile.firstName?.[0] ?? '?'}${profile.lastName?.[0] ?? ''}`}
-            />
+            <ProfilePictureUploadOverlay />
             <Stack gap={3}>
               <Title order={3} fw={500}>
                 {profile.firstName} {profile.lastName}
@@ -583,7 +694,7 @@ const CandidateProfilePage = (): JSX.Element => {
                             }}
                           >
                             <iframe
-                              src={resumeUrl}
+                              src={getViewerUrl(resumeUrl)}
                               style={{
                                 width: '100%',
                                 height: '500px',
