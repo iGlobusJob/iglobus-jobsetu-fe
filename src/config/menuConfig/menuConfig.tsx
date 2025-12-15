@@ -6,6 +6,7 @@ import {
   IconHome,
   IconSearch,
   IconUser,
+  IconUserBitcoin,
   IconUsers,
 } from '@tabler/icons-react';
 
@@ -24,6 +25,7 @@ interface MenuConfig {
   candidate: MenuItem[];
   vendor: MenuItem[];
   admin: MenuItem[];
+  recruiter: MenuItem[];
 }
 
 /**
@@ -186,6 +188,28 @@ export const MENU_CONFIG: MenuConfig = {
     //   icon: <IconSettings size={20} />,
     //   path: '/admin/settings',
     // },
+  ],
+
+  recruiter: [
+    {
+      id: 'jobs',
+      label: 'Jobs',
+      icon: <IconBriefcase size={20} />,
+
+      path: '/recruiter/jobs',
+    },
+    {
+      id: 'clients',
+      label: 'Clients',
+      icon: <IconUserBitcoin size={20} />,
+      path: '/recruiter/clients',
+    },
+    {
+      id: 'candidates',
+      label: 'Candidates',
+      icon: <IconUsers size={20} />,
+      path: '/recruiter/candidate',
+    },
   ],
 };
 

@@ -16,6 +16,7 @@ export const GuestRoute = () => {
       candidate: '/candidate/dashboard',
       vendor: '/vendor/dashboard',
       admin: '/admin/dashboard',
+      recruiter: '/recruiter/jobs',
     };
 
     return <Navigate to={dashboardMap[userRole]} replace />;
