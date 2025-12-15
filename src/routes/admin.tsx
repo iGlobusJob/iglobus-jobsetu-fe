@@ -3,9 +3,9 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AddAdminPage from '@/features/admin/pages/AddAdminPage';
 import AnalyticsDashboard from '@/features/admin/pages/AnalyticsDashboard';
 import CandidateDashboard from '@/features/admin/pages/CandidateDashboard';
+import RecruiterDashboard from '@/features/admin/pages/RecruiterDashboard';
 import VendorDashboard from '@/features/admin/pages/dashboard';
 import AllJobs from '@/features/admin/pages/jobs';
-import RecruiterDashboard from '@/features/admin/pages/RecruiterDashboard';
 
 import { RoleRoute } from './guards';
 

@@ -187,7 +187,7 @@ export function Header() {
                   <Menu.Item component="a" href="#about">
                     About Us
                   </Menu.Item>
-                  <Menu.Item component="a" href="/admin">
+                  <Menu.Item component="a" href="/recruiter">
                     Recruiter
                   </Menu.Item>
                   <Menu.Item component="a" href="/client/login">

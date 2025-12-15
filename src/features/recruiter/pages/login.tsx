@@ -21,14 +21,13 @@ import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
-import { adminLogin } from '@/services/admin-services';
-import { useAuthStore } from '@/store/userDetails';
+import { recruiterLogin } from '@/services/recruiter-services';
 
 import { loginSchema } from '../../dashboard/forms/login';
 import type { LoginFormValues } from '../../dashboard/types/login';
 import AppLoader from '../../dashboard/utlis/loader/loader';
 
-export const AdminLoginPage: React.FC = () => {
+export const RecruiterLoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const systemTheme = useSystemTheme();
@@ -50,20 +49,13 @@ export const AdminLoginPage: React.FC = () => {
     setLoading(true);
     try {
       const payload = {
-        username: values.email,
+        email: values.email,
         password: values.password,
       };
-      const response = await adminLogin(payload);
+      const response = await recruiterLogin(payload);
       toast.success(response?.message);
-      useAuthStore.getState().setAuth({
-        userRole: 'admin',
-        token: response.token || '',
-        firstName: '',
-        lastName: '',
-        email: values.email,
-      });
 
-      navigate('/admin/dashboard');
+      navigate('/recruiter/jobs');
     } catch (error) {
       const err = error as ApiError;
       toast.error(err?.response?.data?.message || err?.message);
@@ -135,8 +127,8 @@ export const AdminLoginPage: React.FC = () => {
               </Box>
 
               <Image
-                src="/auth/adminlogin.png"
-                alt="Admin Login Illustration"
+                src="/auth/sign-in.png"
+                alt="Login Illustration"
                 fit="contain"
                 h={isTablet ? 260 : 360}
                 w="auto"
@@ -200,9 +192,9 @@ export const AdminLoginPage: React.FC = () => {
             )}
 
             <Stack align="center" mb="lg">
-              <Title order={isMobile ? 4 : 1}>Admin Login</Title>
+              <Title order={isMobile ? 4 : 1}>Recruiter Login</Title>
               <Text size={isMobile ? 'sm' : 'md'} ta="center">
-                Sign in to continue to the Admin Dashboard.
+                Sign in to continue to the Recruiter Dashboard.
               </Text>
             </Stack>
 
@@ -254,4 +246,4 @@ export const AdminLoginPage: React.FC = () => {
   );
 };
 
-export default AdminLoginPage;
+export default RecruiterLoginPage;

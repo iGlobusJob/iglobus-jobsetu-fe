@@ -25,6 +25,7 @@ export const RoleRoute = ({ allowedRoles }: RoleRouteProps) => {
       candidate: '/candidate/dashboard',
       vendor: '/vendor/dashboard',
       admin: '/admin/dashboard',
+      recruiter: '/recruiter/jobs',
     };
 
     return <Navigate to={dashboardMap[userRole!]} replace />;

@@ -9,10 +9,12 @@ import { DashboardLayout } from './components/layout/dashboard';
 import { AdminLoginPage } from './features/admin/pages/login';
 import { Login } from './features/auth/pages/vendor/login';
 import Register from './features/auth/pages/vendor/register';
+import RecruiterLoginPage from './features/recruiter/pages/login';
 import { AdminRoutes } from './routes/admin';
 import { CandidateRoutes } from './routes/candidate';
 import { GuestRoute, ProtectedRoute } from './routes/guards';
 import { PublicRoutes } from './routes/public';
+import { RecruiterRoutes } from './routes/recruiter';
 import { VendorRoutes } from './routes/vendor';
 import { useAuthStore } from './store/userDetails';
 
@@ -27,6 +29,7 @@ function App() {
           <Route path="/client/login" element={<Login />} />
           <Route path="/client/register" element={<Register />} />
           <Route path="/admin" element={<AdminLoginPage />} />
+          <Route path="/recruiter" element={<RecruiterLoginPage />} />
         </Route>
 
         {/* Protected Routes */}
@@ -40,6 +43,9 @@ function App() {
 
             {/* Admin Routes */}
             <Route path="/admin/*" element={<AdminRoutes />} />
+
+            {/* Recruiter Routes */}
+            <Route path="/recruiter/*" element={<RecruiterRoutes />} />
           </Route>
         </Route>
 
@@ -62,6 +68,7 @@ const RoleBasedRedirect = () => {
     candidate: '/candidate/dashboard',
     vendor: '/vendor/dashboard',
     admin: '/admin/dashboard',
+    recruiter: '/recruiter/jobs',
   };
 
   return <Navigate to={dashboardMap[userRole!]} replace />;
