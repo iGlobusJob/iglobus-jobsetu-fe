@@ -144,15 +144,15 @@ export const Header = ({
 
         <Menu.Dropdown>
           <Menu.Label>Account</Menu.Label>
-
-          <Menu.Item
-            leftSection={<IconUser size={16} />}
-            onClick={() => navigate(`/${userRole}/profile`)}
-          >
-            Profile
-          </Menu.Item>
-
-          {userRole !== 'candidate' && (
+          {userRole && !['admin', 'recruiter'].includes(userRole) && (
+            <Menu.Item
+              leftSection={<IconUser size={16} />}
+              onClick={() => navigate(`/${userRole}/profile`)}
+            >
+              Profile
+            </Menu.Item>
+          )}
+          {userRole && !['candidate', 'recruiter'].includes(userRole) && (
             <Menu.Item
               leftSection={<IconSettings size={16} />}
               onClick={() => navigate(`/${userRole}/settings`)}
