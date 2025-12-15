@@ -231,7 +231,9 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item onClick={() => openModal()}>Browse Jobs</Menu.Item>
+                  <Menu.Item component="a" href="#browse-jobs">
+                    Browse Jobs
+                  </Menu.Item>
                   <Menu.Item onClick={() => openModal()}>Saved Jobs</Menu.Item>
                   <Menu.Item onClick={() => openModal()}>
                     Candidate List
