@@ -24,7 +24,7 @@ import { toast } from 'react-toastify';
 
 import {
   getVendorProfile,
-  updateVendorProfile,
+  updateClientProfile,
 } from '@/services/vendor-services';
 
 import {
@@ -197,7 +197,7 @@ const VendorProfilePage = (): JSX.Element => {
       }
 
       // Send typed data with logo file to API
-      await updateVendorProfile({
+      await updateClientProfile({
         ...updatedData,
         logo: logoFile || undefined,
       } as VendorProfileFormData);
