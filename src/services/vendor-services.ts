@@ -112,7 +112,7 @@ export const getCandidateDetailsByVendor = async () => {
 
 export const getVendorProfile = async () => {
   try {
-    const response = await apiClient.get(`/getvendorprofile`);
+    const response = await apiClient.get(`/getclientprofile`);
     if (!response.data?.success) {
       throw new Error('Failed to fetch vendor details');
     }
