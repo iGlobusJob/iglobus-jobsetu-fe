@@ -231,9 +231,7 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="/job-list">
-                    Browse Jobs
-                  </Menu.Item>
+                  <Menu.Item onClick={() => openModal()}>Browse Jobs</Menu.Item>
                   <Menu.Item onClick={() => openModal()}>Saved Jobs</Menu.Item>
                   <Menu.Item onClick={() => openModal()}>
                     Candidate List
@@ -270,7 +268,7 @@ export function Header() {
                   <Menu.Item component="a" href="/company-details">
                     Company Details
                   </Menu.Item>
-                  <Menu.Item component="a" href="/post-job">
+                  <Menu.Item component="a" href="/client/login">
                     Post a Job
                   </Menu.Item>
                   <Menu.Item component="a" href="/client/login">
