@@ -63,7 +63,7 @@ export function Header() {
   return (
     <Paper shadow="md">
       {/* Top Bar - Hidden on Mobile */}
-      {!['/client/login', '/client/register'].includes(path) && (
+      {!['/client/login', '/client/register', '/recruiter'].includes(path) && (
         <Box
           visibleFrom="md"
           style={{
