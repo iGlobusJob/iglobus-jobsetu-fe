@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
+import CandidatesPage from '@/features/recruiter/pages/candidates';
 import ClientsPage from '@/features/recruiter/pages/clients';
 import JobDetailPage from '@/features/recruiter/pages/jobDetails';
 import { JobListingsSection } from '@/features/recruiter/pages/jobs';
@@ -13,6 +14,7 @@ export const RecruiterRoutes = () => {
         <Route path="jobs" element={<JobListingsSection />} />
         <Route path=":jobId/job-details" element={<JobDetailPage />} />
         <Route path="clients" element={<ClientsPage />} />
+        <Route path="candidate" element={<CandidatesPage />} />
 
         <Route index element={<Navigate to="dashboard" replace />} />
       </Route>
