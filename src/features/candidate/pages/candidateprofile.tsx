@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  ActionIcon,
   Avatar,
   Button,
   Card,
@@ -17,7 +18,7 @@ import {
   Title,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import { IconFile, IconUpload } from '@tabler/icons-react';
+import { IconFile, IconSparkles, IconUpload } from '@tabler/icons-react';
 import { useEffect, useState, type JSX } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -676,13 +677,26 @@ const CandidateProfilePage = (): JSX.Element => {
                               </Text>
                             </Stack>
                           </Group>
-                          <Button
-                            variant="subtle"
-                            size="xs"
-                            onClick={() => setShowPdfViewer(!showPdfViewer)}
-                          >
-                            {showPdfViewer ? 'Hide' : 'Show'}
-                          </Button>
+                          <Group gap="xs">
+                            <ActionIcon
+                              variant="subtle"
+                              color="violet"
+                              size="sm"
+                              onClick={() => {
+                                toast.info('Analyze resume with Gemini');
+                              }}
+                            >
+                              <IconSparkles size={28} />
+                            </ActionIcon>
+
+                            <Button
+                              variant="subtle"
+                              size="xs"
+                              onClick={() => setShowPdfViewer(!showPdfViewer)}
+                            >
+                              {showPdfViewer ? 'Hide' : 'Show'}
+                            </Button>
+                          </Group>
                         </Group>
 
                         {showPdfViewer && (
@@ -775,13 +789,25 @@ const CandidateProfilePage = (): JSX.Element => {
                           <Text size="sm">✓ {resumeFileName}</Text>
                         </Stack>
                       </Group>
-                      <Button
-                        variant="subtle"
-                        size="xs"
-                        onClick={() => setShowPdfViewer(!showPdfViewer)}
-                      >
-                        {showPdfViewer ? 'Hide' : 'Show'}
-                      </Button>
+                      <Group gap="xs">
+                        <ActionIcon
+                          variant="subtle"
+                          color="violet"
+                          size="sm"
+                          onClick={() => {
+                            toast.info('Analyze resume with Gemini');
+                          }}
+                        >
+                          <IconSparkles size={28} />
+                        </ActionIcon>
+                        <Button
+                          variant="subtle"
+                          size="xs"
+                          onClick={() => setShowPdfViewer(!showPdfViewer)}
+                        >
+                          {showPdfViewer ? 'Hide' : 'Show'}
+                        </Button>
+                      </Group>
                     </Group>
 
                     {showPdfViewer && (

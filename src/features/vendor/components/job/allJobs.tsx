@@ -26,7 +26,6 @@ import {
   IconMapPin,
   IconPencil,
   IconSearch,
-  IconTrash,
 } from '@tabler/icons-react';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
@@ -35,9 +34,7 @@ import { toast } from 'react-toastify';
 
 import type { Job } from '@/features/dashboard/types/job';
 import { VENDOR_PATHS } from '@/routes/config/vendorPath';
-import { deleteJob, getAllJobs } from '@/services/vendor-services';
-
-import { openDeleteModal } from '../modals/deleteJob';
+import { getAllJobs } from '@/services/vendor-services';
 
 const AllJobsComponent = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -171,23 +168,6 @@ const AllJobsComponent = () => {
 
   const onEdit = (id: string) => {
     navigate(VENDOR_PATHS.EDIT_JOB_WITH_ID(id));
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await deleteJob(id);
-
-      if (res.success) {
-        toast.success(res.message);
-
-        setJobs((prev) => prev.filter((job) => job.id !== id));
-        setFilteredJobs((prev) => prev.filter((job) => job.id !== id));
-      } else {
-        toast.error(res.message || 'Failed to delete job');
-      }
-    } catch {
-      toast.error('Error deleting job');
-    }
   };
 
   if (loading) {
@@ -330,15 +310,6 @@ const AllJobsComponent = () => {
                         >
                           <IconPencil size={18} />
                         </ActionIcon>
-
-                        <ActionIcon
-                          variant="subtle"
-                          color="red"
-                          onClick={() => openDeleteModal(job.id, handleDelete)}
-                        >
-                          <IconTrash size={18} />
-                        </ActionIcon>
-
                         <ActionIcon
                           onClick={() =>
                             setExpandedJob(isExpanded ? null : job.id)
