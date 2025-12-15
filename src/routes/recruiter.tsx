@@ -14,7 +14,7 @@ export const RecruiterRoutes = () => {
         <Route path="jobs" element={<JobListingsSection />} />
         <Route path=":jobId/job-details" element={<JobDetailPage />} />
         <Route path="clients" element={<ClientsPage />} />
-        <Route path="candidate" element={<CandidatesPage />} />
+        <Route path="candidates" element={<CandidatesPage />} />
 
         <Route index element={<Navigate to="dashboard" replace />} />
       </Route>
