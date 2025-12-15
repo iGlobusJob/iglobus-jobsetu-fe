@@ -208,7 +208,7 @@ export const MENU_CONFIG: MenuConfig = {
       id: 'candidates',
       label: 'Candidates',
       icon: <IconUsers size={20} />,
-      path: '/recruiter/candidate',
+      path: '/recruiter/candidates',
     },
   ],
 };

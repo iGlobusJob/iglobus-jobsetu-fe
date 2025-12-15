@@ -43,3 +43,31 @@ export const recruiterLogin = async (credentials: {
     throw new Error(err?.response?.data?.message || err?.message);
   }
 };
+
+export const getAllCandidatesByRecruiter = async () => {
+  try {
+    const response = await apiClient.get('/recruiter/candidates');
+    if (!response.data?.success) {
+      throw new Error(response.data?.message || 'Failed to fetch candidates');
+    }
+    return response.data.candidates;
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
+  }
+};
+
+export const getCandidatesDetailsById = async (candidateId: string) => {
+  try {
+    const response = await apiClient.get(`/recruiter/candidate/${candidateId}`);
+    if (!response.data?.success) {
+      throw new Error(
+        response.data?.message || 'Failed to fetch candidate details'
+      );
+    }
+    return response.data.data;
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
+  }
+};
