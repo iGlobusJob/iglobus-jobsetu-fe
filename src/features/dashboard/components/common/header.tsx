@@ -56,6 +56,7 @@ export function Header() {
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn());
   const firstName = useAuthStore((s) => s.firstName);
   const lastName = useAuthStore((s) => s.lastName);
+  const role = useAuthStore((s) => s.userRole);
   const { token } = useAuthStore();
   const location = useLocation();
   const path = location.pathname;
@@ -139,7 +140,7 @@ export function Header() {
                         color: colorScheme === 'dark' ? '#fff' : '#333',
                         borderColor: 'blue',
                       }}
-                      onClick={openModal}
+                      onClick={() => openModal()}
                     >
                       Join as Candidate
                     </Button>
@@ -416,7 +417,7 @@ export function Header() {
                       <Menu.Item component="a" href="/bookmark-jobs">
                         Bookmarks Jobs
                       </Menu.Item>
-                      <Menu.Item component="a" href="/profile">
+                      <Menu.Item component="a" href={`${role}/profile`}>
                         My Profile
                       </Menu.Item>
                       <Menu.Divider />
@@ -887,7 +888,7 @@ export function Header() {
               {' '}
               <Button
                 leftSection={<IconLock size={18} />}
-                onClick={openModal}
+                onClick={() => openModal()}
                 fullWidth
               >
                 Candidate - Login / Register
@@ -920,7 +921,12 @@ export function Header() {
               >
                 Manage Jobs
               </Button>
-              <Button variant="light" component="a" href="/profile" fullWidth>
+              <Button
+                variant="light"
+                component="a"
+                href={`${role}/profile`}
+                fullWidth
+              >
                 My Profile
               </Button>
               <Button

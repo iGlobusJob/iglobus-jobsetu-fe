@@ -1,43 +1,26 @@
 import {
   ActionIcon,
-  Badge,
   Box,
   Button,
   Container,
   Flex,
   Grid,
-  Group,
   Pagination,
   Paper,
   RangeSlider,
-  rem,
   Select,
   Text,
   TextInput,
   Title,
+  Loader,
+  Center,
 } from '@mantine/core';
-import {
-  IconChevronRight,
-  IconMapPin,
-  IconSearch,
-  IconStar,
-  IconX,
-} from '@tabler/icons-react';
-import { useEffect, useMemo, useState, type JSX, type MouseEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { IconSearch, IconX, IconAlertCircle } from '@tabler/icons-react';
+import { useEffect, useMemo, useState, type JSX } from 'react';
 
+import { JobCard } from '@/common/pages/jobCard';
 import type { CandidateJobs } from '@/features/dashboard/types/candidate';
-import { CANDIDATE_PATHS } from '@/routes/config/userPath';
-import { getAllJobs } from '@/services/candidate-services';
-
-const formatJobType = (type: string): string => {
-  if (!type) return 'Unknown';
-
-  return type
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
-};
+import { getAllJobs, getMyJobs } from '@/services/candidate-services';
 
 interface ApiJob {
   id: string;
@@ -69,183 +52,14 @@ const mapJob = (job: ApiJob): CandidateJobs => ({
   logo: job.logo,
 });
 
-interface JobCardProps {
-  job: CandidateJobs;
-  onBookmark: (id: string) => void;
-}
 const ITEMS_PER_PAGE = 6;
-
-const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
-  const navigate = useNavigate();
-  const handleBookmarkClick = (): void => {
-    onBookmark(job.id);
-  };
-
-  const handleApplyClick = () => {
-    alert(`Applied for ${job.jobTitle}`);
-  };
-  return (
-    <Paper
-      onClick={() => navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id))}
-      radius="md"
-      style={{
-        overflow: 'hidden',
-        position: 'relative',
-        transition: 'all 0.3s ease',
-        cursor: 'pointer',
-      }}
-      shadow="sm"
-      withBorder
-      p="lg"
-      onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
-        e.currentTarget.style.transform = 'translateY(-4px)';
-        e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.15)';
-      }}
-      onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
-      }}
-    >
-      <ActionIcon
-        variant="light"
-        radius="md"
-        size="lg"
-        onClick={handleBookmarkClick}
-        style={{
-          position: 'absolute',
-          top: rem(12),
-          right: rem(12),
-          zIndex: 10,
-          transition: 'all 0.2s ease',
-        }}
-        color={job.bookmarked ? 'yellow' : 'gray'}
-        onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => {
-          e.currentTarget.style.transform = 'scale(1.1)';
-        }}
-        onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => {
-          e.currentTarget.style.transform = 'scale(1)';
-        }}
-      >
-        <IconStar size={18} fill={job.bookmarked ? 'currentColor' : 'none'} />
-      </ActionIcon>
-
-      <Flex align="flex-start" gap="lg" mb="md" style={{ paddingRight: 15 }}>
-        <Box
-          style={{
-            minWidth: 60,
-            width: 60,
-            height: 60,
-            borderRadius: '12px',
-            overflow: 'hidden',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 24,
-            fontWeight: 700,
-            color: '#fff',
-            boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
-            flexShrink: 0,
-          }}
-        >
-          {job.logo ? (
-            <img
-              src={job.logo}
-              alt={job.organizationName || 'Logo'}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          ) : (
-            (job.organizationName?.[0]?.toUpperCase() ?? '?')
-          )}
-        </Box>
-
-        <Box style={{ flex: 1, minWidth: 0, paddingRight: '50px' }}>
-          <Title order={4} size="h5" fw={600} mb={2} lineClamp={1}>
-            {job.jobTitle}
-          </Title>
-          <Text size="sm" c="dimmed" fw={500} lineClamp={1}>
-            {job.organizationName || 'Unknown Company'}
-          </Text>
-        </Box>
-      </Flex>
-
-      <Flex align="center" gap="md" mb="md" style={{ flexWrap: 'wrap' }}>
-        <Flex align="center" gap={4} style={{ minWidth: 0, flex: '1 1 auto' }}>
-          <IconMapPin
-            size={16}
-            stroke={1.5}
-            style={{ color: '#666', flexShrink: 0 }}
-          />
-          <Text size="xs" c="dimmed" lineClamp={1}>
-            {job.jobLocation}
-          </Text>
-        </Flex>
-        <Badge
-          variant="light"
-          size="sm"
-          color="blue"
-          w="fit-content"
-          style={{ flexShrink: 0 }}
-        >
-          {' '}
-          {formatJobType(job.jobType)}
-        </Badge>
-      </Flex>
-
-      <Text
-        size="sm"
-        c="dimmed"
-        lineClamp={2}
-        mb="md"
-        style={{ minHeight: '2.5rem' }}
-        dangerouslySetInnerHTML={{
-          __html: job.jobDescription,
-        }}
-      />
-
-      <Group
-        justify="space-between"
-        align="center"
-        pt="sm"
-        style={{ borderTop: '1px solid #e9ecef' }}
-      >
-        <Box>
-          <Text size="xs" c="dimmed" mb={4}>
-            Experience
-          </Text>
-          <Text size="sm" fw={600}>
-            {job.experienceLevel}
-          </Text>
-        </Box>
-        <Box>
-          <Text size="xs" c="dimmed" mb={4}>
-            Salary
-          </Text>
-          <Text size="sm" fw={600} c="blue">
-            {job.salaryRange}
-          </Text>
-        </Box>
-        <Button
-          variant="light"
-          size="xs"
-          rightSection={<IconChevronRight size={14} />}
-          onClick={handleApplyClick}
-        >
-          Apply
-        </Button>
-      </Group>
-    </Paper>
-  );
-};
 
 export const JobListingsSection = (): JSX.Element => {
   const [jobs, setJobs] = useState<CandidateJobs[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [bookmarkedJobs, setBookmarkedJobs] = useState<Set<string>>(new Set());
+  const [appliedJobs, setAppliedJobs] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedJobType, setSelectedJobType] = useState<string | null>(null);
   const [salaryRange, setSalaryRange] = useState<[number, number]>([500, 500]);
@@ -256,14 +70,37 @@ export const JobListingsSection = (): JSX.Element => {
   useEffect(() => {
     const loadJobs = async () => {
       try {
-        const data = await getAllJobs();
-        const mapped = data.map(mapJob);
+        setLoading(true);
+        setError(null);
+
+        const [jobsData, myJobsResponse] = await Promise.all([
+          getAllJobs(),
+          getMyJobs(),
+        ]);
+
+        const mapped = jobsData.map(mapJob);
         setJobs(mapped);
+
         const max = Math.max(...mapped.map((job) => job.salaryMax || 0));
         setSalaryRange([500, max]);
         setMaxSalary(max);
+
+        const bookmarkedSet = new Set<string>();
+        const appliedSet = new Set<string>();
+
+        myJobsResponse?.forEach((item) => {
+          const jobId = item.jobId?.id;
+          if (!jobId) return;
+
+          if (item.isJobSaved) bookmarkedSet.add(jobId);
+          if (item.isJobApplied) appliedSet.add(jobId);
+        });
+
+        setBookmarkedJobs(bookmarkedSet);
+        setAppliedJobs(appliedSet);
       } catch (err) {
         console.error('Failed to fetch jobs:', err);
+        setError('Failed to load jobs. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -273,7 +110,6 @@ export const JobListingsSection = (): JSX.Element => {
   }, []);
 
   const handleBookmark = (id: string): void => {
-    console.log(id);
     setBookmarkedJobs((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
@@ -289,32 +125,28 @@ export const JobListingsSection = (): JSX.Element => {
     let list = jobs.map((job) => ({
       ...job,
       bookmarked: bookmarkedJobs.has(job.id),
+      applied: appliedJobs.has(job.id),
     }));
 
-    // Search filter
-    if (searchQuery) {
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
       list = list.filter(
         (job) =>
-          job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          job.organizationName
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          job.jobLocation.toLowerCase().includes(searchQuery.toLowerCase())
+          job.jobTitle.toLowerCase().includes(query) ||
+          job.organizationName.toLowerCase().includes(query) ||
+          job.jobLocation.toLowerCase().includes(query)
       );
     }
 
-    // Job type filter
     if (selectedJobType) {
       list = list.filter((job) => job.jobType === selectedJobType);
     }
 
-    // Salary filter
     list = list.filter(
       (job) =>
         job.salaryMax >= salaryRange[0] && job.salaryMin <= salaryRange[1]
     );
 
-    // Experience filter
     if (experienceFilter) {
       list = list.filter((job) => job.experienceLevel === experienceFilter);
     }
@@ -327,6 +159,7 @@ export const JobListingsSection = (): JSX.Element => {
     salaryRange,
     experienceFilter,
     bookmarkedJobs,
+    appliedJobs,
   ]);
 
   const totalPages = Math.ceil(filteredJobs.length / ITEMS_PER_PAGE);
@@ -334,6 +167,13 @@ export const JobListingsSection = (): JSX.Element => {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
+  const isFiltered =
+    searchQuery.trim() ||
+    selectedJobType ||
+    experienceFilter ||
+    salaryRange[0] !== 500 ||
+    salaryRange[1] !== maxSalary;
 
   const resetFilters = (): void => {
     setSearchQuery('');
@@ -347,7 +187,7 @@ export const JobListingsSection = (): JSX.Element => {
     <Box component="section" py={40}>
       <Container size="xl">
         {/* Header */}
-        <Box mb={50} style={{ textAlign: 'left' }}>
+        <Box mb={50}>
           <Title order={2} size="h2" mb="sm">
             Explore Job Opportunities
           </Title>
@@ -358,31 +198,44 @@ export const JobListingsSection = (): JSX.Element => {
 
         {/* Search & Filters */}
         <Paper p="xl" radius="md" mb={40} withBorder>
-          {/* Search Bar */}
           <TextInput
             placeholder="Search by job title, company, or location..."
             leftSection={<IconSearch size={18} />}
             rightSection={
               searchQuery ? (
-                <ActionIcon onClick={() => setSearchQuery('')}>
-                  <IconX size={16} />
+                <ActionIcon
+                  onClick={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
+                  size="xs"
+                  color="gray"
+                  radius="xl"
+                  variant="transparent"
+                >
+                  <IconX size={14} />
                 </ActionIcon>
               ) : null
             }
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
             mb="lg"
             radius="md"
           />
 
-          {/* Filters Grid */}
           <Grid>
             <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
               <Select
                 label="Job Type"
                 placeholder="All Types"
                 value={selectedJobType}
-                onChange={setSelectedJobType}
+                onChange={(value) => {
+                  setSelectedJobType(value);
+                  setCurrentPage(1);
+                }}
                 data={[
                   { value: 'full-time', label: 'Full-Time' },
                   { value: 'part-time', label: 'Part-Time' },
@@ -400,7 +253,10 @@ export const JobListingsSection = (): JSX.Element => {
                 label="Experience Level"
                 placeholder="All Levels"
                 value={experienceFilter}
-                onChange={(v) => setExperienceFilter(v ?? '')}
+                onChange={(value) => {
+                  setExperienceFilter(value ?? '');
+                  setCurrentPage(1);
+                }}
                 data={[
                   { value: '0 - 1 years', label: 'Entry Level' },
                   { value: '1 - 2 years', label: '1-2 Years' },
@@ -414,44 +270,74 @@ export const JobListingsSection = (): JSX.Element => {
 
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Text size="sm" fw={500} mb={8}>
-                Salary Range: ₹{salaryRange[0]} - ₹{salaryRange[1]}
+                Salary Range: ₹{salaryRange[0].toLocaleString()} - ₹
+                {salaryRange[1].toLocaleString()}
               </Text>
               <RangeSlider
                 value={salaryRange}
-                onChange={setSalaryRange}
+                onChange={(value) => {
+                  setSalaryRange(value);
+                  setCurrentPage(1);
+                }}
                 min={500}
                 max={maxSalary}
-                step={1000}
+                step={5000}
                 marks={[
-                  { value: 0, label: '₹500' },
-                  { value: maxSalary, label: `₹${maxSalary}` },
+                  { value: 500, label: '₹500' },
+                  { value: maxSalary, label: `₹${maxSalary.toLocaleString()}` },
                 ]}
               />
             </Grid.Col>
           </Grid>
 
-          {/* Reset Button */}
-          {(searchQuery || selectedJobType || experienceFilter) && (
-            <Button size="xs" mt="md" variant="light" onClick={resetFilters}>
+          {isFiltered && (
+            <Button
+              size="xs"
+              mt="md"
+              variant="light"
+              onClick={resetFilters}
+              leftSection={<IconX size={14} />}
+            >
               Reset Filters
             </Button>
           )}
         </Paper>
 
+        {/* Error Message */}
+        {error && (
+          <Paper
+            p="md"
+            radius="md"
+            mb={40}
+            style={{ backgroundColor: '#ffe0e0', borderColor: '#ff6b6b' }}
+            withBorder
+          >
+            <Flex align="center" gap="sm">
+              <IconAlertCircle color="#ff6b6b" size={20} />
+              <Text c="#cc0000">{error}</Text>
+            </Flex>
+          </Paper>
+        )}
+
         {/* Results Count */}
-        <Flex justify="space-between" align="center" mb="lg">
-          <Text size="sm" c="dimmed">
-            Showing <strong>{paginatedJobs.length}</strong> of{' '}
-            <strong>{filteredJobs.length}</strong> jobs
-          </Text>
-        </Flex>
+        {!loading && filteredJobs.length > 0 && (
+          <Flex justify="space-between" align="center" mb="lg">
+            <Text size="sm" c="dimmed">
+              Showing <strong>{paginatedJobs.length}</strong> of{' '}
+              <strong>{filteredJobs.length}</strong> jobs
+              {isFiltered && ` (filtered)`}
+            </Text>
+          </Flex>
+        )}
 
         {/* Jobs Grid */}
         {loading ? (
-          <Text>Loading jobs...</Text>
-        ) : paginatedJobs.length ? (
+          <Center py={60}>
+            <Loader size="lg" />
+          </Center>
+        ) : paginatedJobs.length > 0 ? (
           <>
-            <Grid mb={40}>
+            <Grid mb={40} style={{ minHeight: '600px' }}>
               {paginatedJobs.map((job) => (
                 <Grid.Col key={job.id} span={{ base: 12, md: 6, lg: 4 }}>
                   <JobCard job={job} onBookmark={handleBookmark} />
@@ -459,7 +345,6 @@ export const JobListingsSection = (): JSX.Element => {
               ))}
             </Grid>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <Flex justify="center" mt={40}>
                 <Pagination
@@ -468,6 +353,7 @@ export const JobListingsSection = (): JSX.Element => {
                   total={totalPages}
                   size="md"
                   radius="md"
+                  withEdges
                 />
               </Flex>
             )}

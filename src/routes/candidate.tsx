@@ -2,9 +2,11 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 // Candidate Pages
 import JobDetailPage from '@/common/pages/jobDetails';
+import AppliedJobs from '@/features/candidate/pages/applied';
 import CandidateDashboard from '@/features/candidate/pages/candidatedashboard';
 import { JobListingsSection } from '@/features/candidate/pages/candidatejobs';
 import CandidateProfilePage from '@/features/candidate/pages/candidateprofile';
+import SavedJobs from '@/features/candidate/pages/saved';
 
 import { RoleRoute } from './guards';
 
@@ -16,6 +18,8 @@ export const CandidateRoutes = () => {
         <Route path="profile" element={<CandidateProfilePage />} />
         <Route path="search" element={<JobListingsSection />} />
         <Route path=":jobId/job-details" element={<JobDetailPage />} />
+        <Route path="saved-jobs" element={<SavedJobs />} />
+        <Route path="applications" element={<AppliedJobs />} />
         {/* Add more candidate routes here */}
 
         {/* Default redirect */}
