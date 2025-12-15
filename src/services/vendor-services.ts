@@ -123,9 +123,9 @@ export const getVendorProfile = async () => {
   }
 };
 
-export const updateVendorProfile = async (data: VendorProfileFormData) => {
+export const updateClientProfile = async (data: VendorProfileFormData) => {
   try {
-    const response = await apiClient.put(`/updatevendorprofile`, data, {
+    const response = await apiClient.put(`/updateclientprofile`, data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
