@@ -34,7 +34,7 @@ export const Header = ({
   toggleDesktop,
 }: HeaderProps) => {
   const navigate = useNavigate();
-  const { email, userRole, firstName, lastName, clearAuth } = useAuthStore();
+  const { email, userRole, firstName, lastName, profilePicture, clearAuth } = useAuthStore();
   const isAdmin = userRole === 'admin';
 
   const handleLogout = () => {
@@ -121,7 +121,14 @@ export const Header = ({
             }}
           >
             <Group gap="xs">
-              <Avatar size="sm" radius="xl" />
+              <Avatar
+                key={profilePicture || 'no-profile-pic'}
+                size="sm"
+                radius="xl"
+                src={profilePicture || undefined}
+              >
+                {!profilePicture && firstName?.[0]?.toUpperCase()}
+              </Avatar>
 
               {/* Hide email & role on extra small screens */}
               <Box style={{ lineHeight: 1 }} visibleFrom="sm">

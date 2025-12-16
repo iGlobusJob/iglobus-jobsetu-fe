@@ -9,6 +9,7 @@ type AuthStore = {
   token: string | null;
   firstName: string | null;
   lastName: string | null;
+  profilePicture: string | null;
 
   setAuth: (data: {
     email: string;
@@ -16,8 +17,10 @@ type AuthStore = {
     token: string;
     firstName?: string;
     lastName?: string;
+    profilePicture?: string;
   }) => void;
 
+  updateProfilePicture: (profilePicture: string) => void;
   clearAuth: () => void;
   isLoggedIn: () => boolean;
 };
@@ -30,6 +33,7 @@ export const useAuthStore = create<AuthStore>()(
       token: null,
       firstName: null,
       lastName: null,
+      profilePicture: null,
 
       setAuth: ({
         email,
@@ -37,6 +41,7 @@ export const useAuthStore = create<AuthStore>()(
         token,
         firstName = null,
         lastName = null,
+        profilePicture = null,
       }) =>
         set({
           email,
@@ -44,7 +49,11 @@ export const useAuthStore = create<AuthStore>()(
           token,
           firstName,
           lastName,
+          profilePicture,
         }),
+
+      updateProfilePicture: (profilePicture: string) =>
+        set((state) => ({ ...state, profilePicture })),
 
       clearAuth: () =>
         set({
@@ -53,6 +62,7 @@ export const useAuthStore = create<AuthStore>()(
           token: null,
           firstName: null,
           lastName: null,
+          profilePicture: null,
         }),
 
       isLoggedIn: () => {

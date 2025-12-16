@@ -46,6 +46,7 @@ export const validateOtp = async (credentials: {
       firstName: candidate?.firstName || '',
       lastName: candidate?.lastName || '',
       email: candidate?.email || '',
+      profilePicture: candidate?.profilePictureUrl || undefined,
     });
 
     // Close OTP modal AFTER successfully verify

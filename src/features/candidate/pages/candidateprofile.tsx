@@ -29,6 +29,7 @@ import {
   getCandidateProfile,
   updateCandidateProfile,
 } from '@/services/candidate-services';
+import { useAuthStore } from '@/store/userDetails';
 
 const candidateProfileSchema = z.object({
   firstName: z.string().optional(),
@@ -236,6 +237,16 @@ const CandidateProfilePage = (): JSX.Element => {
         // Set profile picture if available
         if (data.profilePictureUrl) {
           setProfilePicturePreview(data.profilePictureUrl);
+          // Update auth store to sync with header avatar
+          const currentAuth = useAuthStore.getState();
+          useAuthStore.getState().setAuth({
+            email: currentAuth.email!,
+            userRole: currentAuth.userRole!,
+            token: currentAuth.token!,
+            firstName: currentAuth.firstName || undefined,
+            lastName: currentAuth.lastName || undefined,
+            profilePicture: data.profilePictureUrl,
+          });
         }
       } catch {
         toast.error('Unable to fetch candidate details');
@@ -275,7 +286,12 @@ const CandidateProfilePage = (): JSX.Element => {
 
       // Update profile picture if new file was uploaded
       if (updated.profilePictureUrl) {
-        setProfilePicturePreview(updated.profilePictureUrl);
+        // Add cache-busting timestamp to force browser to reload the image
+        const cacheBustedUrl = `${updated.profilePictureUrl}?t=${Date.now()}`;
+        setProfilePicturePreview(cacheBustedUrl);
+
+        // Update auth store using dedicated method to ensure reactivity
+        useAuthStore.getState().updateProfilePicture(cacheBustedUrl);
       }
 
       setProfilePictureFile(null);
