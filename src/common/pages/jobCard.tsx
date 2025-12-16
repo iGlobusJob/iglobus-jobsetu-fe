@@ -184,8 +184,8 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
             Salary
           </Text>
           <Text size="sm" fw={600}>
-            ₹{job.salaryMin?.toLocaleString()} - ₹
-            {job.salaryMax?.toLocaleString()}
+            ₹{job.salaryMin?.toLocaleString('en-IN')} - ₹
+            {job.salaryMax?.toLocaleString('en-IN')}
           </Text>
         </Grid.Col>
         <Grid.Col span={6}>

@@ -542,6 +542,7 @@ const CandidateProfilePage = (): JSX.Element => {
                           }}
                           placeholder="Pick a date"
                           radius="md"
+                          maxDate={new Date()}
                         />
                         {errors.dateOfBirth?.message && (
                           <Text c="red" size="xs">
