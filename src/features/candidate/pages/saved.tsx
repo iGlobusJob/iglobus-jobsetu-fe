@@ -165,7 +165,7 @@ const JobCardUI = ({
             height: 60,
             borderRadius: 12,
             background: job.logo
-              ? `url(${job.logo})`
+              ? `url("${job.logo}")`
               : 'linear-gradient(135deg,#667eea,#764ba2)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
