@@ -99,7 +99,7 @@ const VendorDashboard = () => {
               jobLocation: job.jobLocation,
               closingIn: Math.ceil(
                 (new Date(job.postEnd).getTime() - new Date().getTime()) /
-                  (1000 * 60 * 60)
+                (1000 * 60 * 60)
               ),
             })),
           });
@@ -171,7 +171,7 @@ const VendorDashboard = () => {
             Welcome to Client Dashboard
           </Text>
           <Text size="md" c="dimmed" fw={400}>
-            Manage your jobs, applications, and client profile from one place.
+            Manage your jobs and profile from one place.
           </Text>
         </Box>
 
