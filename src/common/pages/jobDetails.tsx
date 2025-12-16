@@ -176,7 +176,6 @@ export const JobDetailPage = (): JSX.Element => {
       </Container>
     );
   }
-  console.log(applied, bookmarked);
   return (
     <Box
       component="section"
