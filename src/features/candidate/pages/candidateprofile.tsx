@@ -46,9 +46,37 @@ const candidateProfileSchema = z.object({
   resume: z
     .union([z.instanceof(File), z.string()])
     .optional()
-    .nullable(),
+    .nullable()
+    .refine(
+      (file) => {
+        if (!file || typeof file === 'string') return true;
+        const allowedTypes = [
+          'application/pdf',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ];
+        return allowedTypes.includes(file.type);
+      },
+      {
+        message:
+          'Invalid file type for Resume. Only PDF, DOC, and DOCX files are allowed !',
+      }
+    ),
   profileUrl: z.string().url().optional().nullable(),
-  profilePictureFile: z.instanceof(File).optional().nullable(),
+  profilePictureFile: z
+    .instanceof(File)
+    .optional()
+    .nullable()
+    .refine(
+      (file) => {
+        if (!file) return true;
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        return allowedTypes.includes(file.type);
+      },
+      {
+        message: 'Invalid file type for Profile Picture. Only image files are allowed !',
+      }
+    ),
   profilePictureUrl: z.string().url().optional().nullable(),
 });
 
@@ -257,9 +285,9 @@ const CandidateProfilePage = (): JSX.Element => {
       const err = error as ApiError;
       toast.error(
         err?.response?.data?.message ||
-          err?.data?.message ||
-          err?.message ||
-          'Something went wrong'
+        err?.data?.message ||
+        err?.message ||
+        'Something went wrong'
       );
     } finally {
       setSubmitting(false);
@@ -288,6 +316,18 @@ const CandidateProfilePage = (): JSX.Element => {
     onChange: (value: File | null) => void
   ): void => {
     if (file) {
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        toast.error('Invalid file type for Resume. Only PDF, DOC, and DOCX files are allowed !');
+        onChange(null);
+        return;
+      }
+
       setResumeFileName(file.name);
       onChange(file);
     }
@@ -295,6 +335,13 @@ const CandidateProfilePage = (): JSX.Element => {
 
   const handleProfilePictureChange = (file: File | null): void => {
     if (file) {
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+      if (!allowedTypes.includes(file.type)) {
+        toast.error('Invalid file type for Profile Picture. Only image files are allowed !');
+        return;
+      }
+
       setProfilePictureFile(file);
       const reader = new FileReader();
       reader.onload = (e) => {
