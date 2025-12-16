@@ -242,16 +242,42 @@ const AllJobs = () => {
                       wrap="wrap"
                     >
                       <div style={{ flex: 1, minWidth: '200px' }}>
-                        <Group justify="space-between" mb="sm">
-                          <Title order={4} style={{ fontSize: '18px' }}>
-                            {job.jobTitle}
-                          </Title>
-                          <Badge color={getStatusColor(job.status)}>
-                            {job.status}
-                          </Badge>
+                        <Group
+                          justify="space-between"
+                          align="center"
+                          wrap="nowrap"
+                        >
+                          <Stack gap={2} style={{ flex: 1 }}>
+                            <Title order={4} style={{ fontSize: '18px' }}>
+                              {job.jobTitle}
+                            </Title>
+                            <Text size="sm" c="dimmed" fw={500}>
+                              {job.organizationName}
+                            </Text>
+                          </Stack>
+                          <Group align="center" gap="xl">
+                            <Badge color={getStatusColor(job.status)}>
+                              {job.status}
+                            </Badge>
+                            <ActionIcon
+                              onClick={() =>
+                                setExpandedJob(isExpanded ? null : job.id)
+                              }
+                            >
+                              <IconChevronRight
+                                size={20}
+                                style={{
+                                  transform: isExpanded
+                                    ? 'rotate(90deg)'
+                                    : 'rotate(0deg)',
+                                  transition: '0.2s',
+                                }}
+                              />
+                            </ActionIcon>
+                          </Group>
                         </Group>
 
-                        <Group gap="xs" wrap="wrap">
+                        <Group gap="xs" wrap="wrap" mt={5}>
                           <Group gap={6}>
                             <IconMapPin size={16} />
                             <Text size="sm" c="dimmed">
@@ -268,23 +294,6 @@ const AllJobs = () => {
                           </Badge>
                         </Group>
                       </div>
-                      <Group gap="xs" mt={{ base: 'sm', sm: 0 }}>
-                        <ActionIcon
-                          onClick={() =>
-                            setExpandedJob(isExpanded ? null : job.id)
-                          }
-                        >
-                          <IconChevronRight
-                            size={20}
-                            style={{
-                              transform: isExpanded
-                                ? 'rotate(90deg)'
-                                : 'rotate(0deg)',
-                              transition: '0.2s',
-                            }}
-                          />
-                        </ActionIcon>
-                      </Group>
                     </Group>
 
                     {/* Compact Info */}
