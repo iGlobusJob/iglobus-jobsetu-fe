@@ -31,7 +31,7 @@ import type { CandidateJobs } from '@/features/dashboard/types/candidate';
 import type { ApiJob } from '@/features/dashboard/types/job';
 import { CANDIDATE_PATHS } from '@/routes/config/userPath';
 import {
-  getAllJobs,
+  getAllJobsByCandidate,
   getMyJobs,
   saveToJob,
   unSaveToJob,
@@ -73,7 +73,7 @@ export default function JobPortalDashboard() {
         setError(null);
 
         const [jobs, myJobsResponse] = await Promise.all([
-          getAllJobs(),
+          getAllJobsByCandidate(),
           getMyJobs(),
         ]);
 
@@ -152,16 +152,28 @@ export default function JobPortalDashboard() {
     {
       icon: IconTrendingUp,
       label: 'Avg. Salary',
-      value:
-        allJobs.length > 0
-          ? '₹' +
-            Math.floor(
-              allJobs.reduce(
-                (acc, j) => acc + ((j.salaryMin || 0) + (j.salaryMax || 0)) / 2,
-                0
-              ) / allJobs.length
-            ).toLocaleString()
-          : '₹0',
+      value: (() => {
+        if (!allJobs || allJobs.length === 0) return '₹0';
+
+        const salaries = allJobs
+          .map((j) => {
+            const min = j.salaryMin ?? 0;
+            const max = j.salaryMax ?? 0;
+            return min && max ? (min + max) / 2 : 0;
+          })
+          .filter((s) => s > 0)
+          .sort((a, b) => a - b);
+
+        if (salaries.length === 0) return '₹0';
+
+        const mid = Math.floor(salaries.length / 2);
+        const median =
+          salaries.length % 2 !== 0
+            ? salaries[mid]
+            : (salaries[mid - 1] + salaries[mid]) / 2;
+
+        return `₹${Math.round(median).toLocaleString()}`;
+      })(),
       color: 'teal',
     },
     {

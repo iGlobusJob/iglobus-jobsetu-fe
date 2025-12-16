@@ -171,3 +171,15 @@ export const getMyJobs = async (): Promise<CandidateJob[]> => {
     throw new Error('failed to get my jobs ');
   }
 };
+
+export const getAllJobsByCandidate = async (): Promise<ApiJob[]> => {
+  try {
+    const response = await apiClient.get('/getalljobsbycandidate');
+    if (!response.data?.success) {
+      throw new Error(response.data?.message || 'Failed to fetch candidate');
+    }
+    return response.data.data;
+  } catch {
+    throw new Error('failed to get all jobs by candidate ');
+  }
+};
