@@ -128,15 +128,10 @@ export const Header = ({
                 <Text size="xs" fw={600}>
                   {email}
                 </Text>
-                {userRole === 'admin' ? (
-                  <Text size="xs" tt="capitalize">
-                    {userRole}
-                  </Text>
-                ) : (
-                  <Text size="xs" tt="capitalize">
-                    {firstName} {lastName}
-                  </Text>
-                )}
+
+                <Text size="xs" tt="capitalize">
+                  {firstName} {lastName}
+                </Text>
               </Box>
             </Group>
           </UnstyledButton>

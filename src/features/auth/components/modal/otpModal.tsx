@@ -18,7 +18,6 @@ import type { ApiError } from '@/common';
 import { CANDIDATE_PATHS } from '@/routes/config/userPath';
 import { candidateJoin, validateOtp } from '@/services/candidate-services';
 import { useOtpModalStore } from '@/store/otpModalStore';
-import { useAuthStore } from '@/store/userDetails';
 
 export const OTPmodal = () => {
   const open = useOtpModalStore((state) => state.open);
@@ -71,15 +70,6 @@ export const OTPmodal = () => {
     try {
       const response = await validateOtp({ email, otp });
       if (response?.success) {
-        const token = response.data.token;
-        const candidate = response.data.candidate;
-        useAuthStore.getState().setAuth({
-          email: candidate.email,
-          userRole: 'candidate',
-          token: token,
-          firstName: '',
-          lastName: '',
-        });
         toast.success('OTP verified successfully ! Welcome to JobSetu 🚀');
         setOtp('');
         setEmail('');

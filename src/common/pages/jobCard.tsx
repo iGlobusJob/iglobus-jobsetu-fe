@@ -11,6 +11,7 @@ import {
   Tooltip,
   Loader,
   rem,
+  Avatar,
 } from '@mantine/core';
 import { IconChevronRight, IconStar } from '@tabler/icons-react';
 import { useState, type JSX } from 'react';
@@ -113,28 +114,18 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
 
       {/* Header */}
       <Flex align="flex-start" gap="lg" mb="md" mt={job.applied ? rem(10) : 0}>
-        <Box
+        <Avatar
+          src={job.logo || undefined}
+          size={80}
+          radius="lg"
           style={{
-            width: 60,
-            height: 60,
-            borderRadius: 12,
             background: job.logo
-              ? `url(${job.logo})`
-              : 'linear-gradient(135deg,#667eea,#764ba2)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            fontWeight: 700,
-            fontSize: 22,
-            flexShrink: 0,
-            overflow: 'hidden',
+              ? undefined
+              : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           }}
         >
-          {!job.logo && job.organizationName?.[0]?.toUpperCase()}
-        </Box>
+          {!job.logo && (job.organizationName?.[0]?.toUpperCase() ?? '?')}
+        </Avatar>
 
         <Box style={{ flex: 1 }}>
           <Flex gap={8} align="center">

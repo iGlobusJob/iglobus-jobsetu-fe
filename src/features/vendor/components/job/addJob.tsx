@@ -571,7 +571,7 @@ export const JobPostForm = () => {
                   reset();
                   setJobDescription('');
                 }}
-                disabled={!isDirty}
+                disabled={!isDirty || isSubmitting}
               >
                 Clear Form
               </Button>
@@ -580,9 +580,12 @@ export const JobPostForm = () => {
               {!jobId && (
                 <Button
                   type="submit"
-                  loading={isSubmitting}
+                  loading={isSubmitting && submitMode === 'draft'}
                   onClick={() => setSubmitMode('draft')}
-                  disabled={!isDirty && !jobId}
+                  disabled={
+                    (!isDirty && !jobId) ||
+                    (isSubmitting && submitMode !== 'draft')
+                  }
                 >
                   Draft
                 </Button>
@@ -591,9 +594,12 @@ export const JobPostForm = () => {
               {/* Publish Job */}
               <Button
                 type="submit"
-                loading={isSubmitting}
+                loading={isSubmitting && submitMode === 'active'}
                 onClick={() => setSubmitMode('active')}
-                disabled={!isDirty && !jobId}
+                disabled={
+                  (!isDirty && !jobId) ||
+                  (isSubmitting && submitMode !== 'active')
+                }
               >
                 {jobId ? 'Update Job' : 'Post Job'}
               </Button>
