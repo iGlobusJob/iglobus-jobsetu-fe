@@ -143,7 +143,7 @@ export const updateClientProfile = async (data: VendorProfileFormData) => {
 
 export const getJobDetailsById = async (jobId: string) => {
   try {
-    const response = await apiClient.get(`/getjobbyvendor/${jobId}`);
+    const response = await apiClient.get(`/getjobbyclient/${jobId}`);
 
     if (!response.data?.success) {
       throw new Error('Failed to fetch job details');
@@ -170,7 +170,7 @@ export const updateJobById = async (
   jobId: string,
   data: JobPostFormData
 ): Promise<JobPostResponse> => {
-  const response = await apiClient.put(`/updatejobbyvendor`, {
+  const response = await apiClient.put(`/updatejobbyclient`, {
     ...data,
     jobId,
   });
