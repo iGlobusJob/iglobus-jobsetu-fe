@@ -178,7 +178,7 @@ export const getAllJobsByCandidate = async (): Promise<ApiJob[]> => {
     if (!response.data?.success) {
       throw new Error(response.data?.message || 'Failed to fetch candidate');
     }
-    return response.data.data;
+    return response.data.data.jobs;
   } catch {
     throw new Error('failed to get all jobs by candidate ');
   }
