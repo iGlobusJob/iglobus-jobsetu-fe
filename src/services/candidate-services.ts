@@ -166,7 +166,17 @@ export const unSaveToJob = async ({ jobId }: { jobId: string }) => {
 export const getMyJobs = async (): Promise<CandidateJob[]> => {
   try {
     const response = await apiClient.get('/getmyjobs');
-    return response.data.data;
+    const jobs = response.data.data;
+    return jobs.map((job: any) => {
+      const logo = job.jobId?.vendorId?.logo || null;
+      return {
+        ...job,
+        jobId: {
+          ...job.jobId,
+          logo,
+        },
+      };
+    });
   } catch {
     throw new Error('failed to get my jobs ');
   }

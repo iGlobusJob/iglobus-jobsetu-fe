@@ -5,6 +5,7 @@ export interface JobSummary {
   jobLocation: string;
   minimumSalary: number;
   maximumSalary: number;
+  logo?: string | null;
 }
 export interface CandidateJob {
   id: string;
