@@ -31,8 +31,14 @@ import {
 } from '@/services/candidate-services';
 
 const candidateProfileSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  firstName: z
+    .string()
+    .regex(/^[A-Za-z\s]+$/, 'First name should contain only letters')
+    .optional(),
+  lastName: z
+    .string()
+    .regex(/^[A-Za-z\s]+$/, 'Last name should contain only letters')
+    .optional(),
   email: z.string().email('Invalid email address'),
   mobileNumber: z
     .string()
@@ -70,11 +76,17 @@ const candidateProfileSchema = z.object({
     .refine(
       (file) => {
         if (!file) return true;
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        const allowedTypes = [
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+        ];
         return allowedTypes.includes(file.type);
       },
       {
-        message: 'Invalid file type for Profile Picture. Only image files are allowed !',
+        message:
+          'Invalid file type for Profile Picture. Only image files are allowed !',
       }
     ),
   profilePictureUrl: z.string().url().optional().nullable(),
@@ -285,9 +297,9 @@ const CandidateProfilePage = (): JSX.Element => {
       const err = error as ApiError;
       toast.error(
         err?.response?.data?.message ||
-        err?.data?.message ||
-        err?.message ||
-        'Something went wrong'
+          err?.data?.message ||
+          err?.message ||
+          'Something went wrong'
       );
     } finally {
       setSubmitting(false);
@@ -323,7 +335,9 @@ const CandidateProfilePage = (): JSX.Element => {
       ];
 
       if (!allowedTypes.includes(file.type)) {
-        toast.error('Invalid file type for Resume. Only PDF, DOC, and DOCX files are allowed !');
+        toast.error(
+          'Invalid file type for Resume. Only PDF, DOC, and DOCX files are allowed !'
+        );
         onChange(null);
         return;
       }
@@ -335,10 +349,17 @@ const CandidateProfilePage = (): JSX.Element => {
 
   const handleProfilePictureChange = (file: File | null): void => {
     if (file) {
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      const allowedTypes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/webp',
+      ];
 
       if (!allowedTypes.includes(file.type)) {
-        toast.error('Invalid file type for Profile Picture. Only image files are allowed !');
+        toast.error(
+          'Invalid file type for Profile Picture. Only image files are allowed !'
+        );
         return;
       }
 
