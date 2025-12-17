@@ -74,7 +74,7 @@ export const Login: React.FC = () => {
       }
 
       toast.success('Login Successfully !');
-      navigate('/vendor/dashboard');
+      navigate('/client/dashboard');
     } catch (err: unknown) {
       const error = err as ApiError;
       const data = error.data ?? error;
