@@ -22,7 +22,6 @@ import { useDisclosure } from '@mantine/hooks';
 import {
   IconBrandFacebook,
   IconBrandInstagram,
-  IconBrandTwitter,
   IconBrandWhatsapp,
   IconChevronDown,
   IconChevronRight,
@@ -497,7 +496,7 @@ export function Header() {
             <Collapse in={homeOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="#about"
+                  href="/#about"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -565,7 +564,7 @@ export function Header() {
             <Collapse in={companyOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="#categories"
+                  href="/#categories"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -585,7 +584,7 @@ export function Header() {
                   <Text>Our Team</Text>
                 </Anchor>
                 <Anchor
-                  href="#testimonials"
+                  href="/#testimonials"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -622,7 +621,7 @@ export function Header() {
             <Collapse in={candidatesOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="#browse-jobs"
+                  href="/#browse-jobs"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -818,14 +817,14 @@ export function Header() {
                 <IconBrandInstagram size={20} />
               </ActionIcon>
               <ActionIcon
-                variant="light"
-                color="blue"
+                variant="subtle"
+                color="gray"
                 size="lg"
                 component="a"
                 href="#"
                 aria-label="Twitter"
               >
-                <IconBrandTwitter size={20} />
+                <IconX size={20} />
               </ActionIcon>
             </Flex>
           </Box>
