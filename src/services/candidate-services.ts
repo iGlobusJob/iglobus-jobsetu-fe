@@ -46,6 +46,7 @@ export const validateOtp = async (credentials: {
       firstName: candidate?.firstName || '',
       lastName: candidate?.lastName || '',
       email: candidate?.email || '',
+      profileImage: candidate?.profilePictureUrl,
     });
 
     // Close OTP modal AFTER successfully verify
@@ -113,6 +114,17 @@ export const updateCandidateProfile = async (data: {
     if (!response.data?.success) {
       throw new Error(response.data?.message || 'Failed to update candidate');
     }
+    const updatedCandidate = response.data.data;
+
+    const authStore = useAuthStore.getState();
+    useAuthStore.getState().setAuth({
+      userRole: authStore.userRole,
+      token: authStore.token as string,
+      email: updatedCandidate.email,
+      firstName: updatedCandidate.firstName,
+      lastName: updatedCandidate.lastName,
+      profileImage: updatedCandidate.profilePicture,
+    });
 
     return response.data.data;
   } catch (err) {
@@ -167,7 +179,7 @@ export const getMyJobs = async (): Promise<CandidateJob[]> => {
   try {
     const response = await apiClient.get('/getmyjobs');
     const jobs = response.data.data;
-    return jobs.map((job: any) => {
+    return jobs.map((job: { jobId: { vendorId: { logo: null } } }) => {
       const logo = job.jobId?.vendorId?.logo || null;
       return {
         ...job,
