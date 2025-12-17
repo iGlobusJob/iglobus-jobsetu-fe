@@ -10,12 +10,12 @@ type OtpModalState = {
 export const useOtpModalStore = create<OtpModalState>((set) => ({
   open: false,
   redirectJobId: null,
-  openModal: (jobId?: string) =>
+  openModal: (jobId?: string) => {
     set({
       open: true,
       redirectJobId: jobId ?? null,
-    }),
-
+    });
+  },
   closeModal: () =>
     set({
       open: false,

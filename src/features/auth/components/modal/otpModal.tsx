@@ -70,12 +70,12 @@ export const OTPmodal = () => {
         setOtpSent(false);
 
         if (redirectJobId?.length) {
+          closeModal();
           navigate(CANDIDATE_PATHS.JOB_DETAILS(redirectJobId));
         } else {
+          closeModal();
           navigate('/candidate/dashboard');
         }
-
-        closeModal();
       } else {
         toast.error('Something went wrong!');
       }
@@ -87,7 +87,6 @@ export const OTPmodal = () => {
       setLoading(false);
     }
   };
-
   return (
     <Modal
       opened={open}
