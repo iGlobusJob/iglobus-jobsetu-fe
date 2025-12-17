@@ -21,6 +21,7 @@ import {
   saveToJob,
   unSaveToJob,
 } from '@/services/candidate-services';
+import { useAuthStore } from '@/store/userDetails';
 
 import type { CandidateJobs } from '../../types/candidate';
 
@@ -34,6 +35,11 @@ export const JobListingsSection = () => {
   const [error, setError] = useState<string | null>(null);
   const [bookmarkedJobs, setBookmarkedJobs] = useState<Set<string>>(new Set());
   const [appliedJobs, setAppliedJobs] = useState<Set<string>>(new Set());
+  const token = useAuthStore((s) => s.token);
+  const userRole = useAuthStore((s) => s.userRole);
+  const isLoggedIn = Boolean(token);
+  const isCandidate = isLoggedIn && userRole === 'candidate';
+  const showRecommended = !isLoggedIn || isCandidate;
 
   useEffect(() => {
     const loadJobs = async () => {
@@ -46,7 +52,7 @@ export const JobListingsSection = () => {
         const bookmarkedSet = new Set<string>();
         const appliedSet = new Set<string>();
 
-        try {
+        if (isCandidate) {
           const myJobsResponse = await getMyJobs();
           myJobsResponse?.forEach((item) => {
             const jobId = item.jobId?.id;
@@ -55,9 +61,6 @@ export const JobListingsSection = () => {
             if (item.isJobSaved) bookmarkedSet.add(jobId);
             if (item.isJobApplied) appliedSet.add(jobId);
           });
-        } catch (err) {
-          console.error('Failed to fetch user jobs:', err);
-          // Continue loading jobs even if user is not logged in
         }
 
         setBookmarkedJobs(bookmarkedSet);
@@ -90,7 +93,7 @@ export const JobListingsSection = () => {
     };
 
     loadJobs();
-  }, []);
+  }, [isCandidate]);
 
   const handleBookmark = async (
     jobId: string,
@@ -146,100 +149,112 @@ export const JobListingsSection = () => {
   const visibleJobs = currentJobs.slice(0, visibleCount);
 
   return (
-    <Box component="section" py={rem(80)}>
-      <Container size="xl">
-        {/* Section Header */}
-        <Box
-          mb={rem(40)}
-          style={{ textAlign: 'center', maxWidth: rem(700), margin: '0 auto' }}
-        >
-          <Title
-            order={2}
-            size="h1"
-            mb="md"
-            style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-            }}
-          >
-            Recommended Jobs
-          </Title>
-        </Box>
-
-        {/* Error Message */}
-        {error && (
-          <Paper
-            p="md"
-            radius="md"
-            mb={40}
-            style={{ backgroundColor: '#ffe0e0', borderColor: '#ff6b6b' }}
-            withBorder
-          >
-            <Text c="#cc0000" size="sm">
-              {error}
-            </Text>
-          </Paper>
-        )}
-
-        {/* Tabs */}
-        <Tabs
-          value={activeTab}
-          onChange={(v) => {
-            setActiveTab(v as 'recent' | 'freelance' | 'partTime' | 'fullTime');
-            setVisibleCount(6);
-          }}
-          variant="pills"
-          radius="md"
-          mb="xl"
-        >
-          <Tabs.List grow style={{ maxWidth: rem(900), margin: '0 auto' }}>
-            <Tabs.Tab value="recent">Recent Jobs</Tabs.Tab>
-            <Tabs.Tab value="freelance">Freelancer</Tabs.Tab>
-            <Tabs.Tab value="partTime">Part Time</Tabs.Tab>
-            <Tabs.Tab value="fullTime">Full Time</Tabs.Tab>
-          </Tabs.List>
-        </Tabs>
-
-        {/* Job Cards */}
-        {loading ? (
-          <Center py={80}>
-            <Loader size="lg" />
-          </Center>
-        ) : currentJobs.length === 0 ? (
-          <Paper p={60} radius="md" withBorder>
-            <Center>
-              <Text c="dimmed">No jobs found.</Text>
-            </Center>
-          </Paper>
-        ) : (
-          <Grid gutter="xl" mb={40}>
-            {visibleJobs.map((job) => (
-              <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                <JobCard
-                  job={job}
-                  onBookmark={(jobId) =>
-                    handleBookmark(jobId, bookmarkedJobs.has(jobId))
-                  }
-                />
-              </Grid.Col>
-            ))}
-          </Grid>
-        )}
-
-        {/* View More */}
-        {visibleCount < currentJobs.length && (
-          <Box mt={rem(50)} style={{ textAlign: 'center' }}>
-            <Button
-              onClick={() => setVisibleCount((prev) => prev + 3)}
-              size="lg"
-              rightSection={<IconArrowRight size={18} />}
-              variant="gradient"
-              gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+    <>
+      {showRecommended && (
+        <Box component="section" py={rem(80)}>
+          <Container size="xl">
+            {/* Section Header */}
+            <Box
+              mb={rem(40)}
+              style={{
+                textAlign: 'center',
+                maxWidth: rem(700),
+                margin: '0 auto',
+              }}
             >
-              View More
-            </Button>
-          </Box>
-        )}
-      </Container>
-    </Box>
+              <Title
+                order={2}
+                size="h1"
+                mb="md"
+                style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
+              >
+                Recommended Jobs
+              </Title>
+            </Box>
+
+            {/* Error Message */}
+            {error && (
+              <Paper
+                p="md"
+                radius="md"
+                mb={40}
+                style={{ backgroundColor: '#ffe0e0', borderColor: '#ff6b6b' }}
+                withBorder
+              >
+                <Text c="#cc0000" size="sm">
+                  {error}
+                </Text>
+              </Paper>
+            )}
+
+            {/* Tabs */}
+            <Tabs
+              value={activeTab}
+              onChange={(v) => {
+                setActiveTab(
+                  v as 'recent' | 'freelance' | 'partTime' | 'fullTime'
+                );
+                setVisibleCount(6);
+              }}
+              variant="pills"
+              radius="md"
+              mb="xl"
+            >
+              <Tabs.List grow style={{ maxWidth: rem(900), margin: '0 auto' }}>
+                <Tabs.Tab value="recent">Recent Jobs</Tabs.Tab>
+                <Tabs.Tab value="freelance">Freelancer</Tabs.Tab>
+                <Tabs.Tab value="partTime">Part Time</Tabs.Tab>
+                <Tabs.Tab value="fullTime">Full Time</Tabs.Tab>
+              </Tabs.List>
+            </Tabs>
+
+            {/* Job Cards */}
+            {loading ? (
+              <Center py={80}>
+                <Loader size="lg" />
+              </Center>
+            ) : currentJobs.length === 0 ? (
+              <Paper p={60} radius="md" withBorder>
+                <Center>
+                  <Text c="dimmed">No jobs found.</Text>
+                </Center>
+              </Paper>
+            ) : (
+              <Grid gutter="xl" mb={40}>
+                {visibleJobs.map((job) => (
+                  <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                    <JobCard
+                      job={job}
+                      onBookmark={
+                        isCandidate
+                          ? (jobId) =>
+                              handleBookmark(jobId, bookmarkedJobs.has(jobId))
+                          : undefined
+                      }
+                      hideBookmark={!isCandidate}
+                    />
+                  </Grid.Col>
+                ))}
+              </Grid>
+            )}
+
+            {/* View More */}
+            {visibleCount < currentJobs.length && (
+              <Box mt={rem(50)} style={{ textAlign: 'center' }}>
+                <Button
+                  onClick={() => setVisibleCount((prev) => prev + 3)}
+                  size="lg"
+                  rightSection={<IconArrowRight size={18} />}
+                  variant="gradient"
+                  gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+                >
+                  View More
+                </Button>
+              </Box>
+            )}
+          </Container>
+        </Box>
+      )}
+    </>
   );
 };

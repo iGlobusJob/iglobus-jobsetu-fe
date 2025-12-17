@@ -23,7 +23,7 @@ import {
   IconUsers,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { JobCard } from '@/common/pages/jobCard';
 import { JobGrid } from '@/common/pages/jobGrid';
@@ -36,6 +36,7 @@ import {
   saveToJob,
   unSaveToJob,
 } from '@/services/candidate-services';
+import { useAuthStore } from '@/store/userDetails';
 
 interface JobWithStatus extends CandidateJobs {
   bookmarked: boolean;
@@ -49,6 +50,9 @@ export default function JobPortalDashboard() {
   const [allJobs, setAllJobs] = useState<CandidateJobs[]>([]);
   const [bookmarkedJobs, setBookmarkedJobs] = useState<Set<string>>(new Set());
   const [appliedJobs, setAppliedJobs] = useState<Set<string>>(new Set());
+  const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn());
+  const userRole = useAuthStore((s) => s.userRole);
 
   const mapJob = (job: ApiJob): CandidateJobs => ({
     id: job.id,
@@ -272,7 +276,16 @@ export default function JobPortalDashboard() {
                     >
                       <Icon size={24} />
                     </ThemeIcon>
-                    <IconArrowRight size={20} opacity={0.5} />
+                    {stat.label === 'Total Jobs' ? (
+                      <IconArrowRight
+                        size={20}
+                        opacity={0.5}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => navigate(CANDIDATE_PATHS.JOB_SEARCH)}
+                      />
+                    ) : (
+                      <IconArrowRight size={20} opacity={0.5} />
+                    )}
                   </Group>
                   <Text size="sm" c="dimmed" fw={500} mb={4}>
                     {stat.label}
@@ -305,6 +318,25 @@ export default function JobPortalDashboard() {
             View All
           </Button>
         </Group>
+
+        {(!isLoggedIn || userRole === 'candidate') && (
+          <>
+            {' '}
+            {featuredJobs.length > 0 ? (
+              <Grid>
+                {' '}
+                {featuredJobs.map((job) => (
+                  <Grid.Col key={job.id} span={{ base: 12, md: 4 }}>
+                    {' '}
+                    <JobCard job={job} onBookmark={() => {}} />{' '}
+                  </Grid.Col>
+                ))}{' '}
+              </Grid>
+            ) : (
+              <Text c="dimmed">No featured jobs available</Text>
+            )}{' '}
+          </>
+        )}
 
         {error && (
           <Card

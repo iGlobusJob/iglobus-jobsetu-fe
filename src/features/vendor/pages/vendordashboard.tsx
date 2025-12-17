@@ -27,7 +27,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
-import { VENDOR_PATHS } from '@/routes/config/vendorPath';
+import { CLIENT_PATHS } from '@/routes/config/vendorPath';
 import { getAllJobs } from '@/services/vendor-services';
 
 interface DashboardMetrics {
@@ -99,7 +99,7 @@ const VendorDashboard = () => {
               jobLocation: job.jobLocation,
               closingIn: Math.ceil(
                 (new Date(job.postEnd).getTime() - new Date().getTime()) /
-                (1000 * 60 * 60)
+                  (1000 * 60 * 60)
               ),
             })),
           });
@@ -290,7 +290,7 @@ const VendorDashboard = () => {
                     variant="subtle"
                     size="sm"
                     rightSection={<IconArrowRight size={16} />}
-                    onClick={() => navigate(VENDOR_PATHS.MANAGE_JOBS)}
+                    onClick={() => navigate(CLIENT_PATHS.MANAGE_JOBS)}
                   >
                     View All
                   </Button>
@@ -354,7 +354,7 @@ const VendorDashboard = () => {
                     variant="subtle"
                     size="sm"
                     rightSection={<IconArrowRight size={16} />}
-                    onClick={() => navigate(VENDOR_PATHS.MANAGE_JOBS)}
+                    onClick={() => navigate(CLIENT_PATHS.MANAGE_JOBS)}
                   >
                     Extend
                   </Button>
@@ -419,14 +419,14 @@ const VendorDashboard = () => {
               <Button
                 size="md"
                 variant="light"
-                onClick={() => navigate(VENDOR_PATHS.POST_JOB)}
+                onClick={() => navigate(CLIENT_PATHS.POST_JOB)}
               >
                 + Create New Job
               </Button>
               <Button
                 size="md"
                 variant="light"
-                onClick={() => navigate(VENDOR_PATHS.PROFILE)}
+                onClick={() => navigate(CLIENT_PATHS.PROFILE)}
               >
                 Edit Profile
               </Button>

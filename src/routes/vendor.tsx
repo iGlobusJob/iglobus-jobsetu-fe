@@ -14,7 +14,7 @@ import { RoleRoute } from './guards';
 export const VendorRoutes = () => {
   return (
     <Routes>
-      <Route element={<RoleRoute allowedRoles={['vendor']} />}>
+      <Route element={<RoleRoute allowedRoles={['client']} />}>
         <Route path="dashboard" element={<VendorDashboard />} />
         <Route path="profile" element={<VendorProfile />} />
         <Route path="jobs">

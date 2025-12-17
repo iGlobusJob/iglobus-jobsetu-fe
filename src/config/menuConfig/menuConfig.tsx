@@ -23,7 +23,7 @@ export interface MenuItem {
 
 interface MenuConfig {
   candidate: MenuItem[];
-  vendor: MenuItem[];
+  client: MenuItem[];
   admin: MenuItem[];
   recruiter: MenuItem[];
 }
@@ -68,50 +68,50 @@ export const MENU_CONFIG: MenuConfig = {
     },
   ],
 
-  // ===== VENDOR MENU =====
-  vendor: [
+  // ===== CLIENT MENU =====
+  client: [
     {
       id: 'dashboard',
       label: 'Dashboard',
       icon: <IconHome size={20} />,
-      path: '/vendor/dashboard',
+      path: '/client/dashboard',
     },
     {
       id: 'profile',
       label: 'Profile',
       icon: <IconUser size={20} />,
-      path: '/vendor/profile',
+      path: '/client/profile',
     },
     {
       id: 'post-job',
       label: 'Post Job',
       icon: <IconBriefcase size={20} />,
-      path: '/vendor/jobs/new',
+      path: '/client/jobs/new',
     },
     {
       id: 'manage-jobs',
       label: 'Manage Jobs',
       icon: <IconFileText size={20} />,
-      path: '/vendor/jobs/manage-jobs',
+      path: '/client/jobs/manage-jobs',
     },
     // {
     //   id: 'analytics',
     //   label: 'Analytics',
     //   icon: <IconChartBar size={20} />,
-    //   path: '/vendor/analytics',
+    //   path: '/client/analytics',
     // },
     // {
     //   id: 'messages',
     //   label: 'Messages',
     //   icon: <IconMessage size={20} />,
-    //   path: '/vendor/messages',
+    //   path: '/client/messages',
     //   badge: 8,
     // },
     // {
     //   id: 'settings',
     //   label: 'Settings',
     //   icon: <IconSettings size={20} />,
-    //   path: '/vendor/settings',
+    //   path: '/client/settings',
     // },
   ],
 

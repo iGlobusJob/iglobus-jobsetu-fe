@@ -13,7 +13,7 @@ export const PERMISSIONS = {
     canManageUsers: false,
     canViewReports: false,
   },
-  vendor: {
+  client: {
     canViewJobs: true,
     canApplyToJobs: false,
     canEditProfile: true,
@@ -57,7 +57,7 @@ export const canAccessRoute = (
   // Define route access rules
   const routeAccess: Record<string, UserRole[]> = {
     '/candidate': ['candidate'],
-    '/vendor': ['vendor'],
+    '/client': ['client'],
     '/admin': ['admin'],
   };
 

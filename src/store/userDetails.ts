@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type UserRole = 'candidate' | 'vendor' | 'admin' | 'recruiter' | null;
+export type UserRole = 'candidate' | 'client' | 'admin' | 'recruiter' | null;
 
 type AuthStore = {
   email: string | null;

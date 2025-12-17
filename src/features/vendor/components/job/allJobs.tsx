@@ -33,7 +33,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { Job } from '@/features/dashboard/types/job';
-import { VENDOR_PATHS } from '@/routes/config/vendorPath';
+import { CLIENT_PATHS } from '@/routes/config/vendorPath';
 import { getAllJobs } from '@/services/vendor-services';
 
 const AllJobsComponent = () => {
@@ -167,7 +167,7 @@ const AllJobsComponent = () => {
   };
 
   const onEdit = (id: string) => {
-    navigate(VENDOR_PATHS.EDIT_JOB_WITH_ID(id));
+    navigate(CLIENT_PATHS.EDIT_JOB_WITH_ID(id));
   };
 
   if (loading) {

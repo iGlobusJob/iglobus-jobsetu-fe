@@ -39,7 +39,7 @@ function App() {
             <Route path="/candidate/*" element={<CandidateRoutes />} />
 
             {/* Vendor Routes */}
-            <Route path="/vendor/*" element={<VendorRoutes />} />
+            <Route path="/client/*" element={<VendorRoutes />} />
 
             {/* Admin Routes */}
             <Route path="/admin/*" element={<AdminRoutes />} />
@@ -66,7 +66,7 @@ const RoleBasedRedirect = () => {
 
   const dashboardMap: Record<NonNullable<typeof userRole>, string> = {
     candidate: '/candidate/dashboard',
-    vendor: '/vendor/dashboard',
+    client: '/client/dashboard',
     admin: '/admin/dashboard',
     recruiter: '/recruiter/jobs',
   };
