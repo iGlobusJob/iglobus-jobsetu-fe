@@ -16,7 +16,7 @@ export const AdminRoutes = () => {
     <Routes>
       <Route element={<RoleRoute allowedRoles={['admin']} />}>
         <Route path="dashboard" element={<AnalyticsDashboard />} />
-        <Route path="vendors" element={<VendorDashboard />} />
+        <Route path="clients" element={<VendorDashboard />} />
         <Route path="candidates" element={<CandidateDashboard />} />
         <Route path="recruiters" element={<RecruiterDashboard />} />
         {/* Add more admin routes here */}

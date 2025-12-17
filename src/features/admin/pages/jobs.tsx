@@ -15,16 +15,19 @@ import {
   Text,
   ThemeIcon,
   Title,
+  Button,
+  Avatar,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
   IconBriefcase,
   IconCalendar,
-  IconChevronRight,
+  IconChevronDown,
   IconClock,
   IconCurrencyDollar,
   IconMapPin,
   IconSearch,
+  IconTrendingUp,
 } from '@tabler/icons-react';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
@@ -150,38 +153,56 @@ const AllJobs = () => {
   }
 
   return (
-    <Container size="xl">
-      <Stack mb="md" gap={4}>
-        <Title order={isMobile ? 4 : 2} fw={700}>
-          Job Listings
-        </Title>
+    <Container size="xl" py="xl">
+      <Stack mb="xl" gap={8}>
+        <div>
+          <Title order={isMobile ? 3 : 2} fw={700} mb={4}>
+            Job Listings
+          </Title>
+          <Text size="md" c="dimmed">
+            Browse all posted jobs, filter by type and status, and manage
+            listings easily.
+          </Text>
+        </div>
 
-        <Text size="sm" color="dimmed">
-          Browse all posted jobs, filter by type and status, and manage listings
-          easily.
-        </Text>
+        <Group justify="space-between" align="center" wrap="wrap">
+          <Badge
+            size="lg"
+            variant="filled"
+            color="blue"
+            leftSection={<IconTrendingUp size={14} />}
+          >
+            {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''}{' '}
+            found
+          </Badge>
+        </Group>
       </Stack>
-      <Stack>
+
+      <Stack gap="lg">
         {/* Filters */}
-        <Paper p="md" radius="md" withBorder>
+        <Paper p="md" radius="lg" withBorder>
           <Stack gap="md">
             <Input
               placeholder="Search by job title or location..."
               leftSection={<IconSearch size={18} />}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.currentTarget.value)}
+              size="md"
+              radius="md"
               styles={{
                 input: { fontSize: '14px' },
               }}
             />
 
             <Grid gutter="md">
-              <Grid.Col span={{ base: 12, xs: 6, sm: 4, md: 3 }}>
+              <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
                 <Select
                   label="Job Type"
                   placeholder="All Types"
                   clearable
                   searchable
+                  size="md"
+                  radius="md"
                   data={[
                     { value: 'full-time', label: 'Full-Time' },
                     { value: 'part-time', label: 'Part-Time' },
@@ -194,12 +215,14 @@ const AllJobs = () => {
                 />
               </Grid.Col>
 
-              <Grid.Col span={{ base: 12, xs: 6, sm: 4, md: 3 }}>
+              <Grid.Col span={{ base: 12, xs: 6, sm: 4 }}>
                 <Select
                   label="Status"
                   placeholder="Status"
                   clearable
                   searchable
+                  size="md"
+                  radius="md"
                   data={[
                     { value: 'active', label: 'Active' },
                     { value: 'drafted', label: 'Draft' },
@@ -208,18 +231,6 @@ const AllJobs = () => {
                   value={selectedStatus}
                   onChange={setSelectedStatus}
                 />
-              </Grid.Col>
-
-              <Grid.Col span={{ base: 12, sm: 4, md: 3 }}>
-                <Stack gap={4}>
-                  <Text size="sm" fw={500}>
-                    Results
-                  </Text>
-                  <Badge size="lg" variant="light" radius="md">
-                    {filteredJobs.length} job
-                    {filteredJobs.length !== 1 ? 's' : ''} found
-                  </Badge>
-                </Stack>
               </Grid.Col>
             </Grid>
           </Stack>
@@ -233,71 +244,103 @@ const AllJobs = () => {
               const daysRemaining = getDaysRemaining(job.postEnd);
 
               return (
-                <Card key={job.id} withBorder radius="md" p="lg">
-                  <Stack gap="md">
-                    {/* Header */}
-                    <Group
-                      justify="space-between"
-                      align="flex-start"
-                      wrap="wrap"
-                    >
-                      <div style={{ flex: 1, minWidth: '200px' }}>
+                <Card
+                  key={job.id}
+                  withBorder
+                  radius="lg"
+                  p={0}
+                  className="job-card"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      '0 8px 24px rgba(0,0,0,0.08)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <Stack gap={0}>
+                    {/* Header with Image */}
+                    <Group gap="md" p="md" wrap="nowrap" align="flex-start">
+                      <Avatar
+                        src={job.logo || undefined}
+                        size={80}
+                        radius="lg"
+                        style={{
+                          background: job.logo
+                            ? undefined
+                            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        }}
+                      >
+                        {!job.logo &&
+                          (job.organizationName?.[0]?.toUpperCase() ?? '?')}
+                      </Avatar>
+
+                      <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
                         <Group
                           justify="space-between"
-                          align="center"
-                          wrap="nowrap"
+                          align="flex-start"
+                          wrap="wrap"
                         >
-                          <Stack gap={2} style={{ flex: 1 }}>
-                            <Title order={4} style={{ fontSize: '18px' }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <Title order={4} size="h4" fw={700} mb={2}>
                               {job.jobTitle}
                             </Title>
-                            <Text size="sm" c="dimmed" fw={500}>
+                            <Text size="sm" c="dimmed" fw={500} truncate>
                               {job.organizationName}
                             </Text>
-                          </Stack>
-                          <Group align="center" gap="xl">
-                            <Badge color={getStatusColor(job.status)}>
-                              {job.status}
-                            </Badge>
-                            <ActionIcon
-                              onClick={() =>
-                                setExpandedJob(isExpanded ? null : job.id)
-                              }
-                            >
-                              <IconChevronRight
-                                size={20}
-                                style={{
-                                  transform: isExpanded
-                                    ? 'rotate(90deg)'
-                                    : 'rotate(0deg)',
-                                  transition: '0.2s',
-                                }}
-                              />
-                            </ActionIcon>
-                          </Group>
+                          </div>
+                          <Badge
+                            color={getStatusColor(job.status)}
+                            variant="filled"
+                            size="sm"
+                            styles={{ root: { textTransform: 'capitalize' } }}
+                          >
+                            {job.status}
+                          </Badge>
                         </Group>
 
-                        <Group gap="xs" wrap="wrap" mt={5}>
-                          <Group gap={6}>
-                            <IconMapPin size={16} />
-                            <Text size="sm" c="dimmed">
+                        <Group gap="xs" wrap="wrap">
+                          <Group gap={4}>
+                            <IconMapPin size={14} />
+                            <Text size="xs" c="dimmed">
                               {job.jobLocation}
                             </Text>
                           </Group>
 
                           <Badge
-                            size="sm"
+                            size="xs"
                             color={getJobTypeColor(job.jobType)}
                             variant="light"
+                            styles={{ root: { textTransform: 'capitalize' } }}
                           >
                             {job.jobType}
                           </Badge>
                         </Group>
-                      </div>
+                      </Stack>
+
+                      <ActionIcon
+                        variant="light"
+                        onClick={() =>
+                          setExpandedJob(isExpanded ? null : job.id)
+                        }
+                        size="lg"
+                      >
+                        <IconChevronDown
+                          size={20}
+                          style={{
+                            transform: isExpanded
+                              ? 'rotate(180deg)'
+                              : 'rotate(0deg)',
+                            transition: '0.3s ease',
+                          }}
+                        />
+                      </ActionIcon>
                     </Group>
 
                     {/* Compact Info */}
-                    <Group gap="xl" wrap="wrap">
+                    <Group gap="lg" p="md" wrap="wrap">
                       <JobInfo
                         label="Positions"
                         value={job.noOfPositions}
@@ -306,7 +349,7 @@ const AllJobs = () => {
                       />
 
                       <JobInfo
-                        label="Salary"
+                        label="Salary Range"
                         value={`${formatSalary(job.minimumSalary)} - ${formatSalary(
                           job.maximumSalary
                         )}`}
@@ -319,7 +362,7 @@ const AllJobs = () => {
                         value={
                           job.minimumExperience && job.maximumExperience
                             ? `${job.minimumExperience}-${job.maximumExperience} yrs`
-                            : 'No experience / Freshers'
+                            : 'Freshers'
                         }
                         icon={<IconClock size={14} />}
                         color="violet"
@@ -335,42 +378,60 @@ const AllJobs = () => {
 
                     {/* Expanded Description */}
                     {isExpanded && (
-                      <Paper p="md" radius="md" withBorder>
-                        <Stack gap="sm">
-                          <div>
-                            <Text fw={600} size="sm" mb={4}>
-                              Description
-                            </Text>
-                            <Text size="sm" c="dimmed">
-                              {stripHtml(job.jobDescription)}
-                            </Text>
-                          </div>
+                      <Stack gap="md" p="md">
+                        <div>
+                          <Text fw={600} size="sm" mb={8}>
+                            Job Description
+                          </Text>
+                          <Text
+                            size="sm"
+                            c="dimmed"
+                            style={{ lineHeight: 1.6 }}
+                          >
+                            {stripHtml(job.jobDescription)}
+                          </Text>
+                        </div>
 
-                          <Group justify="space-between" wrap="wrap">
-                            <Stack gap={0}>
-                              <Text size="xs" c="dimmed">
-                                Posted:{' '}
+                        <Group
+                          justify="space-between"
+                          wrap="wrap"
+                          pt="md"
+                          style={{ borderTop: '1px solid #e9ecef' }}
+                        >
+                          <Stack gap={2}>
+                            <Text size="xs" c="dimmed">
+                              📅 Posted:{' '}
+                              <strong>
                                 {new Date(job.createdAt).toLocaleDateString(
                                   'en-IN'
                                 )}
-                              </Text>
-                              <Text size="xs" c="dimmed">
-                                Closing:{' '}
+                              </strong>
+                            </Text>
+                            <Text size="xs" c="dimmed">
+                              🔔 Closing:{' '}
+                              <strong>
                                 {new Date(job.postEnd).toLocaleDateString(
                                   'en-IN'
                                 )}
-                              </Text>
-                            </Stack>
+                              </strong>
+                            </Text>
+                          </Stack>
+
+                          <Group>
+                            <Button size="sm" variant="light" color="blue">
+                              View Details
+                            </Button>
                           </Group>
-                        </Stack>
-                      </Paper>
+                        </Group>
+                      </Stack>
                     )}
                   </Stack>
                 </Card>
               );
             })}
+
             {totalPages > 1 && (
-              <Center>
+              <Center pt="md">
                 <Pagination
                   value={currentPage}
                   onChange={setCurrentPage}
@@ -382,13 +443,17 @@ const AllJobs = () => {
             )}
           </Stack>
         ) : (
-          <Center py={80}>
-            <Stack align="center">
-              <ThemeIcon size={80} radius="xl" variant="light" color="gray">
-                <IconBriefcase size={40} />
+          <Center py={100}>
+            <Stack align="center" gap="md">
+              <ThemeIcon size={100} radius="xl" variant="light" color="gray">
+                <IconBriefcase size={50} />
               </ThemeIcon>
-              <Title order={4}>No jobs found</Title>
-              <Text c="dimmed">Try adjusting your search filters</Text>
+              <div style={{ textAlign: 'center' }}>
+                <Title order={3}>No jobs found</Title>
+                <Text c="dimmed" size="sm">
+                  Try adjusting your search filters to find more opportunities
+                </Text>
+              </div>
             </Stack>
           </Center>
         )}
@@ -409,15 +474,15 @@ interface JobInfoProps {
 }
 
 const JobInfo = ({ label, value, icon, color }: JobInfoProps) => (
-  <Group gap="lg" wrap="wrap">
-    <ThemeIcon size="sm" variant="light" color={color}>
+  <Group gap="sm" wrap="wrap">
+    <ThemeIcon size="md" variant="light" color={color} radius="md">
       {icon}
     </ThemeIcon>
     <div>
-      <Text size="xs" c="dimmed">
+      <Text size="xs" c="dimmed" fw={500}>
         {label}
       </Text>
-      <Text size="sm" fw={600}>
+      <Text size="sm" fw={600} style={{ lineHeight: 1.3 }}>
         {value}
       </Text>
     </div>
