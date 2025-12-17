@@ -19,15 +19,15 @@ import {
 
 const footerLinks = {
   company: [
-    { label: 'About Us', href: '#about' },
+    { label: 'About Us', href: '/#about' },
     { label: 'Contact Us', href: '/contact' },
     { label: 'Services', href: '/services' },
     { label: 'Blog', href: '/blog' },
     { label: 'Team', href: '/team' },
   ],
   forJobs: [
-    { label: 'Browse Categories', href: '#categories' },
-    { label: 'Browse Jobs', href: '#browse-jobs' },
+    { label: 'Browse Categories', href: '/#categories' },
+    { label: 'Browse Jobs', href: '/#browse-jobs' },
   ],
   support: [{ label: 'Help Center', href: '/contact' }],
 };

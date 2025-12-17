@@ -20,10 +20,13 @@ import { useNavigate } from 'react-router-dom';
 import type { CandidateJobs } from '@/features/dashboard/types/candidate';
 import { CANDIDATE_PATHS } from '@/routes/config/userPath';
 import { saveToJob, unSaveToJob } from '@/services/candidate-services';
+import { useOtpModalStore } from '@/store/otpModalStore';
+import { useAuthStore } from '@/store/userDetails';
 
 interface JobCardProps {
   job: CandidateJobs & { applied?: boolean };
-  onBookmark: (id: string) => void;
+  onBookmark?: (id: string) => void;
+  hideBookmark?: boolean;
 }
 
 export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
@@ -32,6 +35,11 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
     Boolean(job.bookmarked)
   );
   const [isBookmarking, setIsBookmarking] = useState(false);
+  const openModal = useOtpModalStore((state) => state.openModal);
+  const userRole = useAuthStore((s) => s.userRole);
+  const token = useAuthStore((s) => s.token);
+  const showBookmark = userRole === 'candidate';
+  const isLoggedIn = Boolean(token);
 
   const handleBookmarkClick = async (): Promise<void> => {
     const jobId = job.id;
@@ -64,11 +72,17 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
         justifyContent: 'space-between',
         position: 'relative',
         transition: 'all 0.3s ease',
+        cursor: 'pointer',
       }}
       radius="md"
       shadow="sm"
       withBorder
       p="lg"
+      onClick={() => {
+        if (!isLoggedIn) {
+          openModal();
+        }
+      }}
     >
       {/* Top-right badges section */}
       <Flex
@@ -82,34 +96,39 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
         align="center"
       >
         {/* Bookmark Button */}
-        <Tooltip
-          label={bookmarked ? 'Remove bookmark' : 'Save job'}
-          position="bottom"
-        >
-          <ActionIcon
-            variant="light"
-            radius="md"
-            size="lg"
-            onClick={handleBookmarkClick}
-            disabled={isBookmarking}
-            color={bookmarked ? 'yellow' : 'gray'}
-            style={{
-              transition: 'all 0.2s ease',
-            }}
+        {showBookmark && (
+          <Tooltip
+            label={bookmarked ? 'Remove bookmark' : 'Save job'}
+            position="bottom"
           >
-            {isBookmarking ? (
-              <Loader size={16} />
-            ) : (
-              <IconStar
-                size={18}
-                fill={bookmarked ? 'currentColor' : 'none'}
-                style={{
-                  transition: 'all 0.2s ease',
-                }}
-              />
-            )}
-          </ActionIcon>
-        </Tooltip>
+            <ActionIcon
+              variant="light"
+              radius="md"
+              size="lg"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBookmarkClick();
+              }}
+              disabled={isBookmarking}
+              color={bookmarked ? 'yellow' : 'gray'}
+              style={{
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {isBookmarking ? (
+                <Loader size={16} />
+              ) : (
+                <IconStar
+                  size={18}
+                  fill={bookmarked ? 'currentColor' : 'none'}
+                  style={{
+                    transition: 'all 0.2s ease',
+                  }}
+                />
+              )}
+            </ActionIcon>
+          </Tooltip>
+        )}
       </Flex>
 
       {/* Header */}
@@ -212,7 +231,13 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
           variant="light"
           size="sm"
           rightSection={<IconChevronRight size={14} />}
-          onClick={() => navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id))}
+          onClick={() => {
+            if (!isLoggedIn) {
+              openModal();
+            } else {
+              navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id));
+            }
+          }}
           disabled={isBookmarking}
         >
           View Details
