@@ -22,16 +22,14 @@ import { useDisclosure } from '@mantine/hooks';
 import {
   IconBrandFacebook,
   IconBrandInstagram,
-  IconBrandTwitter,
   IconBrandWhatsapp,
   IconChevronDown,
   IconChevronRight,
-  IconLock,
   IconMail,
   IconX,
 } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { useOtpModalStore } from '@/store/otpModalStore';
@@ -51,7 +49,7 @@ export function Header() {
   const [companyOpen, setCompanyOpen] = useState(false);
   const [candidatesOpen, setCandidatesOpen] = useState(false);
   const [employerOpen, setEmployerOpen] = useState(false);
-  const [jobsOpen, setJobsOpen] = useState(false);
+  //const [jobsOpen, setJobsOpen] = useState(false);
 
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn());
   const firstName = useAuthStore((s) => s.firstName);
@@ -498,7 +496,18 @@ export function Header() {
             <Collapse in={homeOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/admin"
+                  href="/#about"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>About Us</Text>
+                </Anchor>
+                <Anchor
+                  component={Link}
+                  to="/recruiter"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -517,16 +526,18 @@ export function Header() {
                 >
                   <Text>Client</Text>
                 </Anchor>
-                <Anchor
-                  onClick={() => openModal()}
+                <UnstyledButton
+                  onClick={() => {
+                    openModal();
+                  }}
                   style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
+                    width: '100%',
+                    textAlign: 'left',
                     padding: '8px 0',
                   }}
                 >
                   <Text>Candidate</Text>
-                </Anchor>
+                </UnstyledButton>
               </Stack>
             </Collapse>
           </Box>
@@ -553,14 +564,14 @@ export function Header() {
             <Collapse in={companyOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/about"
+                  href="/#categories"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
                     padding: '8px 0',
                   }}
                 >
-                  <Text>About Us</Text>
+                  <Text>Job Categories</Text>
                 </Anchor>
                 <Anchor
                   href="/team"
@@ -573,7 +584,7 @@ export function Header() {
                   <Text>Our Team</Text>
                 </Anchor>
                 <Anchor
-                  href="#testimonials"
+                  href="/#testimonials"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -587,69 +598,6 @@ export function Header() {
           </Box>
 
           <Divider />
-
-          {/* Jobs Section */}
-          <Box>
-            <UnstyledButton
-              onClick={() => setJobsOpen(!jobsOpen)}
-              style={{ width: '100%' }}
-            >
-              <Flex justify="space-between" align="center" p="sm">
-                <Text fw={500}>Jobs</Text>
-                <IconChevronRight
-                  size={18}
-                  style={{
-                    transform: jobsOpen ? 'rotate(90deg)' : 'none',
-                    transition: 'transform 0.2s',
-                  }}
-                />
-              </Flex>
-            </UnstyledButton>
-            <Collapse in={jobsOpen}>
-              <Stack gap={0} pl="lg">
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Post a Job</Text>
-                </Anchor>
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Manage Jobs</Text>
-                </Anchor>
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Saved Jobs</Text>
-                </Anchor>
-                <Anchor
-                  href="#categories"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Job Categories</Text>
-                </Anchor>
-              </Stack>
-            </Collapse>
-          </Box>
 
           <Divider />
 
@@ -673,7 +621,7 @@ export function Header() {
             <Collapse in={candidatesOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/job-list"
+                  href="/#browse-jobs"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -681,6 +629,16 @@ export function Header() {
                   }}
                 >
                   <Text>Browse Jobs</Text>
+                </Anchor>
+                <Anchor
+                  onClick={() => openModal()}
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>Saved Jobs</Text>
                 </Anchor>
                 <Anchor
                   onClick={() => openModal()}
@@ -703,7 +661,7 @@ export function Header() {
                   <Text>Candidate Grid</Text>
                 </Anchor>
                 <Anchor
-                  href="/candidate-details"
+                  onClick={() => openModal()}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -713,7 +671,7 @@ export function Header() {
                   <Text>Candidate Profile</Text>
                 </Anchor>
                 <Anchor
-                  href="/upload-resume"
+                  onClick={() => openModal()}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -721,16 +679,6 @@ export function Header() {
                   }}
                 >
                   <Text>Upload Resume</Text>
-                </Anchor>
-                <Anchor
-                  href="/career-tips"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Career Tips</Text>
                 </Anchor>
               </Stack>
             </Collapse>
@@ -755,7 +703,7 @@ export function Header() {
             <Collapse in={employerOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/login"
+                  href="/client/login"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -765,7 +713,7 @@ export function Header() {
                   <Text>Login</Text>
                 </Anchor>
                 <Anchor
-                  href="/register"
+                  href="/client/register"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -775,7 +723,7 @@ export function Header() {
                   <Text>Register</Text>
                 </Anchor>
                 <Anchor
-                  href="/candidate-details"
+                  href="/company-details"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -795,7 +743,17 @@ export function Header() {
                   <Text>Post a Job</Text>
                 </Anchor>
                 <Anchor
-                  href="/career-tips"
+                  href="/client/login"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>Manage Jobs</Text>
+                </Anchor>
+                <Anchor
+                  href="/employer-dashboard"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -803,16 +761,6 @@ export function Header() {
                   }}
                 >
                   <Text>Employer Dashboard</Text>
-                </Anchor>
-                <Anchor
-                  href="/career-tips"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Subscription Plans</Text>
                 </Anchor>
               </Stack>
             </Collapse>
@@ -869,14 +817,14 @@ export function Header() {
                 <IconBrandInstagram size={20} />
               </ActionIcon>
               <ActionIcon
-                variant="light"
-                color="blue"
+                variant="subtle"
+                color="gray"
                 size="lg"
                 component="a"
                 href="#"
                 aria-label="Twitter"
               >
-                <IconBrandTwitter size={20} />
+                <IconX size={20} />
               </ActionIcon>
             </Flex>
           </Box>
@@ -885,31 +833,26 @@ export function Header() {
 
           {!isLoggedIn ? (
             <>
-              {' '}
-              <Button
-                leftSection={<IconLock size={18} />}
-                onClick={() => openModal()}
-                fullWidth
-              >
-                Candidate - Login / Register
-              </Button>
+              {!token && (
+                <Menu trigger="hover" position="bottom">
+                  <Menu.Target>
+                    <Button
+                      variant="subtle"
+                      radius="xl"
+                      fw={600}
+                      style={{
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
+                        color: colorScheme === 'dark' ? '#fff' : '#333',
+                        borderColor: 'blue',
+                      }}
+                      onClick={() => openModal()}
+                    >
+                      Join as Candidate
+                    </Button>
+                  </Menu.Target>
+                </Menu>
+              )}
               <Divider />
-              <Button
-                component="a"
-                href="/client/login"
-                leftSection={<IconLock size={18} />}
-                fullWidth
-              >
-                Client Login
-              </Button>
-              <Button
-                component="a"
-                href="/client/register"
-                leftSection={<IconLock size={18} />}
-                fullWidth
-              >
-                Client Register
-              </Button>{' '}
             </>
           ) : (
             <Stack gap="xs" mt="md">
