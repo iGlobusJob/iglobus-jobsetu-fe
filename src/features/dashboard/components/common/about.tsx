@@ -17,11 +17,7 @@ const About = () => {
   const isDark = systemTheme === 'dark';
 
   return (
-    <Box
-      id="about"
-      py={60}
-      style={{ marginTop: -250, marginBottom: 10, height: 480 }}
-    >
+    <Box id="about" py={60} style={{ marginTop: -250 }}>
       <Container size="lg">
         <Grid gutter="xl" align="stretch">
           <Grid.Col span={{ base: 12, md: 6 }} style={{ height: '100%' }}>

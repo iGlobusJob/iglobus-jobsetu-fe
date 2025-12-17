@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 
 const initialCompanies = [
   {
-    name: 'WooCommerce',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/WooCommerce_logo.svg',
+    name: 'Google',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/250px-Google_2015_logo.svg.png',
   },
   {
     name: 'Amazon',
