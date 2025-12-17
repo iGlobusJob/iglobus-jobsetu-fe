@@ -67,7 +67,7 @@ export const loginVendor = async (credentials: {
 
     // Save everything in Zustand
     useAuthStore.getState().setAuth({
-      userRole: 'vendor',
+      userRole: 'client',
       token,
       firstName: vendor.primaryContact.firstName,
       lastName: vendor.primaryContact.lastName,
