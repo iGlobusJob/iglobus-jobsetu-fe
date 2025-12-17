@@ -24,7 +24,8 @@ export const vendorRegisterSchema = z.object({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
       'Password must contain uppercase, lowercase, number and special character'
     )
-    .min(8, 'Password must be at least 8 characters long'),
+    .min(8, 'Password must be at least 8 characters long')
+    .max(16, 'Password must be at most 16 characters long'),
 
   mobile: z.string().min(10, 'Mobile is required'),
 

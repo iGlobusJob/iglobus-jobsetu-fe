@@ -11,7 +11,7 @@ export const vendorProfileSchema = z.object({
     .min(8, 'Password must be at least 8 characters')
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-      'Password must contain uppercase, lowercase, number & special char'
+      'Password must contain uppercase, lowercase, number & special character'
     )
     .optional(),
   mobile: z
@@ -40,8 +40,16 @@ export const vendorProfileSchema = z.object({
     .optional(),
   secondaryContact: z
     .object({
-      firstName: z.string().optional().or(z.literal('')),
-      lastName: z.string().optional().or(z.literal('')),
+      firstName: z
+        .string()
+        .regex(/^[A-Za-z\s]+$/, 'First name must contain only letters')
+        .optional()
+        .or(z.literal('')),
+      lastName: z
+        .string()
+        .regex(/^[A-Za-z\s]+$/, 'last name must contain only letters')
+        .optional()
+        .or(z.literal('')),
     })
     .optional(),
 });

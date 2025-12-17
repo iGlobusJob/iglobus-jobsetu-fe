@@ -20,7 +20,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import {
   IconBriefcase,
   IconCalendar,
-  IconCurrencyDollar,
+  IconCurrencyRupee,
   IconFileText,
 } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
@@ -146,6 +146,7 @@ export const JobPostForm = () => {
   const watchStartDate = rawStart ? new Date(rawStart) : null;
   const watchEndDate = rawEnd ? new Date(rawEnd) : null;
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const startDate = watch('postStart');
 
   const onSubmit = async (data: JobPostFormSchema) => {
     try {
@@ -318,6 +319,8 @@ export const JobPostForm = () => {
                           label="Start Date"
                           placeholder="Pick start date"
                           leftSection={<IconCalendar size={16} />}
+                          minDate={new Date()}
+                          maxDate={new Date()}
                           {...field}
                           error={errors.postStart?.message}
                           required
@@ -335,6 +338,7 @@ export const JobPostForm = () => {
                           label="End Date"
                           placeholder="Pick end date"
                           leftSection={<IconCalendar size={16} />}
+                          minDate={startDate}
                           {...field}
                           error={errors.postEnd?.message}
                           required
@@ -365,7 +369,7 @@ export const JobPostForm = () => {
             <Card withBorder padding="md">
               <Stack gap="md">
                 <Group>
-                  <IconCurrencyDollar size={20} />
+                  <IconCurrencyRupee size={20} />
                   <Title order={4}>Positions & Salary</Title>
                 </Group>
 
