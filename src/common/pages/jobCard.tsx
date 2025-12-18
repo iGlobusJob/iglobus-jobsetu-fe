@@ -66,11 +66,12 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
   return (
     <Paper
       h="100%"
-      display="flex"
       style={{
+        position: 'relative',
+        overflow: 'visible',
+        display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        position: 'relative',
         transition: 'all 0.3s ease',
         cursor: 'pointer',
       }}
@@ -78,20 +79,18 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
       shadow="sm"
       withBorder
       p="lg"
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.15)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+      }}
     >
-      {/* Top-right badges section */}
-      <Flex
-        gap="xs"
-        style={{
-          position: 'absolute',
-          top: rem(12),
-          right: rem(12),
-          zIndex: 10,
-        }}
-        align="center"
-      >
-        {/* Bookmark Button */}
-        {showBookmark && (
+      {/* Bookmark Button */}
+      {showBookmark && (
+        <Box style={{ position: 'absolute', top: rem(12), right: rem(12) }}>
           <Tooltip
             label={bookmarked ? 'Remove bookmark' : 'Save job'}
             position="bottom"
@@ -123,19 +122,31 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
               )}
             </ActionIcon>
           </Tooltip>
-        )}
-      </Flex>
+        </Box>
+      )}
 
       {/* Header */}
       <Flex align="flex-start" gap="lg" mb="md" mt={job.applied ? rem(10) : 0}>
         <Avatar
           src={job.logo || undefined}
-          size={80}
           radius="lg"
           style={{
+            width: 60,
+            height: 60,
+            borderRadius: 12,
             background: job.logo
               ? undefined
               : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: 22,
+            flexShrink: 0,
+            overflow: 'hidden',
           }}
         >
           {!job.logo && (job.organizationName?.[0]?.toUpperCase() ?? '?')}
@@ -143,25 +154,12 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
 
         <Box style={{ flex: 1 }}>
           <Flex gap={8} align="center">
-            <Title order={4} lineClamp={1} size="h5">
+            <Title order={4} size="h5" lineClamp={1}>
               {job.jobTitle}
             </Title>
 
             {job.applied && (
-              <Badge
-                size="xs"
-                radius="xl"
-                color="green"
-                variant="light"
-                styles={{
-                  root: {
-                    fontWeight: 600,
-                    letterSpacing: '0.4px',
-                    textTransform: 'uppercase',
-                    flexShrink: 0,
-                  },
-                }}
-              >
+              <Badge size="xs" color="green" variant="light">
                 Applied
               </Badge>
             )}
@@ -189,7 +187,7 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
             Salary
           </Text>
           <Text size="sm" fw={600}>
-            ₹{job.salaryMin?.toLocaleString('en-IN')} - ₹
+            ₹{job.salaryMin?.toLocaleString('en-IN')} – ₹
             {job.salaryMax?.toLocaleString('en-IN')}
           </Text>
         </Grid.Col>
@@ -220,24 +218,23 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
       </Grid>
 
       {/* Footer - push to bottom */}
-      <Box style={{ marginTop: 'auto' }}>
-        <Button
-          fullWidth
-          variant="light"
-          size="sm"
-          rightSection={<IconChevronRight size={14} />}
-          onClick={() => {
-            if (!isLoggedIn) {
-              openModal(job.id);
-            } else {
-              navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id));
-            }
-          }}
-          disabled={isBookmarking}
-        >
-          View Details
-        </Button>
-      </Box>
+      <Button
+        mt="auto"
+        fullWidth
+        variant="light"
+        size="sm"
+        rightSection={<IconChevronRight size={14} />}
+        onClick={() => {
+          if (!isLoggedIn) {
+            openModal(job.id);
+          } else {
+            navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id));
+          }
+        }}
+        disabled={isBookmarking}
+      >
+        View Details
+      </Button>
     </Paper>
   );
 };

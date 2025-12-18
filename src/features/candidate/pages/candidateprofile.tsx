@@ -608,8 +608,7 @@ const CandidateProfilePage = (): JSX.Element => {
               value={completionPercentage}
               color={getProgressColor(completionPercentage)}
               size="lg"
-              radius="md"
-              animated
+              radius="sm"
             />
           </Stack>
 

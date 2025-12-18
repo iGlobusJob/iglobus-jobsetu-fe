@@ -183,7 +183,7 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="#about">
+                  <Menu.Item component="a" href="/#about">
                     About Us
                   </Menu.Item>
                   <Menu.Item component="a" href="/recruiter">
@@ -192,7 +192,13 @@ export function Header() {
                   <Menu.Item component="a" href="/client/login">
                     Client
                   </Menu.Item>
-                  <Menu.Item onClick={() => openModal()}>Candidate</Menu.Item>
+                  {![
+                    '/recruiter',
+                    '/client/login',
+                    '/client/register',
+                  ].includes(path) && (
+                    <Menu.Item onClick={() => openModal()}>Candidate</Menu.Item>
+                  )}
                 </Menu.Dropdown>
               </Menu>
 
@@ -209,9 +215,6 @@ export function Header() {
                 <Menu.Dropdown>
                   <Menu.Item component="a" href="#categories">
                     Job Categories
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/team">
-                    Our Team
                   </Menu.Item>
                   <Menu.Item component="a" href="#testimonials">
                     Testimonials
@@ -234,12 +237,6 @@ export function Header() {
                     Browse Jobs
                   </Menu.Item>
                   <Menu.Item onClick={() => openModal()}>Saved Jobs</Menu.Item>
-                  <Menu.Item onClick={() => openModal()}>
-                    Candidate List
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/candidate-grid">
-                    Candidate Grid
-                  </Menu.Item>
                   <Menu.Item onClick={() => openModal()}>
                     Candidate Profile
                   </Menu.Item>
@@ -266,28 +263,25 @@ export function Header() {
                   <Menu.Item component="a" href="/client/register">
                     Register
                   </Menu.Item>
-                  <Menu.Item component="a" href="/company-details">
-                    Company Details
-                  </Menu.Item>
                   <Menu.Item component="a" href="/client/login">
                     Post a Job
                   </Menu.Item>
                   <Menu.Item component="a" href="/client/login">
                     Manage Jobs
                   </Menu.Item>
-                  <Menu.Item component="a" href="/employer-dashboard">
+                  <Menu.Item component="a" href="/client/login">
                     Employer Dashboard
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
 
               {/* Contact Link */}
-              <Anchor
+              {/* <Anchor
                 href="/contact"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <Text fw={500}>Contact</Text>
-              </Anchor>
+              </Anchor> */}
             </Flex>
 
             {/* Right Side - Notifications & User */}
@@ -574,16 +568,6 @@ export function Header() {
                   <Text>Job Categories</Text>
                 </Anchor>
                 <Anchor
-                  href="/team"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Our Team</Text>
-                </Anchor>
-                <Anchor
                   href="/#testimonials"
                   style={{
                     textDecoration: 'none',
@@ -648,26 +632,6 @@ export function Header() {
                     padding: '8px 0',
                   }}
                 >
-                  <Text>Candidate List</Text>
-                </Anchor>
-                <Anchor
-                  href="/candidate-grid"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Candidate Grid</Text>
-                </Anchor>
-                <Anchor
-                  onClick={() => openModal()}
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
                   <Text>Candidate Profile</Text>
                 </Anchor>
                 <Anchor
@@ -723,16 +687,6 @@ export function Header() {
                   <Text>Register</Text>
                 </Anchor>
                 <Anchor
-                  href="/company-details"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Company Details</Text>
-                </Anchor>
-                <Anchor
                   href="/client/login"
                   style={{
                     textDecoration: 'none',
@@ -769,7 +723,7 @@ export function Header() {
           <Divider />
 
           {/* Contact Link */}
-          <Anchor
+          {/* <Anchor
             href="/contact"
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
@@ -778,7 +732,7 @@ export function Header() {
             </Flex>
           </Anchor>
 
-          <Divider />
+          <Divider /> */}
 
           {/* Social Links */}
           <Box p="md">
