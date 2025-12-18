@@ -240,7 +240,7 @@ const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
                   client.status === 'active'
                     ? 'green'
                     : client.status === 'registered'
-                      ? 'yellow'
+                      ? 'blue'
                       : client.status === 'inactive'
                         ? 'red'
                         : 'gray'
