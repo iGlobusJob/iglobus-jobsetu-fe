@@ -22,6 +22,7 @@ import { useEffect, useState, type JSX } from 'react';
 import { Controller, useForm, type FieldPath } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+import type { ApiError } from '@/common';
 import {
   getClientProfile,
   updateClientProfile,
@@ -207,8 +208,8 @@ const ClientProfilePage = (): JSX.Element => {
       setLogoFile(null);
       toast.success('Profile updated successfully !');
     } catch (error) {
-      console.error('Failed to update client profile:', error);
-      toast.error('Failed to update profile');
+      const err = error as ApiError;
+      toast.error(err?.response?.data?.message || err?.message);
     } finally {
       setSubmitting(false);
     }

@@ -24,7 +24,7 @@ import {
   IconCalendar,
   IconChevronDown,
   IconClock,
-  IconCurrencyDollar,
+  IconCurrencyRupee,
   IconMapPin,
   IconSearch,
   IconTrendingUp,
@@ -353,7 +353,7 @@ const AllJobs = () => {
                         value={`${formatSalary(job.minimumSalary)} - ${formatSalary(
                           job.maximumSalary
                         )}`}
-                        icon={<IconCurrencyDollar size={14} />}
+                        icon={<IconCurrencyRupee size={14} />}
                         color="teal"
                       />
 

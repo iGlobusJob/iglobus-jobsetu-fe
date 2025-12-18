@@ -151,7 +151,29 @@ export const JobListingsSection = (): JSX.Element => {
     );
 
     if (experienceFilter) {
-      list = list.filter((job) => job.experienceLevel === experienceFilter);
+      list = list.filter((job) => {
+        const [minExp, maxExp] = job.experienceLevel
+          .replace(' years', '')
+          .split(' - ')
+          .map(Number);
+
+        switch (experienceFilter) {
+          case 'ENTRY':
+            return minExp === 0 && maxExp <= 1;
+
+          case 'ONE_TWO':
+            return minExp === 1 && maxExp <= 2;
+
+          case 'TWO_THREE':
+            return minExp === 2 && maxExp <= 3;
+
+          case 'FOUR_PLUS':
+            return minExp >= 4;
+
+          default:
+            return true;
+        }
+      });
     }
 
     return list;
@@ -261,10 +283,10 @@ export const JobListingsSection = (): JSX.Element => {
                   setCurrentPage(1);
                 }}
                 data={[
-                  { value: '0 - 1 years', label: 'Entry Level' },
-                  { value: '1 - 2 years', label: '1-2 Years' },
-                  { value: '2 - 3 years', label: '2-3 Years' },
-                  { value: '4+ years', label: '4+ Years' },
+                  { value: 'ENTRY', label: 'Entry Level (0–1)' },
+                  { value: 'ONE_TWO', label: '1–2 Years' },
+                  { value: 'TWO_THREE', label: '2–3 Years' },
+                  { value: 'FOUR_PLUS', label: '4+ Years' },
                 ]}
                 clearable
                 searchable
