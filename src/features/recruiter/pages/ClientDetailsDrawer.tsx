@@ -14,33 +14,33 @@ import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import type { Vendor } from '@/features/dashboard/types/vendor';
+import type { Client } from '@/features/dashboard/types/client';
 import { getClientById } from '@/services/admin-services';
 
-interface VendorDetailsDrawerProps {
+interface ClientDetailsDrawerProps {
   opened: boolean;
   onClose: () => void;
-  vendor: Vendor | null;
+  client: Client | null;
 }
 
-const ClientDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
+const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
   opened,
   onClose,
-  vendor,
+  client,
 }) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  const [form, setForm] = useState<Vendor | null>(null);
+  const [form, setForm] = useState<Client | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!vendor) return;
-    const fetchVendor = async () => {
+    if (!client) return;
+    const fetchClient = async () => {
       setLoading(true);
       try {
-        const vendorDetails = await getClientById(vendor.id);
-        setForm(vendorDetails);
+        const clientDetails = await getClientById(client.id);
+        setForm(clientDetails);
       } catch {
         toast.error('Failed to fetch client details');
       } finally {
@@ -48,10 +48,10 @@ const ClientDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
       }
     };
 
-    fetchVendor();
-  }, [vendor]);
+    fetchClient();
+  }, [client]);
 
-  if (!vendor || !form) return null;
+  if (!client || !form) return null;
 
   return (
     <Drawer
@@ -89,20 +89,20 @@ const ClientDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
             </Text>
 
             <Group gap="xs">
-              <Badge variant="filled">{vendor.category}</Badge>
+              <Badge variant="filled">{client.category}</Badge>
               <Badge
                 variant="light"
                 color={
-                  vendor.status === 'active'
+                  client.status === 'active'
                     ? 'green'
-                    : vendor.status === 'registered'
+                    : client.status === 'registered'
                       ? 'blue'
-                      : vendor.status === 'inactive'
+                      : client.status === 'inactive'
                         ? 'red'
                         : 'gray'
                 }
               >
-                {vendor.status.toUpperCase()}
+                {client.status.toUpperCase()}
               </Badge>
             </Group>
           </Stack>

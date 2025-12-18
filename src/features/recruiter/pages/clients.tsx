@@ -24,7 +24,7 @@ import {
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import type { Vendor } from '@/features/dashboard/types/vendor';
+import type { Client } from '@/features/dashboard/types/client';
 import { getAllClients } from '@/services/admin-services';
 
 import ClientDetailsDrawer from './ClientDetailsDrawer';
@@ -35,7 +35,7 @@ const ClientsPage: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState('');
@@ -44,33 +44,33 @@ const ClientsPage: React.FC = () => {
   >('all');
   const [activePage, setActivePage] = useState(1);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [sortFilter, setSortFilter] = useState<
     'asc' | 'desc' | 'newest' | 'oldest'
   >('asc');
 
   useEffect(() => {
-    const fetchVendors = async () => {
+    const fetchClients = async () => {
       setLoading(true);
       try {
         const data = await getAllClients();
-        setVendors(data);
+        setClients(data);
       } catch {
         toast.error('Failed to fetch clients');
       } finally {
         setLoading(false);
       }
     };
-    fetchVendors();
+    fetchClients();
   }, []);
 
-  const openDetails = (vendor: Vendor) => {
-    setSelectedVendor(vendor);
+  const openDetails = (client: Client) => {
+    setSelectedClient(client);
     setDrawerOpen(true);
   };
 
   const filtered = useMemo(() => {
-    return vendors
+    return clients
       .filter((vend) => {
         if (statusFilter !== 'all' && vend.status !== statusFilter)
           return false;
@@ -110,7 +110,7 @@ const ClientsPage: React.FC = () => {
 
         return 0;
       });
-  }, [vendors, search, statusFilter, sortFilter]);
+  }, [clients, search, statusFilter, sortFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = useMemo(() => {
@@ -127,7 +127,7 @@ const ClientsPage: React.FC = () => {
   };
 
   // MOBILE CARD COMPONENT
-  const MobileVendorCard = ({ v }: { v: Vendor }) => (
+  const MobileClientCard = ({ v }: { v: Client }) => (
     <Card
       radius="lg"
       withBorder
@@ -310,7 +310,7 @@ const ClientsPage: React.FC = () => {
                 <Text color="dimmed">No clients found.</Text>
               </Center>
             ) : (
-              pageItems.map((v) => <MobileVendorCard key={v.id} v={v} />)
+              pageItems.map((v) => <MobileClientCard key={v.id} v={v} />)
             )}
           </Stack>
         ) : (
@@ -444,7 +444,7 @@ const ClientsPage: React.FC = () => {
         <ClientDetailsDrawer
           opened={drawerOpen}
           onClose={() => setDrawerOpen(false)}
-          vendor={selectedVendor}
+          client={selectedClient}
         />
       </Container>
     </Box>

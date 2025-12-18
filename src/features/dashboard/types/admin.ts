@@ -1,10 +1,10 @@
-export interface VendorContact {
+export interface ClientContact {
   firstName?: string;
   lastName?: string;
 }
 
-export interface AdminUpdateVendor {
-  vendorId: string;
+export interface AdminUpdateClient {
+  clientId: string;
   organizationName?: string;
   logo: string;
   mobile?: string;
@@ -12,8 +12,8 @@ export interface AdminUpdateVendor {
   gstin?: string;
   panCard?: string;
   category?: string;
-  primaryContact?: VendorContact;
-  secondaryContact?: VendorContact;
+  primaryContact?: ClientContact;
+  secondaryContact?: ClientContact;
   status?: 'registered' | 'active' | 'inactive';
 }
 

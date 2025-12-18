@@ -38,7 +38,7 @@ import {
 
 interface JobDetail {
   id: string;
-  vendorId: string;
+  clientId: string;
   organizationName: string;
   primaryContactFirstName: string;
   primaryContactLastName: string;

@@ -3,7 +3,7 @@ import { z } from 'zod';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 
-export const vendorRegisterSchema = z.object({
+export const clientRegisterSchema = z.object({
   organizationName: z.string().min(1, 'Organization name is required'),
 
   primaryFirstName: z
@@ -64,4 +64,4 @@ export const vendorRegisterSchema = z.object({
     .or(z.literal('')),
 });
 
-export type VendorRegisterFormValues = z.infer<typeof vendorRegisterSchema>;
+export type ClientRegisterFormValues = z.infer<typeof clientRegisterSchema>;

@@ -23,7 +23,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { CandidateProfile } from '@/features/dashboard/types/candidate';
-import { getCandidateDetailsById } from '@/services/vendor-services';
+import { getCandidateDetailsById } from '@/services/client-services';
 
 interface Props {
   opened: boolean;

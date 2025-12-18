@@ -33,8 +33,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { Job } from '@/features/dashboard/types/job';
-import { CLIENT_PATHS } from '@/routes/config/vendorPath';
-import { getAllJobs } from '@/services/vendor-services';
+import { CLIENT_PATHS } from '@/routes/config/clientPath';
+import { getAllJobs } from '@/services/client-services';
 
 const AllJobsComponent = () => {
   const [jobs, setJobs] = useState<Job[]>([]);

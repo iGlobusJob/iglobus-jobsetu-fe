@@ -6,10 +6,10 @@ import type {
   JobsResponse,
 } from '@/features/dashboard/types/job';
 import type {
-  RegisterVendorPayload,
-  VendorRegisterResponse,
+  RegisterClientPayload,
+  ClientRegisterResponse,
 } from '@/features/dashboard/types/register';
-import type { VendorProfileFormData } from '@/features/vendor/interface/updateProfileForm';
+import type { ClientProfileFormData } from '@/features/client/interface/updateProfileForm';
 import { useAuthStore } from '@/store/userDetails';
 
 import { removeEmptyValues } from './helper';
@@ -26,7 +26,7 @@ export const apiClientPublic = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-export const logoutVendor = async () => {
+export const logoutClient = async () => {
   const { clearAuth } = useAuthStore.getState();
 
   clearAuth();
@@ -44,9 +44,9 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export const registerVendor = async (
-  data: RegisterVendorPayload
-): Promise<{ data: VendorRegisterResponse }> => {
+export const registerClient = async (
+  data: RegisterClientPayload
+): Promise<{ data: ClientRegisterResponse }> => {
   const cleanedData = removeEmptyValues(data);
 
   return apiClientPublic.post('/registerclient', cleanedData, {
@@ -56,26 +56,26 @@ export const registerVendor = async (
   });
 };
 
-export const loginVendor = async (credentials: {
+export const loginClient = async (credentials: {
   email: string;
   password: string;
 }) => {
   try {
-    const res = await apiClientPublic.post('/loginvendor', credentials);
+    const res = await apiClientPublic.post('/loginclient', credentials);
 
-    const { token, vendor } = res.data.data;
+    const { token, client } = res.data.data;
 
     // Save everything in Zustand
     useAuthStore.getState().setAuth({
       userRole: 'client',
       token,
-      firstName: vendor.primaryContact.firstName,
-      lastName: vendor.primaryContact.lastName,
-      email: vendor.email,
-      profileImage: vendor.logo,
+      firstName: client.primaryContact.firstName,
+      lastName: client.primaryContact.lastName,
+      email: client.email,
+      profileImage: client.logo,
     });
 
-    return vendor;
+    return client;
   } catch (err: unknown) {
     const error = err as { response?: { data?: unknown } };
     throw error.response?.data ?? error;
@@ -101,7 +101,7 @@ export const deleteJob = async (
   return response.data;
 };
 
-export const getCandidateDetailsByVendor = async () => {
+export const getCandidateDetailsByClient = async () => {
   const response = await apiClient.get(`/getcandidateprofile`);
 
   if (!response.data?.success) {
@@ -111,20 +111,20 @@ export const getCandidateDetailsByVendor = async () => {
   return response.data.data;
 };
 
-export const getVendorProfile = async () => {
+export const getClientProfile = async () => {
   try {
     const response = await apiClient.get(`/getclientprofile`);
     if (!response.data?.success) {
-      throw new Error('Failed to fetch vendor details');
+      throw new Error('Failed to fetch client details');
     }
 
     return response.data.data;
   } catch {
-    throw new Error('Unable to fetch vendor details');
+    throw new Error('Unable to fetch client details');
   }
 };
 
-export const updateClientProfile = async (data: VendorProfileFormData) => {
+export const updateClientProfile = async (data: ClientProfileFormData) => {
   try {
     const response = await apiClient.put(`/updateclientprofile`, data, {
       headers: {
@@ -133,7 +133,7 @@ export const updateClientProfile = async (data: VendorProfileFormData) => {
     });
 
     if (!response.data?.success) {
-      throw new Error('Failed to update vendor profile');
+      throw new Error('Failed to update client profile');
     }
 
     const updatedClient = response.data.data;
@@ -151,7 +151,7 @@ export const updateClientProfile = async (data: VendorProfileFormData) => {
 
     return updatedClient;
   } catch {
-    throw new Error('Unable to update vendor profile');
+    throw new Error('Unable to update client profile');
   }
 };
 

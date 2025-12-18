@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const vendorDetailsSchema = z.object({
-  id: z.string().min(1, 'Vendor ID is required'),
+export const clientDetailsSchema = z.object({
+  id: z.string().min(1, 'Client ID is required'),
 
   organizationName: z.string().min(1, 'Organization name is required'),
   email: z.string().email('Invalid email'),
@@ -43,4 +43,4 @@ export const vendorDetailsSchema = z.object({
   status: z.enum(['registered', 'active', 'inactive']),
 });
 
-export type VendorDetailsSchema = z.infer<typeof vendorDetailsSchema>;
+export type ClientDetailsSchema = z.infer<typeof clientDetailsSchema>;

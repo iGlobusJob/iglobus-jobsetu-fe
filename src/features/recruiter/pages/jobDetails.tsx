@@ -30,7 +30,7 @@ import { getJobDetailsById } from '@/services/candidate-services';
 
 interface JobDetail {
   _id: string;
-  vendorId: string;
+  clientId: string;
   organizationName: string;
   primaryContactFirstName: string;
   primaryContactLastName: string;

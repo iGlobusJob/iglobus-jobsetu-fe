@@ -1,9 +1,9 @@
-export interface VendorContact {
+export interface ClientContact {
   firstName: string;
   lastName: string;
 }
 
-export interface Vendor {
+export interface Client {
   id: string;
   organizationName: string;
   email: string;
@@ -14,8 +14,8 @@ export interface Vendor {
   mobileStatus?: string;
   gstin?: string;
   panCard?: string;
-  primaryContact?: VendorContact;
-  secondaryContact?: VendorContact;
+  primaryContact?: ClientContact;
+  secondaryContact?: ClientContact;
   createdAt: string;
   updatedAt: string;
   logo: string;

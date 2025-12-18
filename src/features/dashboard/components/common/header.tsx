@@ -34,7 +34,7 @@ import { toast } from 'react-toastify';
 
 import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
-import { logoutVendor } from '@services/vendor-services';
+import { logoutClient } from '@services/client-services';
 
 export function Header() {
   const colorScheme = useComputedColorScheme();
@@ -423,7 +423,7 @@ export function Header() {
                         color="red"
                         onClick={() => {
                           toast.success('Logged out Successfully');
-                          logoutVendor();
+                          logoutClient();
                         }}
                       >
                         Logout
@@ -878,7 +878,7 @@ export function Header() {
                 fullWidth
                 onClick={() => {
                   toast.success('Logged out successfully');
-                  logoutVendor();
+                  logoutClient();
                 }}
               >
                 Logout

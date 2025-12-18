@@ -27,11 +27,11 @@ import { toast } from 'react-toastify';
 import type { CandidateProfile } from '@/features/dashboard/types/candidate';
 import { getAllCandidatesByAdmin } from '@/services/admin-services';
 
-import CandidateDetails from './VendorCandidateDetails';
+import CandidateDetails from './ClientCandidateDetails';
 
 const PAGE_SIZE = 10;
 
-const CandidateDashboardByVendor: React.FC = () => {
+const CandidateDashboardByClient: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const [loading, setLoading] = useState(false);
@@ -320,4 +320,4 @@ const CandidateDashboardByVendor: React.FC = () => {
   );
 };
 
-export default CandidateDashboardByVendor;
+export default CandidateDashboardByClient;
