@@ -20,7 +20,7 @@ import {
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { IconFile, IconSparkles, IconUpload } from '@tabler/icons-react';
-import { useCallback, useEffect, useState, type JSX } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
@@ -200,44 +200,25 @@ const CandidateProfilePage = (): JSX.Element => {
     },
   });
 
-  const calculateCompletion = useCallback(
-    (data: CandidateProfileFormData): number => {
-      let totalScore = 0;
-      const weights = {
-        email: 25,
-        mobileNumber: 20,
-        resume: 20,
-        firstName: 8,
-        lastName: 8,
-        gender: 5,
-        dateOfBirth: 5,
-        address: 5,
-        profilePicture: 4,
-      };
+  const calculateCompletion = (data: CandidateProfileFormData): number => {
+    let totalScore = 0;
 
-      // High priority fields
-      if (data.email && data.email.trim()) totalScore += weights.email;
-      if (data.mobileNumber && data.mobileNumber.trim())
-        totalScore += weights.mobileNumber;
-      if (resumeUrl || data.resume instanceof File)
-        totalScore += weights.resume;
+    if (data.email) totalScore += 25;
+    if (data.mobileNumber) totalScore += 20;
+    if (data.resume instanceof File || resumeUrl) totalScore += 20;
 
-      // Medium priority fields
-      if (data.firstName && data.firstName.trim())
-        totalScore += weights.firstName;
-      if (data.lastName && data.lastName.trim()) totalScore += weights.lastName;
-      if (data.gender && data.gender.trim()) totalScore += weights.gender;
-      if (data.dateOfBirth && data.dateOfBirth.trim())
-        totalScore += weights.dateOfBirth;
-      if (data.address && data.address.trim()) totalScore += weights.address;
+    if (data.firstName) totalScore += 8;
+    if (data.lastName) totalScore += 8;
+    if (data.gender) totalScore += 5;
+    if (data.dateOfBirth) totalScore += 5;
+    if (data.address) totalScore += 5;
 
-      // Profile picture
-      if (profilePicturePreview) totalScore += weights.profilePicture;
+    if (data.profilePictureFile instanceof File || profilePicturePreview) {
+      totalScore += 4;
+    }
 
-      return totalScore;
-    },
-    [resumeUrl, profilePicturePreview]
-  );
+    return totalScore;
+  };
 
   const getProgressColor = (percentage: number): string => {
     if (percentage === 100) return 'green';
@@ -265,12 +246,12 @@ const CandidateProfilePage = (): JSX.Element => {
     }
   };
 
-  // Fetch candidate profile
   useEffect(() => {
     const fetchCandidate = async (): Promise<void> => {
       setLoading(true);
       try {
         const data = await getCandidateProfile();
+
         const formData: CandidateProfileFormData = {
           firstName: data.firstName || '',
           lastName: data.lastName || '',
@@ -284,40 +265,42 @@ const CandidateProfilePage = (): JSX.Element => {
           profileUrl: data.profileUrl || null,
           profilePictureUrl: data.profilePictureUrl || null,
         };
+
         setProfile(formData);
         reset(formData);
 
-        // Set resume URL and file name if available
         if (data.profileUrl) {
           setResumeUrl(data.profileUrl);
           setResumeFileName(extractFileName(data.profileUrl));
         }
 
-        // Set profile picture if available
         if (data.profilePictureUrl) {
           setProfilePicturePreview(data.profilePictureUrl);
         }
 
-        // Calculate completion percentage
-        const percentage = calculateCompletion(formData);
-        setCompletionPercentage(percentage);
+        setCompletionPercentage(calculateCompletion(formData));
       } catch {
         toast.error('Unable to fetch candidate details');
       } finally {
         setLoading(false);
       }
     };
+
     void fetchCandidate();
-  }, [calculateCompletion, reset]);
+    // 🔒 INTENTIONALLY EMPTY DEP ARRAY
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Update completion percentage when form data changes
   useEffect(() => {
     const subscription = watch((data) => {
-      const percentage = calculateCompletion(data as CandidateProfileFormData);
-      setCompletionPercentage(percentage);
+      setCompletionPercentage(
+        calculateCompletion(data as CandidateProfileFormData)
+      );
     });
     return () => subscription.unsubscribe();
-  }, [watch, resumeUrl, profilePicturePreview, calculateCompletion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch]);
 
   // Handle form submission
   const onSubmit = async (data: CandidateProfileFormData): Promise<void> => {
@@ -363,7 +346,10 @@ const CandidateProfilePage = (): JSX.Element => {
         category: updated.category || 'IT',
         resume: updated.profileUrl || null,
         profileUrl: updated.profileUrl || null,
-        profilePictureUrl: updated.profilePictureUrl || null,
+        profilePictureFile:
+          data.profilePictureFile instanceof File
+            ? data.profilePictureFile
+            : null,
       };
       const percentage = calculateCompletion(updatedFormData);
       setCompletionPercentage(percentage);
@@ -425,33 +411,29 @@ const CandidateProfilePage = (): JSX.Element => {
     }
   };
 
-  const handleProfilePictureChange = (file: File | null): void => {
-    if (file) {
-      const allowedTypes = [
-        'image/jpeg',
-        'image/jpg',
-        'image/png',
-        'image/webp',
-      ];
-
-      if (!allowedTypes.includes(file.type)) {
-        toast.error(
-          'Invalid file type for Profile Picture. Only image files are allowed !'
-        );
-        return;
-      }
-
-      setProfilePictureFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setProfilePicturePreview(result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setProfilePictureFile(null);
-      setProfilePicturePreview(null);
+  const handleProfilePictureChange = (
+    file: File | null,
+    onChange: (file: File | null) => void
+  ): void => {
+    if (!file) {
+      onChange(null);
+      setProfilePicturePreview(profile?.profilePictureUrl || null);
+      return;
     }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        'Invalid file type for Profile Picture. Only image files are allowed!'
+      );
+      return;
+    }
+
+    setProfilePictureFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfilePicturePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const category = watch('category');
@@ -514,22 +496,28 @@ const CandidateProfilePage = (): JSX.Element => {
             }}
           >
             <div style={{ position: 'relative', cursor: 'pointer' }}>
-              <FileInput
-                placeholder=""
-                leftSection={<IconUpload size={24} />}
-                accept="image/jpeg,image/jpg,image/png"
-                clearable
-                onChange={handleProfilePictureChange}
-                style={{ cursor: 'pointer' }}
-                styles={{
-                  input: {
-                    opacity: 0,
-                    cursor: 'pointer',
-                    width: '80px',
-                    height: '80px',
-                  },
-                }}
+              <Controller
+                name="profilePictureFile"
+                control={control}
+                render={({ field }) => (
+                  <FileInput
+                    accept="image/jpeg,image/png,image/webp"
+                    clearable
+                    onChange={(file) =>
+                      handleProfilePictureChange(file, field.onChange)
+                    }
+                    styles={{
+                      input: {
+                        opacity: 0,
+                        cursor: 'pointer',
+                        width: '80px',
+                        height: '80px',
+                      },
+                    }}
+                  />
+                )}
               />
+
               <div
                 style={{
                   position: 'absolute',
@@ -554,6 +542,8 @@ const CandidateProfilePage = (): JSX.Element => {
       </div>
     );
   };
+
+  console.log('render');
 
   return (
     <Container size="lg" py="xl">
