@@ -272,7 +272,7 @@ const ClientsPage: React.FC = () => {
                 onChange={(val) => {
                   setStatusFilter(
                     (val as 'all' | 'registered' | 'active' | 'inactive') ??
-                      'all'
+                    'all'
                   );
                   setActivePage(1);
                 }}

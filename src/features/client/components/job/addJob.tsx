@@ -355,7 +355,7 @@ export const JobPostForm = () => {
                       <strong>
                         {Math.ceil(
                           (watchEndDate.getTime() - watchStartDate.getTime()) /
-                            (1000 * 60 * 60 * 24)
+                          (1000 * 60 * 60 * 24)
                         )}{' '}
                         days
                       </strong>

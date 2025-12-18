@@ -99,7 +99,7 @@ const ClientDashboard = () => {
               jobLocation: job.jobLocation,
               closingIn: Math.ceil(
                 (new Date(job.postEnd).getTime() - new Date().getTime()) /
-                  (1000 * 60 * 60)
+                (1000 * 60 * 60)
               ),
             })),
           });
