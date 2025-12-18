@@ -159,11 +159,11 @@ export function Header() {
                 src={
                   colorScheme === 'dark'
                     ? '/jobseti-darks.png'
-                    : '/jobseti-light.png'
+                    : '/jobseti-lights.png'
                 }
                 alt="JobSetu Logo"
-                width={45}
-                height={45}
+                width={56}
+                height={56}
                 radius="md"
               />
             </Anchor>
