@@ -179,8 +179,8 @@ export const getMyJobs = async (): Promise<CandidateJob[]> => {
   try {
     const response = await apiClient.get('/getmyjobs');
     const jobs = response.data.data;
-    return jobs.map((job: { jobId: { vendorId: { logo: null } } }) => {
-      const logo = job.jobId?.vendorId?.logo || null;
+    return jobs.map((job: { jobId: { clientId: { logo: null } } }) => {
+      const logo = job.jobId?.clientId?.logo || null;
       return {
         ...job,
         jobId: {

@@ -27,8 +27,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
-import { CLIENT_PATHS } from '@/routes/config/vendorPath';
-import { getAllJobs } from '@/services/vendor-services';
+import { CLIENT_PATHS } from '@/routes/config/clientPath';
+import { getAllJobs } from '@/services/client-services';
 
 interface DashboardMetrics {
   totalJobsPosted: number;
@@ -51,7 +51,7 @@ interface ClosingJob {
   closingIn: number;
 }
 
-const VendorDashboard = () => {
+const ClientDashboard = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ const VendorDashboard = () => {
               jobLocation: job.jobLocation,
               closingIn: Math.ceil(
                 (new Date(job.postEnd).getTime() - new Date().getTime()) /
-                  (1000 * 60 * 60)
+                (1000 * 60 * 60)
               ),
             })),
           });
@@ -438,4 +438,4 @@ const VendorDashboard = () => {
   );
 };
 
-export default VendorDashboard;
+export default ClientDashboard;

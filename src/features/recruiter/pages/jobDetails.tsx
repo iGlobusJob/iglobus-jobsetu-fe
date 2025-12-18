@@ -30,7 +30,7 @@ import { getJobDetailsById } from '@/services/candidate-services';
 
 interface JobDetail {
   _id: string;
-  vendorId: string;
+  clientId: string;
   organizationName: string;
   primaryContactFirstName: string;
   primaryContactLastName: string;
@@ -120,8 +120,8 @@ export const JobDetailPage = (): JSX.Element => {
 
   const salaryRange = job
     ? `₹${(job.minimumSalary / 100000).toFixed(1)}L - ₹${(
-        job.maximumSalary / 100000
-      ).toFixed(1)}L`
+      job.maximumSalary / 100000
+    ).toFixed(1)}L`
     : '';
 
   const experienceRange = job
@@ -130,9 +130,9 @@ export const JobDetailPage = (): JSX.Element => {
 
   const daysLeft = job
     ? Math.ceil(
-        (new Date(job.postEnd).getTime() - new Date().getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+      (new Date(job.postEnd).getTime() - new Date().getTime()) /
+      (1000 * 60 * 60 * 24)
+    )
     : 0;
 
   if (!job) {

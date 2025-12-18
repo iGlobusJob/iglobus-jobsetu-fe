@@ -4,7 +4,7 @@ import AddAdminPage from '@/features/admin/pages/AddAdminPage';
 import AnalyticsDashboard from '@/features/admin/pages/AnalyticsDashboard';
 import CandidateDashboard from '@/features/admin/pages/CandidateDashboard';
 import RecruiterDashboard from '@/features/admin/pages/RecruiterDashboard';
-import VendorDashboard from '@/features/admin/pages/dashboard';
+import ClientDashboard from '@/features/admin/pages/dashboard';
 import AllJobs from '@/features/admin/pages/jobs';
 
 import { RoleRoute } from './guards';
@@ -16,7 +16,7 @@ export const AdminRoutes = () => {
     <Routes>
       <Route element={<RoleRoute allowedRoles={['admin']} />}>
         <Route path="dashboard" element={<AnalyticsDashboard />} />
-        <Route path="clients" element={<VendorDashboard />} />
+        <Route path="clients" element={<ClientDashboard />} />
         <Route path="candidates" element={<CandidateDashboard />} />
         <Route path="recruiters" element={<RecruiterDashboard />} />
         {/* Add more admin routes here */}

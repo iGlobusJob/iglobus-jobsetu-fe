@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const vendorProfileSchema = z.object({
+export const clientProfileSchema = z.object({
   organizationName: z
     .string()
     .min(2, 'Organization name must be at least 2 characters')
@@ -54,4 +54,4 @@ export const vendorProfileSchema = z.object({
     .optional(),
 });
 
-export type VendorProfileFormData = z.infer<typeof vendorProfileSchema>;
+export type ClientProfileFormData = z.infer<typeof clientProfileSchema>;

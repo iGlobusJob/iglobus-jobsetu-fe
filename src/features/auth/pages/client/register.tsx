@@ -28,10 +28,10 @@ import type { ApiError } from '@/common';
 import { FooterSubscribe } from '@/features/dashboard/components/common/footer';
 import { Header } from '@/features/dashboard/components/common/header';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
-import { registerVendor } from '@/services/vendor-services';
+import { registerClient } from '@/services/client-services';
 
-import { vendorRegisterSchema } from '../../../dashboard/forms/register';
-import type { VendorRegisterValues } from '../../../dashboard/types/register';
+import { clientRegisterSchema } from '../../../dashboard/forms/register';
+import type { ClientRegisterValues } from '../../../dashboard/types/register';
 import AppLoader from '../../../dashboard/utlis/loader/loader';
 
 const Register: React.FC = () => {
@@ -47,7 +47,7 @@ const Register: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  const form = useForm<VendorRegisterValues & { termsAccepted: boolean }>({
+  const form = useForm<ClientRegisterValues & { termsAccepted: boolean }>({
     initialValues: {
       organizationName: '',
       primaryFirstName: '',
@@ -63,13 +63,13 @@ const Register: React.FC = () => {
       termsAccepted: false,
     },
     validate: {
-      ...zodResolver(vendorRegisterSchema),
+      ...zodResolver(clientRegisterSchema),
       termsAccepted: (value) =>
         value ? null : 'You must accept Terms & Conditions',
     },
   });
 
-  const handleSubmit = async (values: VendorRegisterValues) => {
+  const handleSubmit = async (values: ClientRegisterValues) => {
     if (!values.termsAccepted) {
       toast.error('Accept Terms & Conditions to continue');
       return;
@@ -92,7 +92,7 @@ const Register: React.FC = () => {
         logo: values.logoImage,
       };
 
-      const res = await registerVendor(payload);
+      const res = await registerClient(payload);
 
       if (res.data?.success) {
         toast.success(res.data.message || 'Client registered Successfully !');

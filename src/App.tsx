@@ -7,15 +7,15 @@ import {
 
 import { DashboardLayout } from './components/layout/dashboard';
 import { AdminLoginPage } from './features/admin/pages/login';
-import { Login } from './features/auth/pages/vendor/login';
-import Register from './features/auth/pages/vendor/register';
+import { Login } from './features/auth/pages/client/login';
+import Register from './features/auth/pages/client/register';
 import RecruiterLoginPage from './features/recruiter/pages/login';
 import { AdminRoutes } from './routes/admin';
 import { CandidateRoutes } from './routes/candidate';
 import { GuestRoute, ProtectedRoute } from './routes/guards';
 import { PublicRoutes } from './routes/public';
 import { RecruiterRoutes } from './routes/recruiter';
-import { VendorRoutes } from './routes/vendor';
+import { ClientRoutes } from './routes/client';
 import { useAuthStore } from './store/userDetails';
 
 function App() {
@@ -38,8 +38,8 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/candidate/*" element={<CandidateRoutes />} />
 
-            {/* Vendor Routes */}
-            <Route path="/client/*" element={<VendorRoutes />} />
+            {/* Client Routes */}
+            <Route path="/client/*" element={<ClientRoutes />} />
 
             {/* Admin Routes */}
             <Route path="/admin/*" element={<AdminRoutes />} />

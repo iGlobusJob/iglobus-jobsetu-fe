@@ -16,42 +16,42 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
-import { vendorDetailsSchema } from '@/features/dashboard/forms/vendordetails';
-import type { AdminUpdateVendor } from '@/features/dashboard/types/admin';
-import type { Vendor } from '@/features/dashboard/types/vendor';
+import { clientDetailsSchema } from '@/features/dashboard/forms/clientdetails';
+import type { AdminUpdateClient } from '@/features/dashboard/types/admin';
+import type { Client } from '@/features/dashboard/types/client';
 import { getClientById, updateClientByAdmin } from '@/services/admin-services';
 
-interface VendorDetailsDrawerProps {
+interface ClientDetailsDrawerProps {
   opened: boolean;
   onClose: () => void;
-  vendor: Vendor | null;
-  onUpdate: (updatedVendor: Vendor) => void;
+  client: Client | null;
+  onUpdate: (updatedClient: Client) => void;
   onStatusChange: (
     id: string,
     status: 'registered' | 'active' | 'inactive'
   ) => void;
 }
 
-const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
+const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
   opened,
   onClose,
-  vendor,
+  client,
   onUpdate,
   onStatusChange,
 }) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  const [form, setForm] = useState<Vendor | null>(null);
+  const [form, setForm] = useState<Client | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!vendor) return;
-    const fetchVendor = async () => {
+    if (!client) return;
+    const fetchClient = async () => {
       setLoading(true);
       try {
-        const vendorDetails = await getClientById(vendor.id);
-        setForm(vendorDetails);
+        const clientDetails = await getClientById(client.id);
+        setForm(clientDetails);
       } catch {
         toast.error('Failed to fetch client details');
       } finally {
@@ -59,10 +59,10 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
       }
     };
 
-    fetchVendor();
-  }, [vendor]);
+    fetchClient();
+  }, [client]);
 
-  function updateField<Key extends keyof Vendor>(key: Key, value: Vendor[Key]) {
+  function updateField<Key extends keyof Client>(key: Key, value: Client[Key]) {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
   }
 
@@ -86,14 +86,14 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
 
   const handleSave = async () => {
     if (!form) return;
-    const validation = vendorDetailsSchema.safeParse(form);
+    const validation = clientDetailsSchema.safeParse(form);
 
     if (!validation.success) {
       toast.error(validation.error.errors[0].message);
       return;
     }
-    const payload: AdminUpdateVendor = {
-      vendorId: form.id,
+    const payload: AdminUpdateClient = {
+      clientId: form.id,
       organizationName: form.organizationName,
       logo: form.logo,
       mobile: form.mobile,
@@ -127,12 +127,12 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
     }
   };
 
-  const approveVendor = async () => {
+  const approveClient = async () => {
     if (!form) return;
     setLoading(true);
 
-    const payload: AdminUpdateVendor = {
-      vendorId: form.id,
+    const payload: AdminUpdateClient = {
+      clientId: form.id,
       status: 'active',
       organizationName: form.organizationName,
       logo: form.logo,
@@ -166,8 +166,8 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
     if (!form) return;
     setLoading(true);
 
-    const payload: AdminUpdateVendor = {
-      vendorId: form.id,
+    const payload: AdminUpdateClient = {
+      clientId: form.id,
       status: 'inactive',
       organizationName: form.organizationName,
       logo: form.logo,
@@ -197,7 +197,7 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
     setLoading(false);
   };
 
-  if (!vendor || !form) return null;
+  if (!client || !form) return null;
 
   return (
     <Drawer
@@ -233,20 +233,20 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
               {form.organizationName}
             </Text>
             <Group gap="xs">
-              <Badge variant="filled">{vendor.category}</Badge>
+              <Badge variant="filled">{client.category}</Badge>
               <Badge
                 variant="light"
                 color={
-                  vendor.status === 'active'
+                  client.status === 'active'
                     ? 'green'
-                    : vendor.status === 'registered'
+                    : client.status === 'registered'
                       ? 'blue'
-                      : vendor.status === 'inactive'
+                      : client.status === 'inactive'
                         ? 'red'
                         : 'gray'
                 }
               >
-                {vendor.status.toUpperCase()}
+                {client.status.toUpperCase()}
               </Badge>
             </Group>
           </Stack>
@@ -370,18 +370,18 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
 
           {/* ACTION BUTTONS */}
           <Stack gap="md">
-            {vendor.status === 'registered' && (
+            {client.status === 'registered' && (
               <Button
                 color="green"
                 variant="light"
                 size={isMobile ? 'sm' : 'md'}
                 fullWidth={isMobile}
-                onClick={approveVendor}
+                onClick={approveClient}
               >
                 Approve
               </Button>
             )}
-            {vendor.status === 'active' && (
+            {client.status === 'active' && (
               <Button
                 color="red"
                 variant="light"
@@ -392,13 +392,13 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
                 Inactive
               </Button>
             )}
-            {vendor.status === 'inactive' && (
+            {client.status === 'inactive' && (
               <Button
                 color="green"
                 variant="light"
                 size={isMobile ? 'sm' : 'md'}
                 fullWidth={isMobile}
-                onClick={approveVendor}
+                onClick={approveClient}
               >
                 Activate
               </Button>
@@ -418,4 +418,4 @@ const VendorDetailsDrawer: React.FC<VendorDetailsDrawerProps> = ({
   );
 };
 
-export default VendorDetailsDrawer;
+export default ClientDetailsDrawer;

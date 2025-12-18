@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import type { ApiError } from '@/common';
 import type {
-  AdminUpdateVendor,
+  AdminUpdateClient,
   CreateAdminInput,
   CreateRecruiterInput,
 } from '@/features/dashboard/types/admin';
@@ -79,9 +79,9 @@ export const getClientById = async (clientId: string) => {
   }
 };
 
-export const updateClientByAdmin = async (vendorData: AdminUpdateVendor) => {
+export const updateClientByAdmin = async (clientData: AdminUpdateClient) => {
   try {
-    const response = await apiClient.put('/updateclientbyadmin', vendorData);
+    const response = await apiClient.put('/updateclientbyadmin', clientData);
 
     if (!response.data?.success) {
       throw new Error(response.data?.message || 'Failed to update client');
@@ -89,7 +89,7 @@ export const updateClientByAdmin = async (vendorData: AdminUpdateVendor) => {
     return response.data.data;
   } catch (err) {
     throw new Error(
-      err instanceof Error ? err.message : 'Unable to update vendor'
+      err instanceof Error ? err.message : 'Unable to update client'
     );
   }
 };
@@ -98,7 +98,7 @@ export const getAllCandidatesByAdmin = async () => {
   try {
     const response = await apiClient.get('/getallcandidates');
     if (!response.data?.success) {
-      throw new Error('Failed to fetch vendors');
+      throw new Error('Failed to fetch clients');
     }
     return response.data.candidates;
   } catch (err) {

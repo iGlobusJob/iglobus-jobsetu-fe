@@ -37,7 +37,7 @@ import {
   createJob,
   getJobDetailsById,
   updateJobById,
-} from '@/services/vendor-services';
+} from '@/services/client-services';
 
 import {
   jobPostSchema,
@@ -65,7 +65,7 @@ const JOB_STATUS = [
 
 /**
  * Job Post Form Component
- * Used by vendors/employers to create or edit job postings
+ * Used by clients/employers to create or edit job postings
  * Fetches job details from URL params if editing
  */
 export const JobPostForm = () => {
@@ -355,7 +355,7 @@ export const JobPostForm = () => {
                       <strong>
                         {Math.ceil(
                           (watchEndDate.getTime() - watchStartDate.getTime()) /
-                            (1000 * 60 * 60 * 24)
+                          (1000 * 60 * 60 * 24)
                         )}{' '}
                         days
                       </strong>

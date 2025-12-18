@@ -22,7 +22,7 @@ import { toast } from 'react-toastify';
 import { FooterSubscribe } from '@/features/dashboard/components/common/footer';
 import { Header } from '@/features/dashboard/components/common/header';
 import type { ApiError } from '@common';
-import { loginVendor } from '@services/vendor-services';
+import { loginClient } from '@services/client-services';
 
 import { loginSchema } from '../../../dashboard/forms/login';
 import type { LoginFormValues } from '../../../dashboard/types/login';
@@ -62,12 +62,12 @@ export const Login: React.FC = () => {
 
     setLoading(true);
     try {
-      const vendor = await loginVendor({
+      const client = await loginClient({
         email: values.email,
         password: values.password,
       });
 
-      if (vendor.status !== 'active') {
+      if (client.status !== 'active') {
         setApiError('Your account is under review by admin. Please wait.');
         setShowErrors(true);
         return;

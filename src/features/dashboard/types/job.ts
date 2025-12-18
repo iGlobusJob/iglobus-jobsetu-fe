@@ -55,7 +55,7 @@ export interface JobPostFormData {
 
 export interface Job {
   _id: string;
-  vendorId: string;
+  clientId: string;
   organizationName?: string;
   companyName: string;
   jobTitle: string;

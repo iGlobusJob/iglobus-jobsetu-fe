@@ -23,18 +23,18 @@ import { Controller, useForm, type FieldPath } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 import {
-  getVendorProfile,
+  getClientProfile,
   updateClientProfile,
-} from '@/services/vendor-services';
+} from '@/services/client-services';
 
 import {
-  vendorProfileSchema,
-  type VendorProfileFormData,
+  clientProfileSchema,
+  type ClientProfileFormData,
 } from '../interface/updateProfileForm';
 
 interface ProfileFieldProps {
   label: string;
-  fieldName: FieldPath<VendorProfileFormData>;
+  fieldName: FieldPath<ClientProfileFormData>;
   error: string | undefined;
   value: string | undefined;
   disabled: boolean;
@@ -124,9 +124,9 @@ const ReadOnlyField = ({ label, value }: ReadOnlyFieldProps): JSX.Element => {
   );
 };
 
-const VendorProfilePage = (): JSX.Element => {
+const ClientProfilePage = (): JSX.Element => {
   const [editMode, setEditMode] = useState(false);
-  const [profile, setProfile] = useState<VendorProfileFormData | null>(null);
+  const [profile, setProfile] = useState<ClientProfileFormData | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -138,36 +138,36 @@ const VendorProfilePage = (): JSX.Element => {
     formState: { errors },
     reset,
     watch,
-  } = useForm<VendorProfileFormData>({
-    resolver: zodResolver(vendorProfileSchema),
+  } = useForm<ClientProfileFormData>({
+    resolver: zodResolver(clientProfileSchema),
     mode: 'onBlur',
   });
 
   const categoryValue = watch('category');
 
-  // Fetch vendor profile
+  // Fetch client profile
   useEffect(() => {
-    const fetchVendor = async (): Promise<void> => {
+    const fetchClient = async (): Promise<void> => {
       setLoading(true);
       try {
-        const data = await getVendorProfile();
-        setProfile(data as VendorProfileFormData);
-        reset(data as VendorProfileFormData);
+        const data = await getClientProfile();
+        setProfile(data as ClientProfileFormData);
+        reset(data as ClientProfileFormData);
         if (data.logoImage) {
           setLogoPreview(data.logoImage);
         }
       } catch (error) {
-        console.error('Failed to fetch vendor profile:', error);
-        toast.error('Unable to fetch vendor details');
+        console.error('Failed to fetch client profile:', error);
+        toast.error('Unable to fetch client details');
       } finally {
         setLoading(false);
       }
     };
 
-    void fetchVendor();
+    void fetchClient();
   }, [reset]);
 
-  const onSubmit = async (data: VendorProfileFormData): Promise<void> => {
+  const onSubmit = async (data: ClientProfileFormData): Promise<void> => {
     setSubmitting(true);
 
     try {
@@ -200,14 +200,14 @@ const VendorProfilePage = (): JSX.Element => {
       await updateClientProfile({
         ...updatedData,
         logo: logoFile || undefined,
-      } as VendorProfileFormData);
+      } as ClientProfileFormData);
 
       setProfile(data);
       setEditMode(false);
       setLogoFile(null);
       toast.success('Profile updated successfully !');
     } catch (error) {
-      console.error('Failed to update vendor profile:', error);
+      console.error('Failed to update client profile:', error);
       toast.error('Failed to update profile');
     } finally {
       setSubmitting(false);
@@ -699,4 +699,4 @@ const VendorProfilePage = (): JSX.Element => {
   );
 };
 
-export default VendorProfilePage;
+export default ClientProfilePage;
