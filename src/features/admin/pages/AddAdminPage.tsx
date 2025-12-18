@@ -57,8 +57,8 @@ const AddAdminPage = () => {
 
           <Stack gap="md">
             <TextInput
-              label="Username / Email"
-              placeholder="Enter admin username"
+              label="Email"
+              placeholder="Enter admin email"
               value={form.username}
               onChange={(e) => handleChange('username', e.target.value)}
               radius="md"

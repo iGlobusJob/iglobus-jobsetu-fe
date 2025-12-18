@@ -10,6 +10,7 @@ import {
   FileInput,
   Group,
   Loader,
+  Progress,
   SegmentedControl,
   Select,
   Stack,
@@ -19,7 +20,7 @@ import {
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { IconFile, IconSparkles, IconUpload } from '@tabler/icons-react';
-import { useEffect, useState, type JSX } from 'react';
+import { useCallback, useEffect, useState, type JSX } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
@@ -183,6 +184,7 @@ const CandidateProfilePage = (): JSX.Element => {
   const [profilePictureFile, setProfilePictureFile] = useState<File | null>(
     null
   );
+  const [completionPercentage, setCompletionPercentage] = useState(0);
 
   const {
     control,
@@ -197,6 +199,52 @@ const CandidateProfilePage = (): JSX.Element => {
       category: 'IT',
     },
   });
+
+  const calculateCompletion = useCallback(
+    (data: CandidateProfileFormData): number => {
+      let totalScore = 0;
+      const weights = {
+        email: 25,
+        mobileNumber: 20,
+        resume: 20,
+        firstName: 8,
+        lastName: 8,
+        gender: 5,
+        dateOfBirth: 5,
+        address: 5,
+        profilePicture: 4,
+      };
+
+      // High priority fields
+      if (data.email && data.email.trim()) totalScore += weights.email;
+      if (data.mobileNumber && data.mobileNumber.trim())
+        totalScore += weights.mobileNumber;
+      if (resumeUrl || data.resume instanceof File)
+        totalScore += weights.resume;
+
+      // Medium priority fields
+      if (data.firstName && data.firstName.trim())
+        totalScore += weights.firstName;
+      if (data.lastName && data.lastName.trim()) totalScore += weights.lastName;
+      if (data.gender && data.gender.trim()) totalScore += weights.gender;
+      if (data.dateOfBirth && data.dateOfBirth.trim())
+        totalScore += weights.dateOfBirth;
+      if (data.address && data.address.trim()) totalScore += weights.address;
+
+      // Profile picture
+      if (profilePicturePreview) totalScore += weights.profilePicture;
+
+      return totalScore;
+    },
+    [resumeUrl, profilePicturePreview]
+  );
+
+  const getProgressColor = (percentage: number): string => {
+    if (percentage === 100) return 'green';
+    if (percentage < 40) return 'red';
+    if (percentage < 70) return 'yellow';
+    return 'blue';
+  };
 
   const formatDate = (date?: string | null): string => {
     if (!date) return 'N/A';
@@ -249,6 +297,10 @@ const CandidateProfilePage = (): JSX.Element => {
         if (data.profilePictureUrl) {
           setProfilePicturePreview(data.profilePictureUrl);
         }
+
+        // Calculate completion percentage
+        const percentage = calculateCompletion(formData);
+        setCompletionPercentage(percentage);
       } catch {
         toast.error('Unable to fetch candidate details');
       } finally {
@@ -256,7 +308,16 @@ const CandidateProfilePage = (): JSX.Element => {
       }
     };
     void fetchCandidate();
-  }, [reset]);
+  }, [calculateCompletion, reset]);
+
+  // Update completion percentage when form data changes
+  useEffect(() => {
+    const subscription = watch((data) => {
+      const percentage = calculateCompletion(data as CandidateProfileFormData);
+      setCompletionPercentage(percentage);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, resumeUrl, profilePicturePreview, calculateCompletion]);
 
   // Handle form submission
   const onSubmit = async (data: CandidateProfileFormData): Promise<void> => {
@@ -289,6 +350,23 @@ const CandidateProfilePage = (): JSX.Element => {
       if (updated.profilePictureUrl) {
         setProfilePicturePreview(updated.profilePictureUrl);
       }
+
+      // Recalculate completion percentage
+      const updatedFormData: CandidateProfileFormData = {
+        firstName: updated.firstName || '',
+        lastName: updated.lastName || '',
+        email: updated.email || '',
+        mobileNumber: updated.mobileNumber || '',
+        gender: updated.gender || '',
+        dateOfBirth: updated.dateOfBirth || '',
+        address: updated.address || '',
+        category: updated.category || 'IT',
+        resume: updated.profileUrl || null,
+        profileUrl: updated.profileUrl || null,
+        profilePictureUrl: updated.profilePictureUrl || null,
+      };
+      const percentage = calculateCompletion(updatedFormData);
+      setCompletionPercentage(percentage);
 
       setProfilePictureFile(null);
       setEditMode(false);
@@ -509,6 +587,31 @@ const CandidateProfilePage = (): JSX.Element => {
               </Button>
             </Group>
           </Group>
+
+          <Divider my="lg" />
+
+          {/* Profile Completion Progress */}
+          <Stack gap="sm">
+            <Group justify="space-between">
+              <Text fw={500} size="sm">
+                Profile Completion
+              </Text>
+              <Text
+                fw={600}
+                size="sm"
+                c={getProgressColor(completionPercentage)}
+              >
+                {completionPercentage}%
+              </Text>
+            </Group>
+            <Progress
+              value={completionPercentage}
+              color={getProgressColor(completionPercentage)}
+              size="lg"
+              radius="md"
+              animated
+            />
+          </Stack>
 
           <Group mt="xl" align="center">
             <ProfilePictureUploadOverlay />

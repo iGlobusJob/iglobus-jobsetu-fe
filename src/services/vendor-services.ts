@@ -72,6 +72,7 @@ export const loginVendor = async (credentials: {
       firstName: vendor.primaryContact.firstName,
       lastName: vendor.primaryContact.lastName,
       email: vendor.email,
+      profileImage: vendor.logo,
     });
 
     return vendor;
@@ -135,7 +136,20 @@ export const updateClientProfile = async (data: VendorProfileFormData) => {
       throw new Error('Failed to update vendor profile');
     }
 
-    return response.data.data;
+    const updatedClient = response.data.data;
+
+    const authState = useAuthStore.getState();
+
+    useAuthStore.getState().setAuth({
+      userRole: authState.userRole,
+      token: authState.token as string,
+      email: updatedClient.email,
+      firstName: updatedClient.primaryContact.firstName,
+      lastName: updatedClient.primaryContact.lastName,
+      profileImage: updatedClient.logo,
+    });
+
+    return updatedClient;
   } catch {
     throw new Error('Unable to update vendor profile');
   }

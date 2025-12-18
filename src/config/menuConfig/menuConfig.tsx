@@ -139,7 +139,7 @@ export const MENU_CONFIG: MenuConfig = {
           id: 'vendors',
           label: 'Clients',
           icon: <IconBuilding size={18} />,
-          path: '/admin/vendors',
+          path: '/admin/clients',
         },
         {
           id: 'candidates',

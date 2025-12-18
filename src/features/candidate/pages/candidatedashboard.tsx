@@ -222,7 +222,7 @@ export default function JobPortalDashboard() {
         <Stack gap="lg" mb="md">
           <div>
             <Title order={2} size="h2" fw={600} mb="xs">
-              Welcome back to JobSetu
+              Welcome to JobSetu
             </Title>
 
             <Title order={1} size="h1" fw={700} mb="sm">

@@ -73,6 +73,7 @@ export interface Job {
   createdAt: string;
   updatedAt: string;
   id: string;
+  logo?: string;
 }
 
 export interface JobsResponse {

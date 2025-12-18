@@ -78,11 +78,6 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
       shadow="sm"
       withBorder
       p="lg"
-      onClick={() => {
-        if (!isLoggedIn) {
-          openModal();
-        }
-      }}
     >
       {/* Top-right badges section */}
       <Flex
@@ -233,7 +228,7 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
           rightSection={<IconChevronRight size={14} />}
           onClick={() => {
             if (!isLoggedIn) {
-              openModal();
+              openModal(job.id);
             } else {
               navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id));
             }
