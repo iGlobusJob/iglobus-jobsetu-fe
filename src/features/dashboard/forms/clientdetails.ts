@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const nameRegex = /^[A-Za-z\s]+$/;
+
 export const clientDetailsSchema = z.object({
   id: z.string().min(1, 'Client ID is required'),
 
@@ -28,14 +30,32 @@ export const clientDetailsSchema = z.object({
     .or(z.literal('')),
 
   primaryContact: z.object({
-    firstName: z.string().min(1, 'First name required'),
-    lastName: z.string().min(1, 'Last name required'),
+    firstName: z
+      .string()
+      .min(1, 'First name required')
+      .regex(nameRegex, 'First name must contain only letters'),
+
+    lastName: z
+      .string()
+      .min(1, 'Last name required')
+      .regex(nameRegex, 'Last name must contain only letters'),
   }),
 
   secondaryContact: z
     .object({
-      firstName: z.string().optional().nullable().or(z.literal('')),
-      lastName: z.string().optional().nullable().or(z.literal('')),
+      firstName: z
+        .string()
+        .regex(nameRegex, 'First name must contain only letters')
+        .optional()
+        .nullable()
+        .or(z.literal('')),
+
+      lastName: z
+        .string()
+        .regex(nameRegex, 'Last name must contain only letters')
+        .optional()
+        .nullable()
+        .or(z.literal('')),
     })
     .optional()
     .nullable(),
