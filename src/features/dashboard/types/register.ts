@@ -11,6 +11,7 @@ export interface VendorRegisterValues {
   panCard: string;
   category: 'IT' | 'Non-IT';
   logoImage: File | null;
+  termsAccepted: boolean;
 }
 // Payload sent to backend
 export interface RegisterVendorPayload {
