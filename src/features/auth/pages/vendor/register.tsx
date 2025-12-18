@@ -3,10 +3,13 @@ import {
   Button,
   Card,
   Center,
+  Checkbox,
   Container,
   FileInput,
   Group,
   Image,
+  Modal,
+  ScrollArea,
   SegmentedControl,
   Stack,
   Text,
@@ -38,12 +41,13 @@ const Register: React.FC = () => {
   const theme = useMantineTheme();
   const [loading, setLoading] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [termsOpened, setTermsOpened] = useState(false);
 
   // Responsive breakpoints
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  const form = useForm<VendorRegisterValues>({
+  const form = useForm<VendorRegisterValues & { termsAccepted: boolean }>({
     initialValues: {
       organizationName: '',
       primaryFirstName: '',
@@ -56,11 +60,20 @@ const Register: React.FC = () => {
       panCard: '',
       category: 'IT',
       logoImage: null,
+      termsAccepted: false,
     },
-    validate: zodResolver(vendorRegisterSchema),
+    validate: {
+      ...zodResolver(vendorRegisterSchema),
+      termsAccepted: (value) =>
+        value ? null : 'You must accept Terms & Conditions',
+    },
   });
 
   const handleSubmit = async (values: VendorRegisterValues) => {
+    if (!values.termsAccepted) {
+      toast.error('Accept Terms & Conditions to continue');
+      return;
+    }
     setLoading(true);
     try {
       const payload = {
@@ -133,6 +146,74 @@ const Register: React.FC = () => {
       }}
     >
       <Header />
+      <Modal
+        opened={termsOpened}
+        onClose={() => setTermsOpened(false)}
+        title="Terms & Conditions"
+        size="lg"
+        radius="md"
+      >
+        <ScrollArea h={320}>
+          <Stack gap="sm">
+            <Text size="sm">
+              These Terms & Conditions govern your access to and use of our
+              platform. By registering, you agree to comply with all applicable
+              laws, policies, and guidelines.
+            </Text>
+
+            <Text size="sm">
+              <b>1. Account Responsibility</b>
+              <br />
+              You are responsible for maintaining the confidentiality of your
+              account credentials and all activities conducted through your
+              account.
+            </Text>
+
+            <Text size="sm">
+              <b>2. Information Accuracy</b>
+              <br />
+              You confirm that all information provided during registration is
+              true, accurate, and up to date. Any false information may result
+              in account suspension or termination.
+            </Text>
+
+            <Text size="sm">
+              <b>3. Data Usage</b>
+              <br />
+              We may collect and process your data in accordance with our
+              Privacy Policy for the purpose of providing and improving our
+              services.
+            </Text>
+
+            <Text size="sm">
+              <b>4. Termination</b>
+              <br />
+              We reserve the right to suspend or terminate accounts that violate
+              these terms or engage in unlawful activities.
+            </Text>
+
+            <Text size="sm" c="dimmed">
+              By clicking “Accept”, you acknowledge that you have read,
+              understood, and agreed to these Terms & Conditions.
+            </Text>
+          </Stack>
+        </ScrollArea>
+
+        <Group justify="space-between" mt="md">
+          <Button variant="default" onClick={() => setTermsOpened(false)}>
+            Cancel
+          </Button>
+
+          <Button
+            onClick={() => {
+              form.setFieldValue('termsAccepted', true);
+              setTermsOpened(false);
+            }}
+          >
+            Accept & Continue
+          </Button>
+        </Group>
+      </Modal>
       <Box
         style={{
           display: 'flex',
@@ -396,6 +477,50 @@ const Register: React.FC = () => {
                         </Center>
                       )}
                     </Group>
+                  </Box>
+                  <Box
+                    p="md"
+                    style={{
+                      border: `1px solid ${
+                        form.errors.termsAccepted
+                          ? theme.colors.red[6]
+                          : theme.colors.gray[3]
+                      }`,
+                      borderRadius: theme.radius.md,
+                      backgroundColor: isDark
+                        ? theme.colors.dark[6]
+                        : theme.colors.gray[0],
+                    }}
+                  >
+                    <Checkbox
+                      checked={form.values.termsAccepted}
+                      onChange={() => setTermsOpened(true)}
+                      label={
+                        <Text size="sm">
+                          I agree to the{' '}
+                          <Text
+                            span
+                            fw={600}
+                            c="cyan.6"
+                            td="underline"
+                            style={{ cursor: 'pointer' }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setTermsOpened(true);
+                            }}
+                          >
+                            Terms & Conditions
+                          </Text>{' '}
+                          and acknowledge that I have read and understood them.
+                        </Text>
+                      }
+                    />
+
+                    {form.errors.termsAccepted && (
+                      <Text size="xs" c="red" mt={6}>
+                        {form.errors.termsAccepted}
+                      </Text>
+                    )}
                   </Box>
 
                   <Button
