@@ -50,7 +50,7 @@ export function Header() {
   const [candidatesOpen, setCandidatesOpen] = useState(false);
   const [employerOpen, setEmployerOpen] = useState(false);
   //const [jobsOpen, setJobsOpen] = useState(false);
-
+  const [contactOpen, setContactOpen] = useState(false);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn());
   const firstName = useAuthStore((s) => s.firstName);
   const lastName = useAuthStore((s) => s.lastName);
@@ -62,7 +62,12 @@ export function Header() {
   return (
     <Paper shadow="md">
       {/* Top Bar - Hidden on Mobile */}
-      {!['/client/login', '/client/register', '/recruiter'].includes(path) && (
+      {![
+        '/client/login',
+        '/client/register',
+        '/recruiter',
+        '/services',
+      ].includes(path) && (
         <Box
           visibleFrom="md"
           style={{
@@ -186,6 +191,9 @@ export function Header() {
                   <Menu.Item component="a" href="/#about">
                     About Us
                   </Menu.Item>
+                  <Menu.Item component="a" href="/services">
+                    Services
+                  </Menu.Item>
                   <Menu.Item component="a" href="/recruiter">
                     Recruiter
                   </Menu.Item>
@@ -276,12 +284,22 @@ export function Header() {
               </Menu>
 
               {/* Contact Link */}
-              {/* <Anchor
-                href="/contact"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <Text fw={500}>Contact</Text>
-              </Anchor> */}
+              <Menu trigger="hover" position="bottom">
+                <Menu.Target>
+                  <UnstyledButton>
+                    <Flex align="center" gap={5}>
+                      <Text fw={500}>Contact</Text>
+                      <IconChevronDown size={14} />
+                    </Flex>
+                  </UnstyledButton>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Item component="a" href="/services">
+                    Services
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             </Flex>
 
             {/* Right Side - Notifications & User */}
@@ -720,19 +738,39 @@ export function Header() {
             </Collapse>
           </Box>
 
-          <Divider />
-
           {/* Contact Link */}
-          {/* <Anchor
-            href="/contact"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <Flex align="center" p="sm">
-              <Text fw={500}>Contact</Text>
-            </Flex>
-          </Anchor>
+          <Box>
+            <UnstyledButton
+              onClick={() => setContactOpen(!contactOpen)}
+              style={{ width: '100%' }}
+            >
+              <Flex justify="space-between" align="center" p="sm">
+                <Text fw={500}>Contact</Text>
+                <IconChevronRight
+                  size={18}
+                  style={{
+                    transform: contactOpen ? 'rotate(90deg)' : 'none',
+                    transition: 'transform 0.2s',
+                  }}
+                />
+              </Flex>
+            </UnstyledButton>
 
-          <Divider /> */}
+            <Collapse in={contactOpen}>
+              <Stack gap={0} pl="lg">
+                <Anchor
+                  href="/services"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>Services</Text>
+                </Anchor>
+              </Stack>
+            </Collapse>
+          </Box>
 
           {/* Social Links */}
           <Box p="md">
