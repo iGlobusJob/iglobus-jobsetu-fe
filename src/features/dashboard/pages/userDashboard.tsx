@@ -8,6 +8,7 @@ import { Categories } from '../components/common/categories';
 import { LogoShowcase } from '../components/common/companies';
 import { FooterSubscribe } from '../components/common/footer';
 import { Header } from '../components/common/header';
+import Icons from '../components/common/icons';
 import { JobListingsSection } from '../components/common/jobs';
 import { TestimonialCarousel } from '../components/common/review';
 import { ScrollToTop } from '../components/common/scrolltotop';
@@ -21,6 +22,8 @@ export const UserDashboard = () => {
         <BannerSection />
 
         <About />
+
+        <Icons />
 
         <Categories />
 

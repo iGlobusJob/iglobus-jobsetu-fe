@@ -15,7 +15,6 @@ import {
   Text,
   ThemeIcon,
   Title,
-  Button,
   Avatar,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
@@ -294,7 +293,7 @@ const AllJobs = () => {
                           <Badge
                             color={getStatusColor(job.status)}
                             variant="filled"
-                            size="sm"
+                            size="md"
                             styles={{ root: { textTransform: 'capitalize' } }}
                           >
                             {job.status}
@@ -340,7 +339,7 @@ const AllJobs = () => {
                     </Group>
 
                     {/* Compact Info */}
-                    <Group gap="lg" p="md" wrap="wrap">
+                    <Group gap="xl" p="md" wrap="wrap">
                       <JobInfo
                         label="Positions"
                         value={job.noOfPositions}
@@ -416,12 +415,6 @@ const AllJobs = () => {
                               </strong>
                             </Text>
                           </Stack>
-
-                          <Group>
-                            <Button size="sm" variant="light" color="blue">
-                              View Details
-                            </Button>
-                          </Group>
                         </Group>
                       </Stack>
                     )}
