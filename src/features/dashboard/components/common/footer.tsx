@@ -18,7 +18,10 @@ import {
 } from '@tabler/icons-react';
 
 const footerLinks = {
-  company: [{ label: 'About Us', href: '/#about' }],
+  company: [
+    { label: 'About Us', href: '/#about' },
+    { label: 'Services', href: '/services' },
+  ],
   forJobs: [
     { label: 'Browse Categories', href: '/#categories' },
     { label: 'Browse Jobs', href: '/#browse-jobs' },
