@@ -320,7 +320,6 @@ export const JobPostForm = () => {
                           placeholder="Pick start date"
                           leftSection={<IconCalendar size={16} />}
                           minDate={new Date()}
-                          maxDate={new Date()}
                           {...field}
                           error={errors.postStart?.message}
                           required
@@ -355,7 +354,7 @@ export const JobPostForm = () => {
                       <strong>
                         {Math.ceil(
                           (watchEndDate.getTime() - watchStartDate.getTime()) /
-                          (1000 * 60 * 60 * 24)
+                            (1000 * 60 * 60 * 24)
                         )}{' '}
                         days
                       </strong>

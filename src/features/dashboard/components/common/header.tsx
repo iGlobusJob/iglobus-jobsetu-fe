@@ -186,6 +186,9 @@ export function Header() {
                   <Menu.Item component="a" href="/#about">
                     About Us
                   </Menu.Item>
+                  <Menu.Item component="a" href="/services">
+                    Services
+                  </Menu.Item>
                   <Menu.Item component="a" href="/recruiter">
                     Recruiter
                   </Menu.Item>
@@ -498,6 +501,16 @@ export function Header() {
                   }}
                 >
                   <Text>About Us</Text>
+                </Anchor>
+                <Anchor
+                  href="/services"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>Services</Text>
                 </Anchor>
                 <Anchor
                   component={Link}
