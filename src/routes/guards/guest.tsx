@@ -14,8 +14,9 @@ export const GuestRoute = () => {
   if (isLoggedIn() && userRole) {
     const dashboardMap: Record<NonNullable<UserRole>, string> = {
       candidate: '/candidate/dashboard',
-      vendor: '/vendor/dashboard',
+      client: '/client/dashboard',
       admin: '/admin/dashboard',
+      recruiter: '/recruiter/jobs',
     };
 
     return <Navigate to={dashboardMap[userRole]} replace />;

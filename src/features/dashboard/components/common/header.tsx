@@ -22,21 +22,19 @@ import { useDisclosure } from '@mantine/hooks';
 import {
   IconBrandFacebook,
   IconBrandInstagram,
-  IconBrandTwitter,
   IconBrandWhatsapp,
   IconChevronDown,
   IconChevronRight,
-  IconLock,
   IconMail,
   IconX,
 } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
-import { logoutVendor } from '@services/vendor-services';
+import { logoutClient } from '@services/client-services';
 
 export function Header() {
   const colorScheme = useComputedColorScheme();
@@ -51,11 +49,12 @@ export function Header() {
   const [companyOpen, setCompanyOpen] = useState(false);
   const [candidatesOpen, setCandidatesOpen] = useState(false);
   const [employerOpen, setEmployerOpen] = useState(false);
-  const [jobsOpen, setJobsOpen] = useState(false);
+  //const [jobsOpen, setJobsOpen] = useState(false);
 
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn());
   const firstName = useAuthStore((s) => s.firstName);
   const lastName = useAuthStore((s) => s.lastName);
+  const role = useAuthStore((s) => s.userRole);
   const { token } = useAuthStore();
   const location = useLocation();
   const path = location.pathname;
@@ -63,7 +62,7 @@ export function Header() {
   return (
     <Paper shadow="md">
       {/* Top Bar - Hidden on Mobile */}
-      {!['/client/login', '/client/register'].includes(path) && (
+      {!['/client/login', '/client/register', '/recruiter'].includes(path) && (
         <Box
           visibleFrom="md"
           style={{
@@ -139,7 +138,7 @@ export function Header() {
                         color: colorScheme === 'dark' ? '#fff' : '#333',
                         borderColor: 'blue',
                       }}
-                      onClick={openModal}
+                      onClick={() => openModal()}
                     >
                       Join as Candidate
                     </Button>
@@ -160,11 +159,11 @@ export function Header() {
                 src={
                   colorScheme === 'dark'
                     ? '/jobseti-darks.png'
-                    : '/jobseti-light.png'
+                    : '/jobseti-lights.png'
                 }
                 alt="JobSetu Logo"
-                width={45}
-                height={45}
+                width={56}
+                height={56}
                 radius="md"
               />
             </Anchor>
@@ -184,16 +183,25 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="#about">
+                  <Menu.Item component="a" href="/#about">
                     About Us
                   </Menu.Item>
-                  <Menu.Item component="a" href="/admin">
+                  <Menu.Item component="a" href="/services">
+                    Services
+                  </Menu.Item>
+                  <Menu.Item component="a" href="/recruiter">
                     Recruiter
                   </Menu.Item>
                   <Menu.Item component="a" href="/client/login">
                     Client
                   </Menu.Item>
-                  <Menu.Item onClick={() => openModal()}>Candidate</Menu.Item>
+                  {![
+                    '/recruiter',
+                    '/client/login',
+                    '/client/register',
+                  ].includes(path) && (
+                    <Menu.Item onClick={() => openModal()}>Candidate</Menu.Item>
+                  )}
                 </Menu.Dropdown>
               </Menu>
 
@@ -210,9 +218,6 @@ export function Header() {
                 <Menu.Dropdown>
                   <Menu.Item component="a" href="#categories">
                     Job Categories
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/team">
-                    Our Team
                   </Menu.Item>
                   <Menu.Item component="a" href="#testimonials">
                     Testimonials
@@ -231,16 +236,10 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="/job-list">
+                  <Menu.Item component="a" href="/#browse-jobs">
                     Browse Jobs
                   </Menu.Item>
                   <Menu.Item onClick={() => openModal()}>Saved Jobs</Menu.Item>
-                  <Menu.Item onClick={() => openModal()}>
-                    Candidate List
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/candidate-grid">
-                    Candidate Grid
-                  </Menu.Item>
                   <Menu.Item onClick={() => openModal()}>
                     Candidate Profile
                   </Menu.Item>
@@ -267,28 +266,25 @@ export function Header() {
                   <Menu.Item component="a" href="/client/register">
                     Register
                   </Menu.Item>
-                  <Menu.Item component="a" href="/company-details">
-                    Company Details
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/post-job">
+                  <Menu.Item component="a" href="/client/login">
                     Post a Job
                   </Menu.Item>
                   <Menu.Item component="a" href="/client/login">
                     Manage Jobs
                   </Menu.Item>
-                  <Menu.Item component="a" href="/employer-dashboard">
+                  <Menu.Item component="a" href="/client/login">
                     Employer Dashboard
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
 
               {/* Contact Link */}
-              <Anchor
+              {/* <Anchor
                 href="/contact"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <Text fw={500}>Contact</Text>
-              </Anchor>
+              </Anchor> */}
             </Flex>
 
             {/* Right Side - Notifications & User */}
@@ -416,7 +412,7 @@ export function Header() {
                       <Menu.Item component="a" href="/bookmark-jobs">
                         Bookmarks Jobs
                       </Menu.Item>
-                      <Menu.Item component="a" href="/profile">
+                      <Menu.Item component="a" href={`${role}/profile`}>
                         My Profile
                       </Menu.Item>
                       <Menu.Divider />
@@ -424,7 +420,7 @@ export function Header() {
                         color="red"
                         onClick={() => {
                           toast.success('Logged out Successfully');
-                          logoutVendor();
+                          logoutClient();
                         }}
                       >
                         Logout
@@ -497,7 +493,28 @@ export function Header() {
             <Collapse in={homeOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/admin"
+                  href="/#about"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>About Us</Text>
+                </Anchor>
+                <Anchor
+                  href="/services"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>Services</Text>
+                </Anchor>
+                <Anchor
+                  component={Link}
+                  to="/recruiter"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -516,16 +533,18 @@ export function Header() {
                 >
                   <Text>Client</Text>
                 </Anchor>
-                <Anchor
-                  onClick={() => openModal()}
+                <UnstyledButton
+                  onClick={() => {
+                    openModal();
+                  }}
                   style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
+                    width: '100%',
+                    textAlign: 'left',
                     padding: '8px 0',
                   }}
                 >
                   <Text>Candidate</Text>
-                </Anchor>
+                </UnstyledButton>
               </Stack>
             </Collapse>
           </Box>
@@ -552,27 +571,17 @@ export function Header() {
             <Collapse in={companyOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/about"
+                  href="/#categories"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
                     padding: '8px 0',
                   }}
                 >
-                  <Text>About Us</Text>
+                  <Text>Job Categories</Text>
                 </Anchor>
                 <Anchor
-                  href="/team"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Our Team</Text>
-                </Anchor>
-                <Anchor
-                  href="#testimonials"
+                  href="/#testimonials"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -586,69 +595,6 @@ export function Header() {
           </Box>
 
           <Divider />
-
-          {/* Jobs Section */}
-          <Box>
-            <UnstyledButton
-              onClick={() => setJobsOpen(!jobsOpen)}
-              style={{ width: '100%' }}
-            >
-              <Flex justify="space-between" align="center" p="sm">
-                <Text fw={500}>Jobs</Text>
-                <IconChevronRight
-                  size={18}
-                  style={{
-                    transform: jobsOpen ? 'rotate(90deg)' : 'none',
-                    transition: 'transform 0.2s',
-                  }}
-                />
-              </Flex>
-            </UnstyledButton>
-            <Collapse in={jobsOpen}>
-              <Stack gap={0} pl="lg">
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Post a Job</Text>
-                </Anchor>
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Manage Jobs</Text>
-                </Anchor>
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Saved Jobs</Text>
-                </Anchor>
-                <Anchor
-                  href="#categories"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Job Categories</Text>
-                </Anchor>
-              </Stack>
-            </Collapse>
-          </Box>
 
           <Divider />
 
@@ -672,7 +618,7 @@ export function Header() {
             <Collapse in={candidatesOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/job-list"
+                  href="/#browse-jobs"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -689,20 +635,10 @@ export function Header() {
                     padding: '8px 0',
                   }}
                 >
-                  <Text>Candidate List</Text>
+                  <Text>Saved Jobs</Text>
                 </Anchor>
                 <Anchor
-                  href="/candidate-grid"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Candidate Grid</Text>
-                </Anchor>
-                <Anchor
-                  href="/candidate-details"
+                  onClick={() => openModal()}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -712,7 +648,7 @@ export function Header() {
                   <Text>Candidate Profile</Text>
                 </Anchor>
                 <Anchor
-                  href="/upload-resume"
+                  onClick={() => openModal()}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -720,16 +656,6 @@ export function Header() {
                   }}
                 >
                   <Text>Upload Resume</Text>
-                </Anchor>
-                <Anchor
-                  href="/career-tips"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Career Tips</Text>
                 </Anchor>
               </Stack>
             </Collapse>
@@ -754,7 +680,7 @@ export function Header() {
             <Collapse in={employerOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/login"
+                  href="/client/login"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -764,7 +690,7 @@ export function Header() {
                   <Text>Login</Text>
                 </Anchor>
                 <Anchor
-                  href="/register"
+                  href="/client/register"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -772,16 +698,6 @@ export function Header() {
                   }}
                 >
                   <Text>Register</Text>
-                </Anchor>
-                <Anchor
-                  href="/candidate-details"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Company Details</Text>
                 </Anchor>
                 <Anchor
                   href="/client/login"
@@ -794,7 +710,17 @@ export function Header() {
                   <Text>Post a Job</Text>
                 </Anchor>
                 <Anchor
-                  href="/career-tips"
+                  href="/client/login"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>Manage Jobs</Text>
+                </Anchor>
+                <Anchor
+                  href="/employer-dashboard"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -803,16 +729,6 @@ export function Header() {
                 >
                   <Text>Employer Dashboard</Text>
                 </Anchor>
-                <Anchor
-                  href="/career-tips"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Subscription Plans</Text>
-                </Anchor>
               </Stack>
             </Collapse>
           </Box>
@@ -820,7 +736,7 @@ export function Header() {
           <Divider />
 
           {/* Contact Link */}
-          <Anchor
+          {/* <Anchor
             href="/contact"
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
@@ -829,7 +745,7 @@ export function Header() {
             </Flex>
           </Anchor>
 
-          <Divider />
+          <Divider /> */}
 
           {/* Social Links */}
           <Box p="md">
@@ -868,14 +784,14 @@ export function Header() {
                 <IconBrandInstagram size={20} />
               </ActionIcon>
               <ActionIcon
-                variant="light"
-                color="blue"
+                variant="subtle"
+                color="gray"
                 size="lg"
                 component="a"
                 href="#"
                 aria-label="Twitter"
               >
-                <IconBrandTwitter size={20} />
+                <IconX size={20} />
               </ActionIcon>
             </Flex>
           </Box>
@@ -884,31 +800,26 @@ export function Header() {
 
           {!isLoggedIn ? (
             <>
-              {' '}
-              <Button
-                leftSection={<IconLock size={18} />}
-                onClick={openModal}
-                fullWidth
-              >
-                Candidate - Login / Register
-              </Button>
+              {!token && (
+                <Menu trigger="hover" position="bottom">
+                  <Menu.Target>
+                    <Button
+                      variant="subtle"
+                      radius="xl"
+                      fw={600}
+                      style={{
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
+                        color: colorScheme === 'dark' ? '#fff' : '#333',
+                        borderColor: 'blue',
+                      }}
+                      onClick={() => openModal()}
+                    >
+                      Join as Candidate
+                    </Button>
+                  </Menu.Target>
+                </Menu>
+              )}
               <Divider />
-              <Button
-                component="a"
-                href="/client/login"
-                leftSection={<IconLock size={18} />}
-                fullWidth
-              >
-                Client Login
-              </Button>
-              <Button
-                component="a"
-                href="/client/register"
-                leftSection={<IconLock size={18} />}
-                fullWidth
-              >
-                Client Register
-              </Button>{' '}
             </>
           ) : (
             <Stack gap="xs" mt="md">
@@ -920,7 +831,12 @@ export function Header() {
               >
                 Manage Jobs
               </Button>
-              <Button variant="light" component="a" href="/profile" fullWidth>
+              <Button
+                variant="light"
+                component="a"
+                href={`${role}/profile`}
+                fullWidth
+              >
                 My Profile
               </Button>
               <Button
@@ -929,7 +845,7 @@ export function Header() {
                 fullWidth
                 onClick={() => {
                   toast.success('Logged out successfully');
-                  logoutVendor();
+                  logoutClient();
                 }}
               >
                 Logout

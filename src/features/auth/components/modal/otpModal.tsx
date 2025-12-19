@@ -15,12 +15,13 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
+import { CANDIDATE_PATHS } from '@/routes/config/userPath';
 import { candidateJoin, validateOtp } from '@/services/candidate-services';
 import { useOtpModalStore } from '@/store/otpModalStore';
-import { useAuthStore } from '@/store/userDetails';
 
 export const OTPmodal = () => {
   const open = useOtpModalStore((state) => state.open);
+  const redirectJobId = useOtpModalStore((state) => state.redirectJobId);
   const closeModal = useOtpModalStore((state) => state.closeModal);
 
   const [email, setEmail] = useState('');
@@ -29,21 +30,19 @@ export const OTPmodal = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Simulated backend API: Send OTP
   const handleSendOtp = async () => {
-    // Email regex validation
     setLoading(true);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email.trim() || !emailRegex.test(email)) {
       setLoading(false);
-      alert('Please enter a valid email address');
+      toast.error('Please enter a valid email address');
       return;
     }
+
     try {
       const response = await candidateJoin({ email });
       if (response) {
-        setLoading(false);
         setOtpSent(true);
         toast.success(`OTP sent to ${email}`);
       } else {
@@ -51,67 +50,52 @@ export const OTPmodal = () => {
       }
     } catch (err: unknown) {
       const error = err as ApiError;
-
       const data = error.data ?? error;
-
-      if (data.message) {
-        toast.error(data.message);
-      } else {
-        toast.error('Failed to send OTP');
-      }
+      toast.error(data.message || 'Failed to send OTP');
     } finally {
       setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
+    if (otp.length !== 5) return;
+
     setLoading(true);
     try {
       const response = await validateOtp({ email, otp });
       if (response?.success) {
-        const token = response.data.token;
-        const candidate = response.data.candidate;
-        useAuthStore.getState().setAuth({
-          email: candidate.email,
-          userRole: 'candidate',
-          token: token,
-          firstName: '',
-          lastName: '',
-        });
         toast.success('OTP verified successfully ! Welcome to JobSetu 🚀');
         setOtp('');
         setEmail('');
         setOtpSent(false);
-        navigate('/candidate/dashboard');
+
+        if (redirectJobId?.length) {
+          closeModal();
+          navigate(CANDIDATE_PATHS.JOB_DETAILS(redirectJobId));
+        } else {
+          closeModal();
+          navigate('/candidate/dashboard');
+        }
       } else {
-        toast.error('Something went wrong! ');
+        toast.error('Something went wrong!');
       }
     } catch (err: unknown) {
       const error = err as ApiError;
-
       const data = error.data ?? error;
-
-      if (data.message) {
-        toast.error(data.message);
-      } else {
-        toast.error('Failed to send OTP');
-      }
+      toast.error(data.message || 'Failed to verify OTP');
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <Modal
       opened={open}
       onClose={closeModal}
-      closeOnClickOutside
-      closeOnEscape
       centered
       size="xl"
       withCloseButton={false}
       radius="lg"
-      padding="xl"
+      padding={0}
       styles={{
         content: {
           borderRadius: '20px',
@@ -119,89 +103,85 @@ export const OTPmodal = () => {
         },
       }}
     >
-      <Grid gutter={0} align="center">
-        {/* Left Image Section */}
+      <Grid gutter={0} align="stretch">
+        {/* Left Image */}
         <Grid.Col
           span={{ base: 0, sm: 5 }}
+          visibleFrom="sm"
           style={{
             backgroundColor: '#f8f9fa',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            borderTopLeftRadius: '20px',
-            borderBottomLeftRadius: '20px',
             padding: '2rem',
           }}
         >
           <Image
             src="/auth/sign-in.png"
             alt="Authentication Illustration"
-            radius="md"
-            style={{
-              width: '100%',
-              maxWidth: '280px',
-              objectFit: 'contain',
-            }}
+            style={{ maxWidth: 280, width: '100%' }}
           />
         </Grid.Col>
 
-        {/* Right Form Section */}
-        <Grid.Col span={{ base: 12, sm: 7 }} style={{ padding: '2rem' }}>
-          <Box>
-            <Text
-              fw={700}
-              ta="center"
-              mb={10}
-              style={{
-                fontSize: '34px',
-                color: '#1a73e8',
-                letterSpacing: '-0.1px',
-              }}
-            >
+        {/* Right Section */}
+        <Grid.Col span={{ base: 12, sm: 7 }} p="xl">
+          <Box mb="lg" ta="center">
+            <Text fw={700} fz={32} c="blue">
               Candidate
             </Text>
-            <Text size="lg" fw={600} mb={4}>
+            <Text fw={600} fz="lg">
               {otpSent ? 'Verify OTP' : 'Login or Register'}
             </Text>
-            <Text size="sm" c="dimmed" mb="lg">
+            <Text size="sm" c="dimmed">
               {otpSent
-                ? 'Enter the 5-digit OTP sent to your email address.'
-                : 'Enter your Email to proceed.'}
+                ? 'Enter the 5-digit OTP sent to your email.'
+                : 'Enter your email to continue.'}
             </Text>
           </Box>
 
           <Stack gap="md">
-            {/* Always show number field */}
             <TextInput
               size="lg"
               label="Email"
               placeholder="Enter your email"
-              required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
               disabled={otpSent}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) =>
+                e.key === 'Enter' && !otpSent && handleSendOtp()
+              }
             />
 
             {!otpSent ? (
-              <Button onClick={handleSendOtp} fullWidth loading={loading}>
+              <Button
+                size="lg"
+                fullWidth
+                loading={loading}
+                onClick={handleSendOtp}
+              >
                 Send OTP
               </Button>
             ) : (
               <>
-                <Text size="sm" fw={500}>
-                  Enter OTP
-                </Text>
                 <Group justify="center">
                   <PinInput
                     length={5}
-                    type="number"
+                    size="lg"
                     value={otp}
                     onChange={setOtp}
+                    onComplete={handleVerifyOtp}
                     oneTimeCode
+                    type="number"
                   />
                 </Group>
 
-                <Button onClick={handleVerifyOtp} fullWidth>
+                <Button
+                  size="lg"
+                  fullWidth
+                  loading={loading}
+                  disabled={otp.length !== 5}
+                  onClick={handleVerifyOtp}
+                >
                   Verify OTP
                 </Button>
 
@@ -210,6 +190,7 @@ export const OTPmodal = () => {
                   <Text
                     span
                     c="blue"
+                    fw={500}
                     style={{ cursor: 'pointer' }}
                     onClick={handleSendOtp}
                   >

@@ -126,7 +126,7 @@ export const AdminLoginPage: React.FC = () => {
                 }
               >
                 <Image
-                  src={isDark ? '/jobseti-darks.png' : '/jobseti-light.png'}
+                  src={isDark ? '/jobseti-darks.png' : '/jobseti-lights.png'}
                   alt="Logo"
                   fit="contain"
                   h={isTablet ? 50 : 70}
@@ -136,7 +136,7 @@ export const AdminLoginPage: React.FC = () => {
 
               <Image
                 src="/auth/adminlogin.png"
-                alt="Recruiter Login Illustration"
+                alt="Admin Login Illustration"
                 fit="contain"
                 h={isTablet ? 260 : 360}
                 w="auto"
@@ -200,9 +200,9 @@ export const AdminLoginPage: React.FC = () => {
             )}
 
             <Stack align="center" mb="lg">
-              <Title order={isMobile ? 4 : 1}>Recruiter Login</Title>
+              <Title order={isMobile ? 4 : 1}>Admin Login</Title>
               <Text size={isMobile ? 'sm' : 'md'} ta="center">
-                Sign in to continue to the Recruiter Dashboard.
+                Sign in to continue to the Admin Dashboard.
               </Text>
             </Stack>
 

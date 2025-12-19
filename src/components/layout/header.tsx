@@ -34,7 +34,8 @@ export const Header = ({
   toggleDesktop,
 }: HeaderProps) => {
   const navigate = useNavigate();
-  const { email, userRole, firstName, lastName, clearAuth } = useAuthStore();
+  const { email, userRole, firstName, lastName, clearAuth, profileImage } =
+    useAuthStore();
   const isAdmin = userRole === 'admin';
 
   const handleLogout = () => {
@@ -121,22 +122,17 @@ export const Header = ({
             }}
           >
             <Group gap="xs">
-              <Avatar size="sm" radius="xl" />
+              <Avatar size="sm" radius="xl" src={profileImage} />
 
               {/* Hide email & role on extra small screens */}
               <Box style={{ lineHeight: 1 }} visibleFrom="sm">
                 <Text size="xs" fw={600}>
                   {email}
                 </Text>
-                {userRole === 'admin' ? (
-                  <Text size="xs" tt="capitalize">
-                    {userRole}
-                  </Text>
-                ) : (
-                  <Text size="xs" tt="capitalize">
-                    {firstName} {lastName}
-                  </Text>
-                )}
+
+                <Text size="xs" tt="capitalize">
+                  {firstName} {lastName}
+                </Text>
               </Box>
             </Group>
           </UnstyledButton>
@@ -144,15 +140,15 @@ export const Header = ({
 
         <Menu.Dropdown>
           <Menu.Label>Account</Menu.Label>
-
-          <Menu.Item
-            leftSection={<IconUser size={16} />}
-            onClick={() => navigate(`/${userRole}/profile`)}
-          >
-            Profile
-          </Menu.Item>
-
-          {userRole !== 'candidate' && (
+          {userRole && !['admin', 'recruiter'].includes(userRole) && (
+            <Menu.Item
+              leftSection={<IconUser size={16} />}
+              onClick={() => navigate(`/${userRole}/profile`)}
+            >
+              Profile
+            </Menu.Item>
+          )}
+          {userRole && !['candidate', 'recruiter'].includes(userRole) && (
             <Menu.Item
               leftSection={<IconSettings size={16} />}
               onClick={() => navigate(`/${userRole}/settings`)}

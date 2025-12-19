@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import type { CandidateProfileFormData } from '@/features/candidate/pages/candidateprofile';
+import type { CandidateJob } from '@/features/dashboard/types/candidatejobs';
 import type { ApiJob } from '@/features/dashboard/types/job';
 import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
@@ -45,6 +46,7 @@ export const validateOtp = async (credentials: {
       firstName: candidate?.firstName || '',
       lastName: candidate?.lastName || '',
       email: candidate?.email || '',
+      profileImage: candidate?.profilePictureUrl,
     });
 
     // Close OTP modal AFTER successfully verify
@@ -86,6 +88,7 @@ export const updateCandidateProfile = async (data: {
   gender?: string;
   category?: string;
   resumeFile?: File | null;
+  profilePictureFile?: File | null;
 }): Promise<CandidateProfileFormData> => {
   try {
     const formData = new FormData();
@@ -96,6 +99,7 @@ export const updateCandidateProfile = async (data: {
     formData.append('dateOfBirth', data.dateOfBirth || '');
     formData.append('gender', data.gender || '');
     formData.append('category', data.category || '');
+    formData.append('profilepicture', data.profilePictureFile || '');
 
     if (data.resumeFile instanceof File) {
       formData.append('profile', data.resumeFile);
@@ -110,6 +114,17 @@ export const updateCandidateProfile = async (data: {
     if (!response.data?.success) {
       throw new Error(response.data?.message || 'Failed to update candidate');
     }
+    const updatedCandidate = response.data.data;
+
+    const authStore = useAuthStore.getState();
+    useAuthStore.getState().setAuth({
+      userRole: authStore.userRole,
+      token: authStore.token as string,
+      email: updatedCandidate.email,
+      firstName: updatedCandidate.firstName,
+      lastName: updatedCandidate.lastName,
+      profileImage: updatedCandidate.profilePicture,
+    });
 
     return response.data.data;
   } catch (err) {
@@ -130,5 +145,63 @@ export const getJobDetailsById = async (jobId: string) => {
     return response.data.data;
   } catch {
     throw new Error('Unable to fetch job details');
+  }
+};
+
+export const applyToJob = async ({ jobId }: { jobId: string }) => {
+  try {
+    const response = await apiClient.post('/applytojob', { jobId });
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to apply ');
+  }
+};
+
+export const saveToJob = async ({ jobId }: { jobId: string }) => {
+  try {
+    const response = await apiClient.post('/savejob', { jobId });
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to save ');
+  }
+};
+
+export const unSaveToJob = async ({ jobId }: { jobId: string }) => {
+  try {
+    const response = await apiClient.put('/unsavejob', { jobId });
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to unsave ');
+  }
+};
+
+export const getMyJobs = async (): Promise<CandidateJob[]> => {
+  try {
+    const response = await apiClient.get('/getmyjobs');
+    const jobs = response.data.data;
+    return jobs.map((job: { jobId: { clientId: { logo: null } } }) => {
+      const logo = job.jobId?.clientId?.logo || null;
+      return {
+        ...job,
+        jobId: {
+          ...job.jobId,
+          logo,
+        },
+      };
+    });
+  } catch {
+    throw new Error('failed to get my jobs ');
+  }
+};
+
+export const getAllJobsByCandidate = async (): Promise<ApiJob[]> => {
+  try {
+    const response = await apiClient.get('/getalljobsbycandidate');
+    if (!response.data?.success) {
+      throw new Error(response.data?.message || 'Failed to fetch candidate');
+    }
+    return response.data.data.jobs;
+  } catch {
+    throw new Error('failed to get all jobs by candidate ');
   }
 };

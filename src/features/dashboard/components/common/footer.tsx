@@ -19,17 +19,14 @@ import {
 
 const footerLinks = {
   company: [
-    { label: 'About Us', href: '#about' },
-    { label: 'Contact Us', href: '/contact' },
+    { label: 'About Us', href: '/#about' },
     { label: 'Services', href: '/services' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Team', href: '/team' },
   ],
   forJobs: [
-    { label: 'Browse Categories', href: '#categories' },
-    { label: 'Browse Jobs', href: '#browse-jobs' },
+    { label: 'Browse Categories', href: '/#categories' },
+    { label: 'Browse Jobs', href: '/#browse-jobs' },
   ],
-  support: [{ label: 'Help Center', href: '/contact' }],
+  // support: [{ label: 'Help Center', href: '/contact' }],
 };
 
 const socialLinks = [
@@ -172,7 +169,7 @@ export function FooterSubscribe() {
             </Grid.Col>
 
             {/* Support Links */}
-            <Grid.Col span={{ base: 6, sm: 6, md: 2 }}>
+            {/* <Grid.Col span={{ base: 6, sm: 6, md: 2 }}>
               <Stack gap="md">
                 <Text size="sm" fw={500} c="white">
                   Support
@@ -206,7 +203,7 @@ export function FooterSubscribe() {
                   ))}
                 </Stack>
               </Stack>
-            </Grid.Col>
+            </Grid.Col> */}
           </Grid>
         </Container>
       </Box>
@@ -215,25 +212,29 @@ export function FooterSubscribe() {
       <Box bg="#111827" style={{ padding: '25px 0' }}>
         <Container size="lg">
           <Text size="sm" c="rgba(255, 255, 255, 0.6)" ta="center">
-            {new Date().getFullYear()} ©
-            <Anchor
-              href="https://themeforest.net/search/themesdesign"
+            Powered and Managed by SRYTAL Systems India Pvt Ltd –{' '}
+            <Text
+              component="a"
+              href="https://www.srytal.com"
               target="_blank"
               rel="noopener noreferrer"
-              c="rgba(255, 255, 255, 0.6)"
               style={{
+                color: 'rgba(255, 255, 255, 0.6)',
                 textDecoration: 'underline',
-                transition: 'color 0.3s ease',
+                display: 'inline-block',
+                transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'white';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'scale(1.05)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.99)';
+                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+                e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              JobSetu
-            </Anchor>
+              www.srytal.com
+            </Text>
           </Text>
         </Container>
       </Box>

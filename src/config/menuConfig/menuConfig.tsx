@@ -6,6 +6,7 @@ import {
   IconHome,
   IconSearch,
   IconUser,
+  IconUserBitcoin,
   IconUsers,
 } from '@tabler/icons-react';
 
@@ -22,8 +23,9 @@ export interface MenuItem {
 
 interface MenuConfig {
   candidate: MenuItem[];
-  vendor: MenuItem[];
+  client: MenuItem[];
   admin: MenuItem[];
+  recruiter: MenuItem[];
 }
 
 /**
@@ -66,61 +68,61 @@ export const MENU_CONFIG: MenuConfig = {
     },
   ],
 
-  // ===== VENDOR MENU =====
-  vendor: [
+  // ===== CLIENT MENU =====
+  client: [
     {
       id: 'dashboard',
       label: 'Dashboard',
       icon: <IconHome size={20} />,
-      path: '/vendor/dashboard',
+      path: '/client/dashboard',
     },
     {
       id: 'profile',
       label: 'Profile',
       icon: <IconUser size={20} />,
-      path: '/vendor/profile',
+      path: '/client/profile',
     },
     {
       id: 'post-job',
       label: 'Post Job',
       icon: <IconBriefcase size={20} />,
-      path: '/vendor/jobs/new',
+      path: '/client/jobs/new',
     },
     {
       id: 'manage-jobs',
       label: 'Manage Jobs',
       icon: <IconFileText size={20} />,
-      path: '/vendor/jobs/manage-jobs',
+      path: '/client/jobs/manage-jobs',
     },
     // {
     //   id: 'analytics',
     //   label: 'Analytics',
     //   icon: <IconChartBar size={20} />,
-    //   path: '/vendor/analytics',
+    //   path: '/client/analytics',
     // },
     // {
     //   id: 'messages',
     //   label: 'Messages',
     //   icon: <IconMessage size={20} />,
-    //   path: '/vendor/messages',
+    //   path: '/client/messages',
     //   badge: 8,
     // },
     // {
     //   id: 'settings',
     //   label: 'Settings',
     //   icon: <IconSettings size={20} />,
-    //   path: '/vendor/settings',
+    //   path: '/client/settings',
     // },
   ],
 
   // ===== ADMIN MENU =====
   admin: [
-    // {
-    //   id: 'dashboard',
-    //   label: 'Dashboard',
-    //   icon: <IconHome size={20} />,
-    //   path: '/admin/dashboard',
-    // },
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: <IconHome size={20} />,
+      path: '/admin/dashboard',
+    },
     {
       id: 'users',
       label: 'User Management',
@@ -134,16 +136,22 @@ export const MENU_CONFIG: MenuConfig = {
         //   path: '/admin/users',
         // },
         {
-          id: 'vendors',
-          label: 'Vendors',
+          id: 'clients',
+          label: 'Clients',
           icon: <IconBuilding size={18} />,
-          path: '/admin/dashboard',
+          path: '/admin/clients',
         },
         {
           id: 'candidates',
           label: 'Candidates',
           icon: <IconUser size={18} />,
           path: '/admin/candidates',
+        },
+        {
+          id: 'recruiters',
+          label: 'Recruiters',
+          icon: <IconUsers size={18} />,
+          path: '/admin/recruiters',
         },
       ],
     },
@@ -180,6 +188,28 @@ export const MENU_CONFIG: MenuConfig = {
     //   icon: <IconSettings size={20} />,
     //   path: '/admin/settings',
     // },
+  ],
+
+  recruiter: [
+    {
+      id: 'jobs',
+      label: 'Jobs',
+      icon: <IconBriefcase size={20} />,
+
+      path: '/recruiter/jobs',
+    },
+    {
+      id: 'clients',
+      label: 'Clients',
+      icon: <IconUserBitcoin size={20} />,
+      path: '/recruiter/clients',
+    },
+    {
+      id: 'candidates',
+      label: 'Candidates',
+      icon: <IconUsers size={20} />,
+      path: '/recruiter/candidates',
+    },
   ],
 };
 

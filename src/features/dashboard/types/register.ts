@@ -1,5 +1,5 @@
 // Form values (frontend only)
-export interface VendorRegisterValues {
+export interface ClientRegisterValues {
   organizationName: string;
   primaryFirstName: string;
   primaryLastName: string;
@@ -11,9 +11,10 @@ export interface VendorRegisterValues {
   panCard: string;
   category: 'IT' | 'Non-IT';
   logoImage: File | null;
+  termsAccepted: boolean;
 }
 // Payload sent to backend
-export interface RegisterVendorPayload {
+export interface RegisterClientPayload {
   organizationName: string;
   primaryContact: {
     firstName: string;
@@ -28,7 +29,7 @@ export interface RegisterVendorPayload {
 }
 
 // Backend response
-export interface VendorRegisterResponse {
+export interface ClientRegisterResponse {
   success: boolean;
   message: string;
 }

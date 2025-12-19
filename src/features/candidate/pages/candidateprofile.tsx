@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  ActionIcon,
   Avatar,
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   FileInput,
   Group,
   Loader,
+  Progress,
   SegmentedControl,
   Select,
   Stack,
@@ -17,7 +19,7 @@ import {
   Title,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import { IconFile, IconUpload } from '@tabler/icons-react';
+import { IconFile, IconSparkles, IconUpload } from '@tabler/icons-react';
 import { useEffect, useState, type JSX } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -29,10 +31,15 @@ import {
   updateCandidateProfile,
 } from '@/services/candidate-services';
 
-// Validation Schema - FIXED: Changed resume validation
 const candidateProfileSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  firstName: z
+    .string()
+    .regex(/^[A-Za-z\s]+$/, 'First name should contain only letters')
+    .optional(),
+  lastName: z
+    .string()
+    .regex(/^[A-Za-z\s]+$/, 'Last name should contain only letters')
+    .optional(),
   email: z.string().email('Invalid email address'),
   mobileNumber: z
     .string()
@@ -43,12 +50,47 @@ const candidateProfileSchema = z.object({
   dateOfBirth: z.string().optional(),
   address: z.string().min(5).optional().or(z.literal('')),
   category: z.enum(['IT', 'Non-IT']),
-  // FIXED: File validation - can't use instanceof File in Zod directly
   resume: z
     .union([z.instanceof(File), z.string()])
     .optional()
-    .nullable(),
+    .nullable()
+    .refine(
+      (file) => {
+        if (!file || typeof file === 'string') return true;
+        const allowedTypes = [
+          'application/pdf',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ];
+        return allowedTypes.includes(file.type);
+      },
+      {
+        message:
+          'Invalid file type for Resume. Only PDF, DOC, and DOCX files are allowed !',
+      }
+    ),
   profileUrl: z.string().url().optional().nullable(),
+  profilePictureFile: z
+    .instanceof(File)
+    .optional()
+    .nullable()
+    .refine(
+      (file) => {
+        if (!file) return true;
+        const allowedTypes = [
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+        ];
+        return allowedTypes.includes(file.type);
+      },
+      {
+        message:
+          'Invalid file type for Profile Picture. Only image files are allowed !',
+      }
+    ),
+  profilePictureUrl: z.string().url().optional().nullable(),
 });
 
 export type CandidateProfileFormData = z.infer<typeof candidateProfileSchema>;
@@ -136,6 +178,13 @@ const CandidateProfilePage = (): JSX.Element => {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [resumeFileName, setResumeFileName] = useState<string | null>(null);
   const [showPdfViewer, setShowPdfViewer] = useState(true);
+  const [profilePicturePreview, setProfilePicturePreview] = useState<
+    string | null
+  >(null);
+  const [profilePictureFile, setProfilePictureFile] = useState<File | null>(
+    null
+  );
+  const [completionPercentage, setCompletionPercentage] = useState(0);
 
   const {
     control,
@@ -150,6 +199,33 @@ const CandidateProfilePage = (): JSX.Element => {
       category: 'IT',
     },
   });
+
+  const calculateCompletion = (data: CandidateProfileFormData): number => {
+    let totalScore = 0;
+
+    if (data.email) totalScore += 25;
+    if (data.mobileNumber) totalScore += 20;
+    if (data.resume instanceof File || resumeUrl) totalScore += 20;
+
+    if (data.firstName) totalScore += 8;
+    if (data.lastName) totalScore += 8;
+    if (data.gender) totalScore += 5;
+    if (data.dateOfBirth) totalScore += 5;
+    if (data.address) totalScore += 5;
+
+    if (data.profilePictureFile instanceof File || profilePicturePreview) {
+      totalScore += 4;
+    }
+
+    return totalScore;
+  };
+
+  const getProgressColor = (percentage: number): string => {
+    if (percentage === 100) return 'green';
+    if (percentage < 40) return 'red';
+    if (percentage < 70) return 'yellow';
+    return 'blue';
+  };
 
   const formatDate = (date?: string | null): string => {
     if (!date) return 'N/A';
@@ -170,12 +246,12 @@ const CandidateProfilePage = (): JSX.Element => {
     }
   };
 
-  // Fetch candidate profile
   useEffect(() => {
     const fetchCandidate = async (): Promise<void> => {
       setLoading(true);
       try {
         const data = await getCandidateProfile();
+
         const formData: CandidateProfileFormData = {
           firstName: data.firstName || '',
           lastName: data.lastName || '',
@@ -186,24 +262,45 @@ const CandidateProfilePage = (): JSX.Element => {
           address: data.address || '',
           category: data.category || 'IT',
           resume: data.profileUrl || null,
+          profileUrl: data.profileUrl || null,
+          profilePictureUrl: data.profilePictureUrl || null,
         };
+
         setProfile(formData);
         reset(formData);
 
-        // Set resume URL and file name if available
         if (data.profileUrl) {
           setResumeUrl(data.profileUrl);
           setResumeFileName(extractFileName(data.profileUrl));
         }
-      } catch (error) {
-        console.error('Failed to fetch candidate profile:', error);
+
+        if (data.profilePictureUrl) {
+          setProfilePicturePreview(data.profilePictureUrl);
+        }
+
+        setCompletionPercentage(calculateCompletion(formData));
+      } catch {
         toast.error('Unable to fetch candidate details');
       } finally {
         setLoading(false);
       }
     };
+
     void fetchCandidate();
-  }, [reset]);
+    // 🔒 INTENTIONALLY EMPTY DEP ARRAY
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update completion percentage when form data changes
+  useEffect(() => {
+    const subscription = watch((data) => {
+      setCompletionPercentage(
+        calculateCompletion(data as CandidateProfileFormData)
+      );
+    });
+    return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch]);
 
   // Handle form submission
   const onSubmit = async (data: CandidateProfileFormData): Promise<void> => {
@@ -220,6 +317,8 @@ const CandidateProfilePage = (): JSX.Element => {
         resumeFile:
           data.resume instanceof File ? data.resume : (null as File | null),
         profileUrl: data.profileUrl,
+        profilePictureFile: profilePictureFile || (null as File | null),
+        profilePictureUrl: profilePicturePreview || null,
       };
       const updated = await updateCandidateProfile(payload);
       setProfile(updated);
@@ -230,6 +329,32 @@ const CandidateProfilePage = (): JSX.Element => {
         setResumeFileName(extractFileName(updated.profileUrl));
       }
 
+      // Update profile picture if new file was uploaded
+      if (updated.profilePictureUrl) {
+        setProfilePicturePreview(updated.profilePictureUrl);
+      }
+
+      // Recalculate completion percentage
+      const updatedFormData: CandidateProfileFormData = {
+        firstName: updated.firstName || '',
+        lastName: updated.lastName || '',
+        email: updated.email || '',
+        mobileNumber: updated.mobileNumber || '',
+        gender: updated.gender || '',
+        dateOfBirth: updated.dateOfBirth || '',
+        address: updated.address || '',
+        category: updated.category || 'IT',
+        resume: updated.profileUrl || null,
+        profileUrl: updated.profileUrl || null,
+        profilePictureFile:
+          data.profilePictureFile instanceof File
+            ? data.profilePictureFile
+            : null,
+      };
+      const percentage = calculateCompletion(updatedFormData);
+      setCompletionPercentage(percentage);
+
+      setProfilePictureFile(null);
       setEditMode(false);
       toast.success('Profile updated successfully !');
     } catch (error) {
@@ -247,6 +372,10 @@ const CandidateProfilePage = (): JSX.Element => {
 
   const handleCancel = (): void => {
     setEditMode(false);
+    setProfilePictureFile(null);
+    if (profile?.profilePictureUrl) {
+      setProfilePicturePreview(profile.profilePictureUrl);
+    }
     reset();
   };
 
@@ -263,9 +392,48 @@ const CandidateProfilePage = (): JSX.Element => {
     onChange: (value: File | null) => void
   ): void => {
     if (file) {
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        toast.error(
+          'Invalid file type for Resume. Only PDF, DOC, and DOCX files are allowed !'
+        );
+        onChange(null);
+        return;
+      }
+
       setResumeFileName(file.name);
       onChange(file);
     }
+  };
+
+  const handleProfilePictureChange = (
+    file: File | null,
+    onChange: (file: File | null) => void
+  ): void => {
+    if (!file) {
+      onChange(null);
+      setProfilePicturePreview(profile?.profilePictureUrl || null);
+      return;
+    }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error(
+        'Invalid file type for Profile Picture. Only image files are allowed!'
+      );
+      return;
+    }
+
+    setProfilePictureFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfilePicturePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const category = watch('category');
@@ -277,6 +445,7 @@ const CandidateProfilePage = (): JSX.Element => {
       </Center>
     );
   }
+
   const getFileExtension = (url: string) => {
     const cleanUrl = url.split('?')[0] as string;
     return cleanUrl ? (cleanUrl.split('.').pop() ?? '').toLowerCase() : '';
@@ -291,6 +460,90 @@ const CandidateProfilePage = (): JSX.Element => {
     // For ALL other docs → use Microsoft Office Viewer
     return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
   };
+
+  const ProfilePictureUploadOverlay = () => {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: 'fit-content',
+        }}
+      >
+        <Avatar
+          size={80}
+          radius="xl"
+          color="blue"
+          src={profilePicturePreview || undefined}
+          name={`${profile.firstName?.[0] ?? '?'}${profile.lastName?.[0] ?? ''}`}
+          style={{
+            transition: 'filter 0.2s ease',
+            filter: editMode ? 'brightness(0.7)' : 'brightness(1)',
+          }}
+        />
+        {editMode && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '0.625rem',
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ position: 'relative', cursor: 'pointer' }}>
+              <Controller
+                name="profilePictureFile"
+                control={control}
+                render={({ field }) => (
+                  <FileInput
+                    accept="image/jpeg,image/png,image/webp"
+                    clearable
+                    onChange={(file) =>
+                      handleProfilePictureChange(file, field.onChange)
+                    }
+                    styles={{
+                      input: {
+                        opacity: 0,
+                        cursor: 'pointer',
+                        width: '80px',
+                        height: '80px',
+                      },
+                    }}
+                  />
+                )}
+              />
+
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  pointerEvents: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+              >
+                <IconUpload size={24} color="white" />
+                <Text size="xs" fw={600} c="white">
+                  Change
+                </Text>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  console.log('render');
 
   return (
     <Container size="lg" py="xl">
@@ -325,13 +578,32 @@ const CandidateProfilePage = (): JSX.Element => {
             </Group>
           </Group>
 
-          <Group mt="xl" align="center">
-            <Avatar
-              size={80}
-              radius="xl"
-              color="blue"
-              name={`${profile.firstName?.[0] ?? '?'}${profile.lastName?.[0] ?? ''}`}
+          <Divider my="lg" />
+
+          {/* Profile Completion Progress */}
+          <Stack gap="sm">
+            <Group justify="space-between">
+              <Text fw={500} size="sm">
+                Profile Completion
+              </Text>
+              <Text
+                fw={600}
+                size="sm"
+                c={getProgressColor(completionPercentage)}
+              >
+                {completionPercentage}%
+              </Text>
+            </Group>
+            <Progress
+              value={completionPercentage}
+              color={getProgressColor(completionPercentage)}
+              size="lg"
+              radius="sm"
             />
+          </Stack>
+
+          <Group mt="xl" align="center">
+            <ProfilePictureUploadOverlay />
             <Stack gap={3}>
               <Title order={3} fw={500}>
                 {profile.firstName} {profile.lastName}
@@ -430,6 +702,7 @@ const CandidateProfilePage = (): JSX.Element => {
                           }}
                           placeholder="Pick a date"
                           radius="md"
+                          maxDate={new Date()}
                         />
                         {errors.dateOfBirth?.message && (
                           <Text c="red" size="xs">
@@ -565,13 +838,26 @@ const CandidateProfilePage = (): JSX.Element => {
                               </Text>
                             </Stack>
                           </Group>
-                          <Button
-                            variant="subtle"
-                            size="xs"
-                            onClick={() => setShowPdfViewer(!showPdfViewer)}
-                          >
-                            {showPdfViewer ? 'Hide' : 'Show'}
-                          </Button>
+                          <Group gap="xs">
+                            <ActionIcon
+                              variant="subtle"
+                              color="violet"
+                              size="sm"
+                              onClick={() => {
+                                toast.info('Analyze resume with Gemini');
+                              }}
+                            >
+                              <IconSparkles size={28} />
+                            </ActionIcon>
+
+                            <Button
+                              variant="subtle"
+                              size="xs"
+                              onClick={() => setShowPdfViewer(!showPdfViewer)}
+                            >
+                              {showPdfViewer ? 'Hide' : 'Show'}
+                            </Button>
+                          </Group>
                         </Group>
 
                         {showPdfViewer && (
@@ -583,7 +869,7 @@ const CandidateProfilePage = (): JSX.Element => {
                             }}
                           >
                             <iframe
-                              src={resumeUrl}
+                              src={getViewerUrl(resumeUrl)}
                               style={{
                                 width: '100%',
                                 height: '500px',
@@ -664,13 +950,25 @@ const CandidateProfilePage = (): JSX.Element => {
                           <Text size="sm">✓ {resumeFileName}</Text>
                         </Stack>
                       </Group>
-                      <Button
-                        variant="subtle"
-                        size="xs"
-                        onClick={() => setShowPdfViewer(!showPdfViewer)}
-                      >
-                        {showPdfViewer ? 'Hide' : 'Show'}
-                      </Button>
+                      <Group gap="xs">
+                        <ActionIcon
+                          variant="subtle"
+                          color="violet"
+                          size="sm"
+                          onClick={() => {
+                            toast.info('Analyze resume with Gemini');
+                          }}
+                        >
+                          <IconSparkles size={28} />
+                        </ActionIcon>
+                        <Button
+                          variant="subtle"
+                          size="xs"
+                          onClick={() => setShowPdfViewer(!showPdfViewer)}
+                        >
+                          {showPdfViewer ? 'Hide' : 'Show'}
+                        </Button>
+                      </Group>
                     </Group>
 
                     {showPdfViewer && (

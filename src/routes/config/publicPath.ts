@@ -1,7 +1,7 @@
 export const PUBLIC_PATHS = {
   HOME: '/',
-  VENDOR_LOGIN: '/client/login',
-  VENDOR_REGISTER: '/client/register',
+  CLIENT_LOGIN: '/client/login',
+  CLIENT_REGISTER: '/client/register',
   ADMIN_LOGIN: '/admin',
   JOBS: '/jobs',
   COMPANIES: '/companies',

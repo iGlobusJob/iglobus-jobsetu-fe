@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type UserRole = 'candidate' | 'vendor' | 'admin' | null;
+export type UserRole = 'candidate' | 'client' | 'admin' | 'recruiter' | null;
 
 type AuthStore = {
   email: string | null;
@@ -9,6 +9,7 @@ type AuthStore = {
   token: string | null;
   firstName: string | null;
   lastName: string | null;
+  profileImage?: string | null;
 
   setAuth: (data: {
     email: string;
@@ -16,6 +17,7 @@ type AuthStore = {
     token: string;
     firstName?: string;
     lastName?: string;
+    profileImage?: string;
   }) => void;
 
   clearAuth: () => void;
@@ -30,6 +32,7 @@ export const useAuthStore = create<AuthStore>()(
       token: null,
       firstName: null,
       lastName: null,
+      profileImage: null,
 
       setAuth: ({
         email,
@@ -37,6 +40,7 @@ export const useAuthStore = create<AuthStore>()(
         token,
         firstName = null,
         lastName = null,
+        profileImage = null,
       }) =>
         set({
           email,
@@ -44,6 +48,7 @@ export const useAuthStore = create<AuthStore>()(
           token,
           firstName,
           lastName,
+          profileImage,
         }),
 
       clearAuth: () =>
@@ -53,6 +58,7 @@ export const useAuthStore = create<AuthStore>()(
           token: null,
           firstName: null,
           lastName: null,
+          profileImage: null,
         }),
 
       isLoggedIn: () => {

@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 // Public Pages
 import { UserDashboard } from '@/features/dashboard';
 import { AboutData } from '@/features/dashboard/components/common/aboutdata';
+import { ServicesData } from '@/features/dashboard/components/common/services';
 
 export const PublicRoutes = () => {
   return (
@@ -10,6 +11,7 @@ export const PublicRoutes = () => {
       {/* Public pages - accessible to everyone */}
       <Route path="/" element={<UserDashboard />} />
       <Route path="/aboutus" element={<AboutData />} />
+      <Route path="/services" element={<ServicesData />} />
     </Routes>
   );
 };

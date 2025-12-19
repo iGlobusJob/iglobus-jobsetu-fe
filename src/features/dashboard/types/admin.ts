@@ -1,10 +1,10 @@
-export interface VendorContact {
+export interface ClientContact {
   firstName?: string;
   lastName?: string;
 }
 
-export interface AdminUpdateVendor {
-  vendorId: string;
+export interface AdminUpdateClient {
+  clientId: string;
   organizationName?: string;
   logo: string;
   mobile?: string;
@@ -12,8 +12,8 @@ export interface AdminUpdateVendor {
   gstin?: string;
   panCard?: string;
   category?: string;
-  primaryContact?: VendorContact;
-  secondaryContact?: VendorContact;
+  primaryContact?: ClientContact;
+  secondaryContact?: ClientContact;
   status?: 'registered' | 'active' | 'inactive';
 }
 
@@ -21,4 +21,11 @@ export interface CreateAdminInput {
   username: string;
   password: string;
   role: 'admin';
+}
+
+export interface CreateRecruiterInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
 }

@@ -23,7 +23,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { CandidateProfile } from '@/features/dashboard/types/candidate';
-import { getCandidateDetailsById } from '@/services/vendor-services';
+import { getCandidateDetailsById } from '@/services/client-services';
 
 interface Props {
   opened: boolean;
@@ -88,7 +88,12 @@ const CandidateDetailsDrawer: React.FC<Props> = ({
 
       <Stack gap="xl">
         <Group align="center" gap="md">
-          <Avatar size={80} radius="xl" color="blue">
+          <Avatar
+            size={80}
+            radius="xl"
+            color="blue"
+            src={details?.profilePicture || null}
+          >
             {(candidate.firstName?.[0] || '?').toUpperCase()}
             {(candidate.lastName?.[0] || '').toUpperCase()}
           </Avatar>

@@ -17,12 +17,8 @@ const About = () => {
   const isDark = systemTheme === 'dark';
 
   return (
-    <Box
-      id="about"
-      py={60}
-      style={{ marginTop: -250, marginBottom: 10, height: 480 }}
-    >
-      <Container size="lg">
+    <Box id="about" py={65} style={{ marginTop: -250 }}>
+      <Container size="xl">
         <Grid gutter="xl" align="stretch">
           <Grid.Col span={{ base: 12, md: 6 }} style={{ height: '100%' }}>
             <Image
@@ -43,7 +39,7 @@ const About = () => {
           <Grid.Col span={{ base: 12, md: 6 }} style={{ height: '100%' }}>
             <Paper
               radius="lg"
-              p="xl"
+              p="md"
               shadow="sm"
               style={{
                 height: '100%',
@@ -53,26 +49,27 @@ const About = () => {
                 border: isDark ? '1px solid #333' : '1px solid #e5e7eb',
               }}
             >
-              <Stack gap="md">
+              <Stack gap="lg">
                 <Title order={2} fw={700} c={isDark ? 'white' : '#0c0c0cff'}>
-                  About Us
-                </Title>
-
-                <Title order={3} fw={700} style={{ lineHeight: 1.3 }}>
-                  Why{' '}
-                  <span style={{ color: '#2855b6', fontWeight: 700 }}>
-                    35,000+
-                  </span>{' '}
-                  People Trust Jobcy?
+                  About Iglobus Jobsetu
                 </Title>
 
                 <Text size="md" c="dimmed" lh={1.7}>
-                  Start working with Jobcy that provides everything you need to
-                  generate awareness, drive traffic and connect with your
-                  audience. This is placeholder text used until real content is
-                  added. Our platform connects talented candidates with trusted
-                  employers, making the job search process easier, faster and
-                  more reliable for everyone
+                  Iglobus Jobsetu is a staffing and recruitment platform built
+                  to simplify hiring and connect organizations with the right
+                  talent across IT and Non-IT domains.
+                </Text>
+
+                <Text size="md" c="dimmed" lh={1.7}>
+                  A product of Iglobus Corporate Consulting, founded in 2015,
+                  Jobsetu combines over a decade of recruitment expertise with a
+                  technology-driven hiring ecosystem.
+                </Text>
+
+                <Text size="md" c="dimmed" lh={1.7}>
+                  Led by CEO Pavan Chandra Duddilla, the platform focuses on
+                  scalable, process-driven recruitment and long-term
+                  partnerships.
                 </Text>
 
                 <Anchor
