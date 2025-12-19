@@ -126,7 +126,7 @@ export const AdminLoginPage: React.FC = () => {
                 }
               >
                 <Image
-                  src={isDark ? '/jobseti-darks.png' : '/jobseti-light.png'}
+                  src={isDark ? '/jobseti-darks.png' : '/jobseti-lights.png'}
                   alt="Logo"
                   fit="contain"
                   h={isTablet ? 50 : 70}
