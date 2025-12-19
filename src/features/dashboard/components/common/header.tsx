@@ -159,11 +159,11 @@ export function Header() {
                 src={
                   colorScheme === 'dark'
                     ? '/jobseti-darks.png'
-                    : '/jobseti-light.png'
+                    : '/jobseti-lights.png'
                 }
                 alt="JobSetu Logo"
-                width={45}
-                height={45}
+                width={56}
+                height={56}
                 radius="md"
               />
             </Anchor>
@@ -185,6 +185,9 @@ export function Header() {
                 <Menu.Dropdown>
                   <Menu.Item component="a" href="/#about">
                     About Us
+                  </Menu.Item>
+                  <Menu.Item component="a" href="/services">
+                    Services
                   </Menu.Item>
                   <Menu.Item component="a" href="/recruiter">
                     Recruiter
@@ -498,6 +501,16 @@ export function Header() {
                   }}
                 >
                   <Text>About Us</Text>
+                </Anchor>
+                <Anchor
+                  href="/services"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    padding: '8px 0',
+                  }}
+                >
+                  <Text>Services</Text>
                 </Anchor>
                 <Anchor
                   component={Link}

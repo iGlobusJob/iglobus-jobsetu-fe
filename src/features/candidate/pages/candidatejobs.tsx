@@ -65,7 +65,7 @@ export const JobListingsSection = (): JSX.Element => {
   const [appliedJobs, setAppliedJobs] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedJobType, setSelectedJobType] = useState<string | null>(null);
-  const [salaryRange, setSalaryRange] = useState<[number, number]>([500, 500]);
+  const [salaryRange, setSalaryRange] = useState<[number, number]>([0, 0]);
   const [experienceFilter, setExperienceFilter] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [maxSalary, setMaxSalary] = useState(300000);
@@ -85,7 +85,7 @@ export const JobListingsSection = (): JSX.Element => {
         setJobs(mapped);
 
         const max = Math.max(...mapped.map((job) => job.salaryMax || 0));
-        setSalaryRange([500, max]);
+        setSalaryRange([0, max]);
         setMaxSalary(max);
 
         const bookmarkedSet = new Set<string>();
@@ -145,13 +145,36 @@ export const JobListingsSection = (): JSX.Element => {
       list = list.filter((job) => job.jobType === selectedJobType);
     }
 
-    list = list.filter(
-      (job) =>
-        job.salaryMax >= salaryRange[0] && job.salaryMin <= salaryRange[1]
-    );
+    list = list.filter((job) => {
+      if (!job.salaryMin || !job.salaryMax) return true;
+
+      return job.salaryMax >= salaryRange[0] && job.salaryMin <= salaryRange[1];
+    });
 
     if (experienceFilter) {
-      list = list.filter((job) => job.experienceLevel === experienceFilter);
+      list = list.filter((job) => {
+        const [minExp, maxExp] = job.experienceLevel
+          .replace(' years', '')
+          .split(' - ')
+          .map(Number);
+
+        switch (experienceFilter) {
+          case 'ENTRY':
+            return minExp === 0 && maxExp <= 1;
+
+          case 'ONE_TWO':
+            return minExp === 1 && maxExp <= 2;
+
+          case 'TWO_THREE':
+            return minExp === 2 && maxExp <= 3;
+
+          case 'FOUR_PLUS':
+            return minExp >= 4;
+
+          default:
+            return true;
+        }
+      });
     }
 
     return list;
@@ -175,13 +198,13 @@ export const JobListingsSection = (): JSX.Element => {
     searchQuery.trim() ||
     selectedJobType ||
     experienceFilter ||
-    salaryRange[0] !== 500 ||
+    salaryRange[0] !== 0 ||
     salaryRange[1] !== maxSalary;
 
   const resetFilters = (): void => {
     setSearchQuery('');
     setSelectedJobType(null);
-    setSalaryRange([500, maxSalary]);
+    setSalaryRange([0, maxSalary]);
     setExperienceFilter('');
     setCurrentPage(1);
   };
@@ -261,10 +284,10 @@ export const JobListingsSection = (): JSX.Element => {
                   setCurrentPage(1);
                 }}
                 data={[
-                  { value: '0 - 1 years', label: 'Entry Level' },
-                  { value: '1 - 2 years', label: '1-2 Years' },
-                  { value: '2 - 3 years', label: '2-3 Years' },
-                  { value: '4+ years', label: '4+ Years' },
+                  { value: 'ENTRY', label: 'Entry Level (0–1)' },
+                  { value: 'ONE_TWO', label: '1–2 Years' },
+                  { value: 'TWO_THREE', label: '2–3 Years' },
+                  { value: 'FOUR_PLUS', label: '4+ Years' },
                 ]}
                 clearable
                 searchable
@@ -282,11 +305,11 @@ export const JobListingsSection = (): JSX.Element => {
                   setSalaryRange(value);
                   setCurrentPage(1);
                 }}
-                min={500}
+                min={0}
                 max={maxSalary}
                 step={5000}
                 marks={[
-                  { value: 500, label: '₹500' },
+                  { value: 0, label: '₹0' },
                   { value: maxSalary, label: `₹${maxSalary.toLocaleString()}` },
                 ]}
               />

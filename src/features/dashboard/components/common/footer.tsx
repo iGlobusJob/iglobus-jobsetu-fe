@@ -18,7 +18,10 @@ import {
 } from '@tabler/icons-react';
 
 const footerLinks = {
-  company: [{ label: 'About Us', href: '/#about' }],
+  company: [
+    { label: 'About Us', href: '/#about' },
+    { label: 'Services', href: '/services' },
+  ],
   forJobs: [
     { label: 'Browse Categories', href: '/#categories' },
     { label: 'Browse Jobs', href: '/#browse-jobs' },
@@ -215,8 +218,20 @@ export function FooterSubscribe() {
               href="https://www.srytal.com"
               target="_blank"
               rel="noopener noreferrer"
-              c="rgba(255, 255, 255, 0.6)"
-              style={{ textDecoration: 'underline' }}
+              style={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                textDecoration: 'underline',
+                display: 'inline-block',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
             >
               www.srytal.com
             </Text>
