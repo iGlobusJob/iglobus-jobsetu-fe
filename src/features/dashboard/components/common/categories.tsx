@@ -153,7 +153,7 @@ const CategoryCard = ({ category }: { category: categoryInterface }) => {
 
 export const Categories = () => {
   return (
-    <Box component="section" id="categories">
+    <Box component="section" id="categories" mt="xl">
       <Container size="xl">
         {/* Section Header */}
         <Box
