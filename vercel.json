@@ -1,30 +1,12 @@
 {
-    "version": 2,
-    "builds": [
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
         {
-            "src": "dist/**",
-            "use": "@vercel/static"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(?!public|assets|favicon.ico)(.*)",
-            "dest": "/dist/index.html"
-        },
-        {
-            "src": "/favicon.ico",
-            "headers": {
-                "Cache-Control": "public, max-age=3600"
-            },
-            "continue": true
-        },
-        {
-            "src": "/public/(.*)",
-            "dest": "/dist/public/$1"
-        },
-        {
-            "src": "/assets/(.*)",
-            "dest": "/dist/assets/$1"
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
