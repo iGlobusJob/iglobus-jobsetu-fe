@@ -3,9 +3,9 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AllJobsComponent from '@/features/client/components/job/allJobs';
 import CandidateDashboardByClient from '@/features/client/pages/ClientCandidates';
 import { PostJobPage } from '@/features/client/pages/addJob';
-import EditJobPage from '@/features/client/pages/editJob';
 import ClientProfile from '@/features/client/pages/clientProfile';
 import ClientDashboard from '@/features/client/pages/clientdashboard';
+import EditJobPage from '@/features/client/pages/editJob';
 
 import { RoleRoute } from './guards';
 

@@ -18,6 +18,7 @@ import {
   IconChecklist,
 } from '@tabler/icons-react';
 
+import { OTPmodal } from '@/features/auth/components/modal/otpModal';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 
 import { FooterSubscribe } from './footer';
@@ -181,6 +182,8 @@ export function ServicesData() {
           </Grid>
         </Container>
       </Box>
+
+      <OTPmodal />
 
       <FooterSubscribe />
     </>

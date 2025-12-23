@@ -13,6 +13,8 @@ import { JobListingsSection } from '../components/common/jobs';
 import { TestimonialCarousel } from '../components/common/review';
 import { ScrollToTop } from '../components/common/scrolltotop';
 import { HowItWorks } from '../components/common/steps';
+
+import { ScrollToHash } from './scroll';
 export const UserDashboard = () => {
   return (
     <>
@@ -20,6 +22,7 @@ export const UserDashboard = () => {
         <Header />
 
         <BannerSection />
+        <ScrollToHash />
 
         <About />
 
@@ -27,7 +30,13 @@ export const UserDashboard = () => {
 
         <Categories />
 
-        <JobListingsSection />
+        <Categories />
+
+        <div id="browse-jobs">
+          <JobListingsSection />
+        </div>
+
+        <HowItWorks />
 
         <HowItWorks />
 

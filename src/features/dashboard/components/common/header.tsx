@@ -58,7 +58,6 @@ export function Header() {
   const { token } = useAuthStore();
   const location = useLocation();
   const path = location.pathname;
-
   return (
     <Paper shadow="md">
       {/* Top Bar - Hidden on Mobile */}
@@ -183,7 +182,7 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="/#about">
+                  <Menu.Item component="a" href="/aboutus">
                     About Us
                   </Menu.Item>
                   <Menu.Item component="a" href="/services">
@@ -266,13 +265,13 @@ export function Header() {
                   <Menu.Item component="a" href="/client/register">
                     Register
                   </Menu.Item>
-                  <Menu.Item component="a" href="/client/login">
+                  <Menu.Item component="a" href="/client/jobs/new">
                     Post a Job
                   </Menu.Item>
-                  <Menu.Item component="a" href="/client/login">
+                  <Menu.Item component="a" href="/client/jobs/manage-jobs">
                     Manage Jobs
                   </Menu.Item>
-                  <Menu.Item component="a" href="/client/login">
+                  <Menu.Item component="a" href="/client/dashboard">
                     Employer Dashboard
                   </Menu.Item>
                 </Menu.Dropdown>
@@ -494,7 +493,7 @@ export function Header() {
             <Collapse in={homeOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/#about"
+                  href="/aboutus"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -699,7 +698,7 @@ export function Header() {
                   <Text>Register</Text>
                 </Anchor>
                 <Anchor
-                  href="/client/login"
+                  href="/client/jobs/new"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -709,7 +708,7 @@ export function Header() {
                   <Text>Post a Job</Text>
                 </Anchor>
                 <Anchor
-                  href="/client/login"
+                  href="/client/jobs/manage-jobs"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
