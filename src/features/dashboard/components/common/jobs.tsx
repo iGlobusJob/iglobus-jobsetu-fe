@@ -149,7 +149,7 @@ export const JobListingsSection = () => {
   const visibleJobs = currentJobs.slice(0, visibleCount);
 
   return (
-    <>
+    <div id="browse-jobs">
       {showRecommended && (
         <Box component="section" py={rem(80)}>
           <Container size="xl">
@@ -255,6 +255,6 @@ export const JobListingsSection = () => {
           </Container>
         </Box>
       )}
-    </>
+    </div>
   );
 };
