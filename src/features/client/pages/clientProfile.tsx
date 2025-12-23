@@ -288,7 +288,6 @@ const ClientProfilePage = (): JSX.Element => {
             <div style={{ position: 'relative', cursor: 'pointer' }}>
               <FileInput
                 placeholder=""
-                leftSection={<IconUpload size={24} />}
                 accept="image/jpeg,image/jpg,image/png"
                 clearable
                 onChange={handleLogoChange}

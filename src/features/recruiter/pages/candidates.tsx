@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Card,
@@ -115,9 +116,17 @@ const CandidatesPage: React.FC = () => {
             </Avatar>
 
             <Stack gap={0}>
-              <Text fw={700} size="sm" tt="capitalize">
-                {c.firstName} {c.lastName}
-              </Text>
+              <Group gap={6} wrap="nowrap">
+                <Text fw={700} size="sm" tt="capitalize" lineClamp={1}>
+                  {c.firstName} {c.lastName}
+                </Text>
+
+                {c.category && (
+                  <Badge size="xs" variant="light" radius="sm">
+                    {c.category}
+                  </Badge>
+                )}
+              </Group>
               <Text size="xs" color="dimmed" lineClamp={1}>
                 {c.address}
               </Text>
@@ -253,9 +262,17 @@ const CandidatesPage: React.FC = () => {
                         </Group>
 
                         <Stack gap={6}>
-                          <Text fw={700} size="lg" tt="capitalize">
-                            {c.firstName} {c.lastName}
-                          </Text>
+                          <Group gap="xs" align="center">
+                            <Text fw={700} size="lg" tt="capitalize">
+                              {c.firstName} {c.lastName}
+                            </Text>
+
+                            {c.category && (
+                              <Badge variant="light" color="blue" radius="sm">
+                                {c.category}
+                              </Badge>
+                            )}
+                          </Group>
                           <Group gap={6}>
                             <IconMail size={16} stroke={1.5} color="#1c7ed6" />
                             <Text size="sm">{c.email}</Text>

@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
+import { addAdminSchema } from '@/features/dashboard/forms/addAdminSchema';
 import type { CreateAdminInput } from '@/features/dashboard/types/admin';
 import { createAdmin } from '@/services/admin-services';
 
@@ -27,14 +28,15 @@ const AddAdminPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!form.username || !form.password) {
-      toast.error('Username and password are required.');
+    const result = addAdminSchema.safeParse(form);
+
+    if (!result.success) {
+      toast.error(result.error.errors[0].message);
       return;
     }
     setLoading(true);
     try {
-      const response = await createAdmin(form);
-
+      const response = await createAdmin(result.data);
       toast.success(response?.message || 'Admin created successfully !');
       setForm({ username: '', password: '', role: 'admin' });
     } catch (error) {

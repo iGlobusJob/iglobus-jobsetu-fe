@@ -191,7 +191,7 @@ const AllJobsComponent = () => {
         </Title>
 
         <Text size="sm" color="dimmed">
-          Browse all posted jobs, filter by type and status, and manage listings
+          Browse all posted jobs, filter by type and status and manage listings
           easily.
         </Text>
       </Stack>

@@ -183,7 +183,7 @@ const CandidateDashboard: React.FC = () => {
           </Title>
 
           <Text size="sm" color="dimmed">
-            Explore candidate profiles, verify details, and oversee application
+            Explore candidate profiles, verify details and oversee application
             activity.
           </Text>
         </Stack>
