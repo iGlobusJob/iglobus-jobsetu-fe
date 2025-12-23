@@ -159,7 +159,7 @@ const AllJobs = () => {
             Job Listings
           </Title>
           <Text size="md" c="dimmed">
-            Browse all posted jobs, filter by type and status, and manage
+            Browse all posted jobs, filter by type and status and manage
             listings easily.
           </Text>
         </div>

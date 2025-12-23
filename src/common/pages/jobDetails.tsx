@@ -404,7 +404,7 @@ export const JobDetailPage = (): JSX.Element => {
 
                   <Box>
                     <Text size="sm" c="dimmed" mb={4}>
-                      Per Month
+                      Per Year
                     </Text>
                     <Text size="xs" c="dimmed">
                       Competitive salary based on experience
