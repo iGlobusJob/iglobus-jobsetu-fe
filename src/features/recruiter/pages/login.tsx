@@ -164,7 +164,9 @@ export const RecruiterLoginPage: React.FC = () => {
                     }}
                   >
                     <Image
-                      src={isDark ? '/logo-light.png' : '/logo-dark.png'}
+                      src={
+                        isDark ? '/jobseti-darks.png' : '/jobseti-lights.png'
+                      }
                       alt="JobSetu Logo"
                       fit="contain"
                       h={isMobile ? 55 : 70}

@@ -58,7 +58,7 @@ const JOB_TYPES = [
 ];
 
 const JOB_STATUS = [
-  { value: 'drafted', label: 'Draft' },
+  { value: 'drafted', label: 'Drafted' },
   { value: 'active', label: 'Published' },
   { value: 'closed', label: 'Closed' },
 ];

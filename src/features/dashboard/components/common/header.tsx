@@ -449,7 +449,7 @@ export function Header() {
         size="80%"
         title="Menu"
       >
-        <Stack gap="md">
+        <Stack gap="sm">
           {/* User Profile Section */}
           <Box
             p="md"
@@ -473,13 +473,14 @@ export function Header() {
 
           <Divider />
 
+          {/* Mobile Version */}
           {/* Home Section */}
           <Box>
             <UnstyledButton
               onClick={() => setHomeOpen(!homeOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Home</Text>
                 <IconChevronRight
                   size={18}
@@ -557,7 +558,7 @@ export function Header() {
               onClick={() => setCompanyOpen(!companyOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Company</Text>
                 <IconChevronRight
                   size={18}
@@ -596,15 +597,13 @@ export function Header() {
 
           <Divider />
 
-          <Divider />
-
           {/* Candidates Section */}
           <Box>
             <UnstyledButton
               onClick={() => setCandidatesOpen(!candidatesOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Candidates</Text>
                 <IconChevronRight
                   size={18}
@@ -666,7 +665,7 @@ export function Header() {
               onClick={() => setEmployerOpen(!employerOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Employer</Text>
                 <IconChevronRight
                   size={18}
@@ -748,8 +747,8 @@ export function Header() {
           <Divider /> */}
 
           {/* Social Links */}
-          <Box p="md">
-            <Text size="sm" fw={600} mb="sm">
+          <Box p="xs">
+            <Text size="sm" fw={600} mb="md">
               Connect With Us
             </Text>
             <Flex gap="md">
