@@ -88,7 +88,12 @@ const CandidateDetailDrawer: React.FC<Props> = ({
 
       <Stack gap="xl">
         <Group align="center" gap="md">
-          <Avatar size={80} radius="xl" color="blue">
+          <Avatar
+            size={80}
+            radius="xl"
+            color="blue"
+            src={details?.profilePicture || null}
+          >
             {(candidate.firstName?.[0] || '?').toUpperCase()}
             {(candidate.lastName?.[0] || '').toUpperCase()}
           </Avatar>
