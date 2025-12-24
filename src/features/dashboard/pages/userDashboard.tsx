@@ -38,8 +38,6 @@ export const UserDashboard = () => {
 
         <HowItWorks />
 
-        <HowItWorks />
-
         <TestimonialCarousel />
 
         <LogoShowcase />

@@ -188,9 +188,11 @@ export function Header() {
                   <Menu.Item component="a" href="/services">
                     Services
                   </Menu.Item>
-                  <Menu.Item component="a" href="/recruiter">
-                    Recruiter
-                  </Menu.Item>
+                  {role !== 'client' && (
+                    <Menu.Item component="a" href="/recruiter">
+                      Recruiter
+                    </Menu.Item>
+                  )}
                   <Menu.Item component="a" href="/client/login">
                     Client
                   </Menu.Item>
@@ -512,17 +514,19 @@ export function Header() {
                 >
                   <Text>Services</Text>
                 </Anchor>
-                <Anchor
-                  component={Link}
-                  to="/recruiter"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Recruiter</Text>
-                </Anchor>
+                {role !== 'client' && (
+                  <Anchor
+                    component={Link}
+                    to="/recruiter"
+                    style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      padding: '8px 0',
+                    }}
+                  >
+                    <Text>Recruiter</Text>
+                  </Anchor>
+                )}
                 <Anchor
                   href="/client/login"
                   style={{

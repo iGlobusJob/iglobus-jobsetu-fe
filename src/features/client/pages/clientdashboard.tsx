@@ -99,7 +99,7 @@ const ClientDashboard = () => {
               jobLocation: job.jobLocation,
               closingIn: Math.ceil(
                 (new Date(job.postEnd).getTime() - new Date().getTime()) /
-                (1000 * 60 * 60)
+                  (1000 * 60 * 60)
               ),
             })),
           });
@@ -415,7 +415,7 @@ const ClientDashboard = () => {
               </Stack>
             </Group>
 
-            <Group grow>
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
               <Button
                 size="md"
                 variant="light"
@@ -430,7 +430,7 @@ const ClientDashboard = () => {
               >
                 Edit Profile
               </Button>
-            </Group>
+            </SimpleGrid>
           </Stack>
         </Card>
       </Stack>
