@@ -30,8 +30,6 @@ export const UserDashboard = () => {
 
         <Categories />
 
-        <Categories />
-
         <div id="browse-jobs">
           <JobListingsSection />
         </div>

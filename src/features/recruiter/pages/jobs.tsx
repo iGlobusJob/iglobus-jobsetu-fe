@@ -32,6 +32,8 @@ const formatJobType = (type: string): string => {
     .join(' ');
 };
 
+const formatINR = (value: number) => value.toLocaleString('en-IN');
+
 interface ApiJob {
   id: string;
   jobTitle: string;
@@ -360,7 +362,8 @@ export const JobListingsSection = (): JSX.Element => {
 
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Text size="sm" fw={500} mb={8}>
-                Salary Range: ₹{salaryRange[0]} - ₹{salaryRange[1]}
+                Salary Range: ₹{formatINR(salaryRange[0])} - ₹
+                {formatINR(salaryRange[1])}
               </Text>
               <RangeSlider
                 value={salaryRange}
@@ -370,7 +373,7 @@ export const JobListingsSection = (): JSX.Element => {
                 step={1000}
                 marks={[
                   { value: 0, label: '₹500' },
-                  { value: maxSalary, label: `₹${maxSalary}` },
+                  { value: maxSalary, label: `₹${formatINR(maxSalary)}` },
                 ]}
               />
             </Grid.Col>

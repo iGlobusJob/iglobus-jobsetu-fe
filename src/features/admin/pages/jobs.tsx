@@ -303,7 +303,7 @@ const AllJobs = () => {
                           <Badge
                             color={getStatusColor(job.status)}
                             variant="filled"
-                            size="md"
+                            size="lg"
                             styles={{ root: { textTransform: 'capitalize' } }}
                           >
                             {job.status}
@@ -334,7 +334,7 @@ const AllJobs = () => {
                         onClick={() =>
                           setExpandedJob(isExpanded ? null : job.id)
                         }
-                        size="lg"
+                        size="md"
                       >
                         <IconChevronDown
                           size={20}
