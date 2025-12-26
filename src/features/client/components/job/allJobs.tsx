@@ -249,7 +249,7 @@ const AllJobsComponent = () => {
                   <Text size="sm" fw={500}>
                     Results
                   </Text>
-                  <Badge size="lg" variant="light" radius="md">
+                  <Badge size="lg" mt={6} variant="light" radius="md">
                     {filteredJobs.length} job
                     {filteredJobs.length !== 1 ? 's' : ''} found
                   </Badge>

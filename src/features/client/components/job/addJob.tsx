@@ -571,8 +571,23 @@ export const JobPostForm = () => {
               <Button
                 variant="default"
                 onClick={() => {
-                  reset();
+                  reset({
+                    jobTitle: '',
+                    jobDescription: '',
+                    postStart: new Date(),
+                    postEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                    noOfPositions: 1,
+                    minimumSalary: 0,
+                    maximumSalary: 0,
+                    jobType: '',
+                    jobLocation: '',
+                    minimumExperience: 0,
+                    maximumExperience: 0,
+                    status: 'drafted',
+                  });
+
                   setJobDescription('');
+                  editorRef.current?.clear();
                 }}
                 disabled={!isDirty || isSubmitting}
               >

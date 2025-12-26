@@ -9,12 +9,15 @@ import {
   Paper,
   Anchor,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 
 const About = () => {
   const systemTheme = useSystemTheme();
   const isDark = systemTheme === 'dark';
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(max-width: 1024px)');
 
   return (
     <Box id="about" py={65} style={{ marginTop: -250 }}>
@@ -25,11 +28,10 @@ const About = () => {
               src="/about-logo.png"
               alt="About Us"
               radius="sm"
-              fit="cover"
-              height="370"
-              width="100"
+              fit={isMobile ? 'contain' : 'cover'}
+              height={isMobile ? 220 : isTablet ? 300 : 370}
               style={{
-                objectFit: 'cover',
+                width: '100%',
                 borderRadius: '10px',
                 filter: isDark ? 'brightness(0.85)' : 'brightness(1)',
               }}
