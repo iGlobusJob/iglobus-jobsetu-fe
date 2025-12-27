@@ -45,7 +45,7 @@ const mapJob = (job: ApiJob): CandidateJobs => ({
   jobDescription: job.jobDescription,
   organizationName: job.organizationName,
   jobLocation: job.jobLocation,
-  salaryRange: `${job.minimumSalary} - ${job.maximumSalary}/m`,
+  salaryRange: `${job.minimumSalary} - ${job.maximumSalary}/yr`,
   salaryMin: job.minimumSalary,
   salaryMax: job.maximumSalary,
   experienceLevel: `${job.minimumExperience} - ${job.maximumExperience} years`,
@@ -69,6 +69,9 @@ export const JobListingsSection = (): JSX.Element => {
   const [experienceFilter, setExperienceFilter] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [maxSalary, setMaxSalary] = useState(300000);
+  const [userFiltered, setUserFiltered] = useState(false);
+
+  const formatINR = (value: number) => value.toLocaleString('en-IN');
 
   useEffect(() => {
     const loadJobs = async () => {
@@ -207,6 +210,7 @@ export const JobListingsSection = (): JSX.Element => {
     setSalaryRange([0, maxSalary]);
     setExperienceFilter('');
     setCurrentPage(1);
+    setUserFiltered(false);
   };
 
   return (
@@ -246,6 +250,7 @@ export const JobListingsSection = (): JSX.Element => {
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
+              setUserFiltered(true);
               setCurrentPage(1);
             }}
             mb="lg"
@@ -260,6 +265,7 @@ export const JobListingsSection = (): JSX.Element => {
                 value={selectedJobType}
                 onChange={(value) => {
                   setSelectedJobType(value);
+                  setUserFiltered(true);
                   setCurrentPage(1);
                 }}
                 data={[
@@ -296,13 +302,14 @@ export const JobListingsSection = (): JSX.Element => {
 
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Text size="sm" fw={500} mb={8}>
-                Salary Range: ₹{salaryRange[0].toLocaleString()} - ₹
-                {salaryRange[1].toLocaleString()}
+                Salary Range: ₹{formatINR(salaryRange[0])} - ₹
+                {formatINR(salaryRange[1])}
               </Text>
               <RangeSlider
                 value={salaryRange}
                 onChange={(value) => {
                   setSalaryRange(value);
+                  setUserFiltered(true);
                   setCurrentPage(1);
                 }}
                 min={0}
@@ -310,13 +317,13 @@ export const JobListingsSection = (): JSX.Element => {
                 step={5000}
                 marks={[
                   { value: 0, label: '₹0' },
-                  { value: maxSalary, label: `₹${maxSalary.toLocaleString()}` },
+                  { value: maxSalary, label: `₹${formatINR(maxSalary)}` },
                 ]}
               />
             </Grid.Col>
           </Grid>
 
-          {isFiltered && (
+          {userFiltered && (
             <Button
               size="xs"
               mt="md"

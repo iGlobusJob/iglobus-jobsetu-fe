@@ -20,12 +20,6 @@ const items = [
     icon: '/user/industry.png',
   },
   {
-    label: 'STUDENTS PLACED',
-    value: '8548+',
-    color: 'text-gray-500',
-    icon: '/user/studentskilled.png',
-  },
-  {
     label: 'JOBS POSTED',
     value: '17891+',
     color: 'text-yellow-600',
@@ -43,7 +37,7 @@ const Icons = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  const itemWidth = isMobile ? 140 : isTablet ? 160 : 220;
+  const itemWidth = isMobile ? 140 : isTablet ? 160 : 260;
   const iconSize = isMobile ? 40 : isTablet ? 50 : 60;
   const labelSize = isMobile ? 11 : 12;
 

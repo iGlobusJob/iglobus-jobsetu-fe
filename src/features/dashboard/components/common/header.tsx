@@ -58,7 +58,6 @@ export function Header() {
   const { token } = useAuthStore();
   const location = useLocation();
   const path = location.pathname;
-
   return (
     <Paper shadow="md">
       {/* Top Bar - Hidden on Mobile */}
@@ -183,15 +182,17 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="/#about">
+                  <Menu.Item component="a" href="/aboutus">
                     About Us
                   </Menu.Item>
                   <Menu.Item component="a" href="/services">
                     Services
                   </Menu.Item>
-                  <Menu.Item component="a" href="/recruiter">
-                    Recruiter
-                  </Menu.Item>
+                  {role !== 'client' && (
+                    <Menu.Item component="a" href="/recruiter">
+                      Recruiter
+                    </Menu.Item>
+                  )}
                   <Menu.Item component="a" href="/client/login">
                     Client
                   </Menu.Item>
@@ -266,13 +267,13 @@ export function Header() {
                   <Menu.Item component="a" href="/client/register">
                     Register
                   </Menu.Item>
-                  <Menu.Item component="a" href="/client/login">
+                  <Menu.Item component="a" href="/client/jobs/new">
                     Post a Job
                   </Menu.Item>
-                  <Menu.Item component="a" href="/client/login">
+                  <Menu.Item component="a" href="/client/jobs/manage-jobs">
                     Manage Jobs
                   </Menu.Item>
-                  <Menu.Item component="a" href="/client/login">
+                  <Menu.Item component="a" href="/client/dashboard">
                     Employer Dashboard
                   </Menu.Item>
                 </Menu.Dropdown>
@@ -449,7 +450,7 @@ export function Header() {
         size="80%"
         title="Menu"
       >
-        <Stack gap="md">
+        <Stack gap="sm">
           {/* User Profile Section */}
           <Box
             p="md"
@@ -473,13 +474,14 @@ export function Header() {
 
           <Divider />
 
+          {/* Mobile Version */}
           {/* Home Section */}
           <Box>
             <UnstyledButton
               onClick={() => setHomeOpen(!homeOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Home</Text>
                 <IconChevronRight
                   size={18}
@@ -493,7 +495,7 @@ export function Header() {
             <Collapse in={homeOpen}>
               <Stack gap={0} pl="lg">
                 <Anchor
-                  href="/#about"
+                  href="/aboutus"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -512,17 +514,19 @@ export function Header() {
                 >
                   <Text>Services</Text>
                 </Anchor>
-                <Anchor
-                  component={Link}
-                  to="/recruiter"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Recruiter</Text>
-                </Anchor>
+                {role !== 'client' && (
+                  <Anchor
+                    component={Link}
+                    to="/recruiter"
+                    style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      padding: '8px 0',
+                    }}
+                  >
+                    <Text>Recruiter</Text>
+                  </Anchor>
+                )}
                 <Anchor
                   href="/client/login"
                   style={{
@@ -557,7 +561,7 @@ export function Header() {
               onClick={() => setCompanyOpen(!companyOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Company</Text>
                 <IconChevronRight
                   size={18}
@@ -596,15 +600,13 @@ export function Header() {
 
           <Divider />
 
-          <Divider />
-
           {/* Candidates Section */}
           <Box>
             <UnstyledButton
               onClick={() => setCandidatesOpen(!candidatesOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Candidates</Text>
                 <IconChevronRight
                   size={18}
@@ -666,7 +668,7 @@ export function Header() {
               onClick={() => setEmployerOpen(!employerOpen)}
               style={{ width: '100%' }}
             >
-              <Flex justify="space-between" align="center" p="sm">
+              <Flex justify="space-between" align="center" p="xs">
                 <Text fw={500}>Employer</Text>
                 <IconChevronRight
                   size={18}
@@ -700,7 +702,7 @@ export function Header() {
                   <Text>Register</Text>
                 </Anchor>
                 <Anchor
-                  href="/client/login"
+                  href="/client/jobs/new"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -710,7 +712,7 @@ export function Header() {
                   <Text>Post a Job</Text>
                 </Anchor>
                 <Anchor
-                  href="/client/login"
+                  href="/client/jobs/manage-jobs"
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
@@ -748,8 +750,8 @@ export function Header() {
           <Divider /> */}
 
           {/* Social Links */}
-          <Box p="md">
-            <Text size="sm" fw={600} mb="sm">
+          <Box p="xs">
+            <Text size="sm" fw={600} mb="md">
               Connect With Us
             </Text>
             <Flex gap="md">

@@ -159,7 +159,7 @@ const AllJobs = () => {
             Job Listings
           </Title>
           <Text size="md" c="dimmed">
-            Browse all posted jobs, filter by type and status, and manage
+            Browse all posted jobs, filter by type and status and manage
             listings easily.
           </Text>
         </div>
@@ -261,10 +261,15 @@ const AllJobs = () => {
                 >
                   <Stack gap={0}>
                     {/* Header with Image */}
-                    <Group gap="md" p="md" wrap="nowrap" align="flex-start">
+                    <Group
+                      gap={isMobile ? 'xs' : 'md'}
+                      p={isMobile ? 'sm' : 'md'}
+                      wrap="nowrap"
+                      align="flex-start"
+                    >
                       <Avatar
                         src={job.logo || undefined}
-                        size={80}
+                        size={isMobile ? 48 : 80}
                         radius="lg"
                         style={{
                           background: job.logo
@@ -283,7 +288,12 @@ const AllJobs = () => {
                           wrap="wrap"
                         >
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <Title order={4} size="h4" fw={700} mb={2}>
+                            <Title
+                              order={isMobile ? 5 : 4}
+                              size={isMobile ? 'h5' : 'h4'}
+                              fw={700}
+                              mb={2}
+                            >
                               {job.jobTitle}
                             </Title>
                             <Text size="sm" c="dimmed" fw={500} truncate>
@@ -401,7 +411,7 @@ const AllJobs = () => {
                             <Text size="xs" c="dimmed">
                               📅 Posted:{' '}
                               <strong>
-                                {new Date(job.createdAt).toLocaleDateString(
+                                {new Date(job.updatedAt).toLocaleDateString(
                                   'en-IN'
                                 )}
                               </strong>

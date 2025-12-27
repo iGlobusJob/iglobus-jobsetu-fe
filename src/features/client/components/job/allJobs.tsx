@@ -191,7 +191,7 @@ const AllJobsComponent = () => {
         </Title>
 
         <Text size="sm" color="dimmed">
-          Browse all posted jobs, filter by type and status, and manage listings
+          Browse all posted jobs, filter by type and status and manage listings
           easily.
         </Text>
       </Stack>
@@ -382,7 +382,7 @@ const AllJobsComponent = () => {
                             <Stack gap={0}>
                               <Text size="xs" c="dimmed">
                                 Posted:{' '}
-                                {new Date(job.createdAt).toLocaleDateString(
+                                {new Date(job.updatedAt).toLocaleDateString(
                                   'en-IN'
                                 )}
                               </Text>

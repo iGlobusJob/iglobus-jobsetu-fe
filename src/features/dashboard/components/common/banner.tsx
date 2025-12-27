@@ -249,7 +249,7 @@ export const BannerSection = () => {
           transition: 'background 0.3s ease',
         }}
       >
-        <Container size="xl" component="section" id="browse-jobs">
+        <Container size="xl" component="section">
           <Grid align="center" gutter={{ base: 'xl', md: 60 }}>
             {/* Left Content */}
             <Grid.Col span={{ base: 12, lg: 7 }}>

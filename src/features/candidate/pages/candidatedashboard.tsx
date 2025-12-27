@@ -319,25 +319,6 @@ export default function JobPortalDashboard() {
           </Button>
         </Group>
 
-        {(!isLoggedIn || userRole === 'candidate') && (
-          <>
-            {' '}
-            {featuredJobs.length > 0 ? (
-              <Grid>
-                {' '}
-                {featuredJobs.map((job) => (
-                  <Grid.Col key={job.id} span={{ base: 12, md: 4 }}>
-                    {' '}
-                    <JobCard job={job} onBookmark={() => {}} />{' '}
-                  </Grid.Col>
-                ))}{' '}
-              </Grid>
-            ) : (
-              <Text c="dimmed">No featured jobs available</Text>
-            )}{' '}
-          </>
-        )}
-
         {error && (
           <Card
             p="md"
@@ -352,35 +333,36 @@ export default function JobPortalDashboard() {
           </Card>
         )}
 
-        {loading ? (
-          <Center py={80}>
-            <Loader size="lg" />
-          </Center>
-        ) : enrichedFeaturedJobs.length > 0 ? (
-          <JobGrid>
-            {enrichedFeaturedJobs.map((job) => (
-              <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                <JobCard
-                  job={job}
-                  onBookmark={(jobId) =>
-                    handleBookmark(jobId, bookmarkedJobs.has(jobId))
-                  }
-                />
-              </Grid.Col>
-            ))}
-          </JobGrid>
-        ) : (
-          <Card p={60} radius="md" withBorder>
-            <Center>
-              <Stack gap="md" align="center">
-                <Title order={3} size="h4">
-                  No jobs available
-                </Title>
-                <Text c="dimmed">Check back soon for more opportunities</Text>
-              </Stack>
+        {(!isLoggedIn || userRole === 'candidate') &&
+          (loading ? (
+            <Center py={80}>
+              <Loader size="lg" />
             </Center>
-          </Card>
-        )}
+          ) : enrichedFeaturedJobs.length > 0 ? (
+            <JobGrid>
+              {enrichedFeaturedJobs.map((job) => (
+                <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                  <JobCard
+                    job={job}
+                    onBookmark={(jobId) =>
+                      handleBookmark(jobId, bookmarkedJobs.has(jobId))
+                    }
+                  />
+                </Grid.Col>
+              ))}
+            </JobGrid>
+          ) : (
+            <Card p={60} radius="md" withBorder>
+              <Center>
+                <Stack gap="md" align="center">
+                  <Title order={3} size="h4">
+                    No jobs available
+                  </Title>
+                  <Text c="dimmed">Check back soon for more opportunities</Text>
+                </Stack>
+              </Center>
+            </Card>
+          ))}
       </Container>
 
       {/* Pro Tips Section */}

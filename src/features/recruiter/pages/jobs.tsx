@@ -52,7 +52,7 @@ const mapJob = (job: ApiJob): CandidateJobs => ({
   jobDescription: job.jobDescription,
   organizationName: job.organizationName,
   jobLocation: job.jobLocation,
-  salaryRange: `${job.minimumSalary} - ${job.maximumSalary}/m`,
+  salaryRange: `${job.minimumSalary} - ${job.maximumSalary}/yr`,
   salaryMin: job.minimumSalary,
   salaryMax: job.maximumSalary,
   experienceLevel: `${job.minimumExperience} - ${job.maximumExperience} years`,
