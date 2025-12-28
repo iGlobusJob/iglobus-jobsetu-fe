@@ -188,20 +188,24 @@ export function Header() {
                   <Menu.Item component="a" href="/services">
                     Services
                   </Menu.Item>
-                  {role !== 'client' && (
-                    <Menu.Item component="a" href="/recruiter">
-                      Recruiter
-                    </Menu.Item>
-                  )}
-                  <Menu.Item component="a" href="/client/login">
-                    Client
-                  </Menu.Item>
-                  {![
-                    '/recruiter',
-                    '/client/login',
-                    '/client/register',
-                  ].includes(path) && (
-                    <Menu.Item onClick={() => openModal()}>Candidate</Menu.Item>
+                  {!isLoggedIn && (
+                    <>
+                      <Menu.Item component="a" href="/recruiter">
+                        Recruiter
+                      </Menu.Item>
+                      <Menu.Item component="a" href="/client/login">
+                        Client
+                      </Menu.Item>
+                      {![
+                        '/recruiter',
+                        '/client/login',
+                        '/client/register',
+                      ].includes(path) && (
+                        <Menu.Item onClick={() => openModal()}>
+                          Candidate
+                        </Menu.Item>
+                      )}
+                    </>
                   )}
                 </Menu.Dropdown>
               </Menu>
@@ -237,9 +241,11 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="/#browse-jobs">
-                    Browse Jobs
-                  </Menu.Item>
+                  {!isLoggedIn && (
+                    <Menu.Item component="a" href="/#browse-jobs">
+                      Browse Jobs
+                    </Menu.Item>
+                  )}
                   <Menu.Item onClick={() => openModal()}>Saved Jobs</Menu.Item>
                   <Menu.Item onClick={() => openModal()}>
                     Candidate Profile
@@ -514,41 +520,43 @@ export function Header() {
                 >
                   <Text>Services</Text>
                 </Anchor>
-                {role !== 'client' && (
-                  <Anchor
-                    component={Link}
-                    to="/recruiter"
-                    style={{
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      padding: '8px 0',
-                    }}
-                  >
-                    <Text>Recruiter</Text>
-                  </Anchor>
+                {!isLoggedIn && (
+                  <>
+                    <Anchor
+                      component={Link}
+                      to="/recruiter"
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        padding: '8px 0',
+                      }}
+                    >
+                      <Text>Recruiter</Text>
+                    </Anchor>
+                    <Anchor
+                      href="/client/login"
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        padding: '8px 0',
+                      }}
+                    >
+                      <Text>Client</Text>
+                    </Anchor>
+                    <UnstyledButton
+                      onClick={() => {
+                        openModal();
+                      }}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '8px 0',
+                      }}
+                    >
+                      <Text>Candidate</Text>
+                    </UnstyledButton>
+                  </>
                 )}
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Client</Text>
-                </Anchor>
-                <UnstyledButton
-                  onClick={() => {
-                    openModal();
-                  }}
-                  style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Candidate</Text>
-                </UnstyledButton>
               </Stack>
             </Collapse>
           </Box>

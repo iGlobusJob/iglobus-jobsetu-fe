@@ -11,6 +11,7 @@ import {
   Title,
   Transition,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useState } from 'react';
 
 const steps = [
@@ -42,7 +43,8 @@ const steps = [
 
 export function HowItWorks() {
   const [activeTab, setActiveTab] = useState('register');
-
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(max-width: 1024px)');
   return (
     <Box py={30}>
       <Container size="lg">
@@ -60,13 +62,13 @@ export function HowItWorks() {
             >
               How It Works
             </Title>
-            <Text c="dimmed" size="md" lh={1.6} mb="xl">
+            <Text c="dimmed" size="sm" lh={1.6} mb="xl">
               Find your next opportunity in just a few simple steps — from
               creating your profile to landing your dream job.
             </Text>
 
             <Box style={{ position: 'relative' }}>
-              <Stack gap="xl" ml={0}>
+              <Stack gap="lg" ml={0}>
                 {steps.map((step, index) => (
                   <Group
                     key={step.id}
@@ -151,7 +153,10 @@ export function HowItWorks() {
 
           {/* Right Side - Image Transition */}
           <Grid.Col span={{ base: 12, lg: 6 }}>
-            <Box pos="relative" style={{ minHeight: '400px' }}>
+            <Box
+              pos="relative"
+              style={{ minHeight: isMobile ? 240 : isTablet ? 320 : 360 }}
+            >
               {steps.map((step) => (
                 <Transition
                   key={step.id}
@@ -176,9 +181,10 @@ export function HowItWorks() {
                           src={step.image}
                           alt={step.title}
                           radius="md"
+                          fit={isMobile ? 'contain' : 'cover'}
                           style={{
                             width: '100%',
-                            height: '564px',
+                            height: isMobile ? 200 : isTablet ? 300 : 530,
                             display: 'block',
                           }}
                         />

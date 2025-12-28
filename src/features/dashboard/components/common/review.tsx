@@ -19,7 +19,7 @@ const testimonials = [
     company: 'Vigilant',
     logo: '/testimonials/Vigilant.webp',
     content:
-      'Iglobus Jobsetu has been a dependable hiring partner for us. Their ability to understand role requirements and deliver relevant profiles consistently has helped us close positions faster without compromising on quality. The platform brings structure, transparency, and speed to the hiring process.',
+      'Iglobus JobSetu has been a dependable hiring partner for us. Their ability to understand role requirements and deliver relevant profiles consistently has helped us close positions faster without compromising on quality. The platform brings structure, transparency, and speed to the hiring process.',
     name: 'Sravani',
     position: ' Accounts Manager',
   },
@@ -28,7 +28,7 @@ const testimonials = [
     company: 'Coforge',
     logo: '/testimonials/CoforgeLogo.jfif',
     content:
-      'Working with Iglobus Jobsetu has been a smooth and professional experience. Their recruitment approach is well-organized, and the candidates shared were well-aligned with our technical and cultural expectations. The team’s responsiveness and follow-through truly stand out.',
+      'Working with Iglobus JobSetu has been a smooth and professional experience. Their recruitment approach is well-organized, and the candidates shared were well-aligned with our technical and cultural expectations. The team’s responsiveness and follow-through truly stand out.',
     name: 'Arvind',
     position: 'Manager',
   },
@@ -37,7 +37,7 @@ const testimonials = [
     company: 'Buchanan',
     logo: '/testimonials/Buchanan.png',
     content:
-      'What we appreciate most about Iglobus Jobsetu is their clarity and consistency. The platform simplifies coordination and delivers well-screened candidates, making it easier for HR teams to focus on strategic hiring rather than operational follow-ups.',
+      'What we appreciate most about Iglobus JobSetu is their clarity and consistency. The platform simplifies coordination and delivers well-screened candidates, making it easier for HR teams to focus on strategic hiring rather than operational follow-ups.',
     name: 'Suman',
     position: 'Head of HR Department',
   },
@@ -46,7 +46,7 @@ const testimonials = [
     company: 'Innova Solutions',
     logo: '/testimonials/innovaSolutions.jpg',
     content:
-      'Iglobus Jobsetu has supported us with timely and dependable talent delivery. Their understanding of delivery timelines and role-critical skills makes them a valuable hiring partner, especially for fast-moving project requirements.',
+      'Iglobus JobSetu has supported us with timely and dependable talent delivery. Their understanding of delivery timelines and role-critical skills makes them a valuable hiring partner, especially for fast-moving project requirements.',
     name: 'Syed Sana ',
     position: 'Head of Delivery',
   },
@@ -55,7 +55,7 @@ const testimonials = [
     company: 'Crisil',
     logo: '/testimonials/crisil_logo.jfif',
     content:
-      'The Iglobus Jobsetu platform has added real value to our recruitment efforts. From requirement understanding to candidate quality, the process has been efficient and professional. It’s a platform built with recruiters’ realities in mind.',
+      'The Iglobus JobSetu platform has added real value to our recruitment efforts. From requirement understanding to candidate quality, the process has been efficient and professional. It’s a platform built with recruiters’ realities in mind.',
     name: 'Archana Mahajan ',
     position: 'Recruitment Head',
   },
@@ -64,7 +64,7 @@ const testimonials = [
     company: 'Athena Global Technologies',
     logo: '/testimonials/AthenaSoftware.png',
     content:
-      'Iglobus Jobsetu stands out for its structured hiring workflow and quality-driven approach. The candidates presented were relevant, pre-screened, and interview-ready, which helped us reduce hiring cycles significantly.',
+      'Iglobus JobSetu stands out for its structured hiring workflow and quality-driven approach. The candidates presented were relevant, pre-screened, and interview-ready, which helped us reduce hiring cycles significantly.',
     name: 'Madhu ',
     position: 'Head of Recruitment',
   },
@@ -73,7 +73,7 @@ const testimonials = [
     company: 'Starcare',
     logo: '/testimonials/StarCareLogo.png',
     content:
-      'For delivery-focused teams like ours, timely hiring is critical. Iglobus Jobsetu has consistently supported us with reliable talent and smooth coordination, enabling us to meet project commitments without delays.',
+      'For delivery-focused teams like ours, timely hiring is critical. Iglobus JobSetu has consistently supported us with reliable talent and smooth coordination, enabling us to meet project commitments without delays.',
     name: 'Jilani ',
     position: 'Delivery Head',
   },

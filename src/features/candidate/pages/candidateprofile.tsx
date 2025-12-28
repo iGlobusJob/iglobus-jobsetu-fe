@@ -20,7 +20,7 @@ import {
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { IconFile, IconSparkles, IconUpload } from '@tabler/icons-react';
-import { useEffect, useState, type JSX } from 'react';
+import { useCallback, useEffect, useState, type JSX } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
@@ -34,12 +34,18 @@ import {
 const candidateProfileSchema = z.object({
   firstName: z
     .string()
+    .trim()
+    .min(2, 'First name must be at least 2 characters long !')
     .regex(/^[A-Za-z\s]+$/, 'First name should contain only letters')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   lastName: z
     .string()
+    .trim()
+    .min(2, 'Last name must be at least 2 characters long !')
     .regex(/^[A-Za-z\s]+$/, 'Last name should contain only letters')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   email: z.string().email('Invalid email address'),
   mobileNumber: z
     .string()
@@ -200,25 +206,25 @@ const CandidateProfilePage = (): JSX.Element => {
     },
   });
 
-  const calculateCompletion = (data: CandidateProfileFormData): number => {
-    let totalScore = 0;
+  const calculateCompletion = useCallback(
+    (data: CandidateProfileFormData): number => {
+      let totalScore = 0;
 
-    if (data.email) totalScore += 25;
-    if (data.mobileNumber) totalScore += 20;
-    if (data.resume instanceof File || resumeUrl) totalScore += 20;
+      if (data.email) totalScore += 25;
+      if (data.mobileNumber) totalScore += 20;
+      if (resumeUrl) totalScore += 20;
 
-    if (data.firstName) totalScore += 8;
-    if (data.lastName) totalScore += 8;
-    if (data.gender) totalScore += 5;
-    if (data.dateOfBirth) totalScore += 5;
-    if (data.address) totalScore += 5;
+      if (data.firstName) totalScore += 8;
+      if (data.lastName) totalScore += 8;
+      if (data.gender) totalScore += 5;
+      if (data.dateOfBirth) totalScore += 5;
+      if (data.address) totalScore += 5;
 
-    if (data.profilePictureFile instanceof File || profilePicturePreview) {
-      totalScore += 4;
-    }
-
-    return totalScore;
-  };
+      if (profilePicturePreview) totalScore += 4;
+      return totalScore;
+    },
+    [resumeUrl, profilePicturePreview]
+  );
 
   const getProgressColor = (percentage: number): string => {
     if (percentage === 100) return 'green';
@@ -261,7 +267,7 @@ const CandidateProfilePage = (): JSX.Element => {
           dateOfBirth: data.dateOfBirth || '',
           address: data.address || '',
           category: data.category || 'IT',
-          resume: data.profileUrl || null,
+          resume: null,
           profileUrl: data.profileUrl || null,
           profilePictureUrl: data.profilePictureUrl || null,
         };
@@ -277,8 +283,6 @@ const CandidateProfilePage = (): JSX.Element => {
         if (data.profilePictureUrl) {
           setProfilePicturePreview(data.profilePictureUrl);
         }
-
-        setCompletionPercentage(calculateCompletion(formData));
       } catch {
         toast.error('Unable to fetch candidate details');
       } finally {
@@ -290,6 +294,17 @@ const CandidateProfilePage = (): JSX.Element => {
     // 🔒 INTENTIONALLY EMPTY DEP ARRAY
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!profile) return;
+
+    setCompletionPercentage(
+      calculateCompletion({
+        ...profile,
+        resume: null,
+      })
+    );
+  }, [profile, calculateCompletion]);
 
   // Update completion percentage when form data changes
   useEffect(() => {
@@ -818,136 +833,21 @@ const CandidateProfilePage = (): JSX.Element => {
                 <Text fw={500} size="sm">
                   Resume
                 </Text>
-                {editMode ? (
-                  <Stack gap={4}>
-                    {/* Show existing resume preview */}
-                    {resumeUrl && !field.value && (
-                      <Stack gap="sm">
-                        <Group gap="sm" justify="space-between">
-                          <Group gap="sm">
-                            <IconFile
-                              size={20}
-                              color="var(--mantine-color-blue-6)"
-                            />
-                            <Stack gap={0}>
-                              <Text size="sm" fw={500}>
-                                {resumeFileName}
-                              </Text>
-                              <Text size="xs" c="dimmed">
-                                Current Resume
-                              </Text>
-                            </Stack>
-                          </Group>
-                          <Group gap="xs">
-                            <ActionIcon
-                              variant="subtle"
-                              color="violet"
-                              size="sm"
-                              onClick={() => {
-                                toast.info('Analyze resume with Gemini');
-                              }}
-                            >
-                              <IconSparkles size={28} />
-                            </ActionIcon>
-
-                            <Button
-                              variant="subtle"
-                              size="xs"
-                              onClick={() => setShowPdfViewer(!showPdfViewer)}
-                            >
-                              {showPdfViewer ? 'Hide' : 'Show'}
-                            </Button>
-                          </Group>
-                        </Group>
-
-                        {showPdfViewer && (
-                          <div
-                            style={{
-                              border: '1px solid var(--mantine-color-gray-3)',
-                              borderRadius: 'var(--mantine-radius-md)',
-                              overflow: 'hidden',
-                            }}
-                          >
-                            <iframe
-                              src={getViewerUrl(resumeUrl)}
-                              style={{
-                                width: '100%',
-                                height: '500px',
-                                border: 'none',
-                              }}
-                              title="Resume Preview"
-                            />
-                          </div>
-                        )}
-                      </Stack>
-                    )}
-
-                    {/* File input for uploading new resume */}
-                    <FileInput
-                      {...field}
-                      value={field.value instanceof File ? field.value : null}
-                      leftSection={<IconUpload size={14} />}
-                      placeholder={
-                        resumeUrl
-                          ? 'Choose new resume file to replace'
-                          : 'Choose resume file'
-                      }
-                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                      clearable
-                      onChange={(file) =>
-                        handleResumeChange(file, field.onChange)
-                      }
-                    />
-
-                    {/* Show newly selected file */}
-                    {field.value instanceof File && (
-                      <Stack
-                        gap="sm"
-                        p="md"
-                        style={{
-                          border: '1px solid var(--mantine-color-blue-3)',
-                          borderRadius: 'var(--mantine-radius-md)',
-                          backgroundColor: 'var(--mantine-color-blue-0)',
-                        }}
-                      >
-                        <Group gap="sm">
-                          <IconFile
-                            size={20}
-                            color="var(--mantine-color-blue-6)"
-                          />
-                          <Stack gap={0}>
-                            <Text size="sm" fw={500}>
-                              {field.value.name}
-                            </Text>
-                            <Text size="xs" c="dimmed">
-                              New Resume (to be uploaded)
-                            </Text>
-                          </Stack>
-                        </Group>
-                      </Stack>
-                    )}
-
-                    <Text size="xs" c="dimmed">
-                      Optional • Max size: 5MB • Supported: PDF, DOC, DOCX
-                    </Text>
-                    {errors.resume?.message && (
-                      <Text c="red" size="xs">
-                        {typeof errors.resume.message === 'string'
-                          ? errors.resume.message
-                          : 'Invalid resume'}
-                      </Text>
-                    )}
-                  </Stack>
-                ) : resumeUrl ? (
+                {resumeUrl && !field.value && (
                   <Stack gap="sm">
                     <Group gap="sm" justify="space-between">
-                      <Group gap="xs">
+                      <Group gap="sm">
                         <IconFile
                           size={20}
                           color="var(--mantine-color-blue-6)"
                         />
                         <Stack gap={0}>
-                          <Text size="sm">✓ {resumeFileName}</Text>
+                          <Text size="sm" fw={500}>
+                            {resumeFileName}
+                          </Text>
+                          <Text size="xs" c="dimmed">
+                            Current Resume
+                          </Text>
                         </Stack>
                       </Group>
                       <Group gap="xs">
@@ -961,6 +861,7 @@ const CandidateProfilePage = (): JSX.Element => {
                         >
                           <IconSparkles size={28} />
                         </ActionIcon>
+
                         <Button
                           variant="subtle"
                           size="xs"
@@ -991,7 +892,61 @@ const CandidateProfilePage = (): JSX.Element => {
                       </div>
                     )}
                   </Stack>
-                ) : (
+                )}
+
+                {editMode && field.value instanceof File && (
+                  <Stack
+                    gap="sm"
+                    p="md"
+                    style={{
+                      border: '1px solid var(--mantine-color-blue-3)',
+                      borderRadius: 'var(--mantine-radius-md)',
+                      backgroundColor: 'var(--mantine-color-blue-0)',
+                    }}
+                  >
+                    <Group gap="sm">
+                      <IconFile size={20} color="var(--mantine-color-blue-6)" />
+                      <Stack gap={0}>
+                        <Text size="sm" fw={500}>
+                          {field.value.name}
+                        </Text>
+                        <Text size="xs" c="dimmed">
+                          New Resume (to be uploaded)
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Stack>
+                )}
+
+                {editMode && (
+                  <>
+                    <FileInput
+                      value={field.value instanceof File ? field.value : null}
+                      leftSection={<IconUpload size={14} />}
+                      placeholder={
+                        resumeUrl
+                          ? 'Choose new resume to replace'
+                          : 'Choose resume file'
+                      }
+                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      clearable
+                      onChange={(file) =>
+                        handleResumeChange(file, field.onChange)
+                      }
+                    />
+                    <Text size="xs" c="dimmed">
+                      Optional • Max size: 5MB • Supported: PDF, DOC, DOCX
+                    </Text>
+                    {errors.resume?.message && (
+                      <Text c="red" size="xs">
+                        {typeof errors.resume.message === 'string'
+                          ? errors.resume.message
+                          : 'Invalid resume'}
+                      </Text>
+                    )}
+                  </>
+                )}
+                {!resumeUrl && !editMode && (
                   <Text size="sm" c="dimmed">
                     Not Uploaded
                   </Text>
