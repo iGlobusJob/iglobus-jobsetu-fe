@@ -114,7 +114,7 @@ const RecruiterDashboard: React.FC = () => {
     if (!form.password) {
       newErrors.password = 'Password is required';
     } else if (form.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = 'Password must be at least 8 characters';
     }
 
     setErrors(newErrors);
@@ -466,8 +466,9 @@ const RecruiterDashboard: React.FC = () => {
           opened={modalOpened}
           onClose={handleModalClose}
           title={
-            <Group gap="sm" visibleFrom="sm">
+            <Group gap="sm">
               <Box
+                visibleFrom="sm"
                 style={{
                   padding: '10px',
                   borderRadius: '8px',
@@ -594,14 +595,14 @@ const RecruiterDashboard: React.FC = () => {
 
                 <PasswordInput
                   label="Password"
-                  placeholder="Minimum 6 characters"
+                  placeholder="Minimum 8 characters"
                   value={form.password}
                   onChange={(e) => handleChange('password', e.target.value)}
                   error={errors.password}
                   required
                   disabled={submitting}
                   size="md"
-                  description="Must be at least 6 characters long"
+                  description="Must be at least 8 characters long"
                   styles={{
                     label: { fontWeight: 500, marginBottom: '8px' },
                     input: {
