@@ -605,7 +605,7 @@ export const JobPostForm = () => {
                     (isSubmitting && submitMode !== 'draft')
                   }
                 >
-                  Draft
+                  Drafted
                 </Button>
               )}
 
