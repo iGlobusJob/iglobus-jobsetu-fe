@@ -224,7 +224,7 @@ const AllJobs = () => {
                   radius="md"
                   data={[
                     { value: 'active', label: 'Active' },
-                    { value: 'drafted', label: 'Draft' },
+                    { value: 'drafted', label: 'Drafted' },
                     { value: 'closed', label: 'Closed' },
                   ]}
                   value={selectedStatus}
