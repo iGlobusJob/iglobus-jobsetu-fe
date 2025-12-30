@@ -10,10 +10,10 @@ import {
   Text,
 } from '@mantine/core';
 import {
-  IconBrandFacebook,
-  IconBrandGoogle,
+  IconBrandInstagram,
   IconBrandLinkedin,
   IconChevronRight,
+  IconMail,
   IconX,
 } from '@tabler/icons-react';
 
@@ -30,10 +30,31 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: IconBrandFacebook, label: 'Facebook', href: '#', color: '#1877F2' },
-  { icon: IconBrandLinkedin, label: 'LinkedIn', href: '#', color: '#0A66C2' },
-  { icon: IconBrandGoogle, label: 'Google', href: '#', color: '#DB4437' },
-  { icon: IconX, label: 'Twitter', href: '#', color: '#000000' },
+  {
+    icon: IconBrandLinkedin,
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/iglobus-jobsetu',
+    color: '#0A66C2',
+  },
+  {
+    icon: IconBrandInstagram,
+    label: 'Instagram',
+    href: 'https://www.instagram.com/iglobusjobsetu/',
+    color: '#E1306C',
+  },
+  {
+    icon: IconMail,
+    label: 'Email',
+    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=iglobusjobsetu@gmail.com',
+    color: '#306dabff',
+  },
+  {
+    icon: IconX,
+    label: 'X',
+    href: 'https://x.com/iglobusjobsetu',
+    color: '#000000',
+    stroke: 2.8,
+  },
 ];
 
 export function FooterSubscribe() {
@@ -52,11 +73,11 @@ export function FooterSubscribe() {
                   style={{ display: 'inline-block' }}
                 >
                   <Image
-                    src="/jobseti-darks.png"
+                    src="/auth/jobsetudark.png"
                     alt="JobSetu Logo"
                     fit="contain"
-                    width={40}
-                    height={40}
+                    width={50}
+                    height={50}
                   />
                 </Anchor>
 
@@ -65,30 +86,36 @@ export function FooterSubscribe() {
                     Follow Us on:
                   </Text>
                   <Group gap="xs">
-                    {socialLinks.map((social, index) => (
-                      <ActionIcon
-                        key={index}
-                        component="a"
-                        href={social.href}
-                        size="lg"
-                        radius="md"
-                        variant="light"
-                        color="gray"
-                        style={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                          transition: 'all 0.3s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = social.color;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor =
-                            'rgba(255, 255, 255, 0.1)';
-                        }}
-                      >
-                        <social.icon size={20} color="white" />
-                      </ActionIcon>
-                    ))}
+                    {socialLinks.map((social) => {
+                      const Icon = social.icon;
+                      return (
+                        <ActionIcon
+                          key={social.label}
+                          component="a"
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          size="lg"
+                          radius="md"
+                          variant="light"
+                          aria-label={social.label}
+                          styles={{
+                            root: {
+                              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                              color: social.color,
+                              transition: 'all 200ms ease',
+                              '&:hover': {
+                                backgroundColor: social.color,
+                                color: '#ffffff',
+                                transform: 'translateY(-2px)',
+                              },
+                            },
+                          }}
+                        >
+                          <Icon size={20} stroke={social.stroke ?? 2} />
+                        </ActionIcon>
+                      );
+                    })}
                   </Group>
                 </Box>
               </Stack>

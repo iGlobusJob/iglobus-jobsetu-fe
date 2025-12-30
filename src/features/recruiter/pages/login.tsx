@@ -165,7 +165,9 @@ export const RecruiterLoginPage: React.FC = () => {
                   >
                     <Image
                       src={
-                        isDark ? '/jobseti-darks.png' : '/jobseti-lights.png'
+                        isDark
+                          ? '/auth/jobsetudark.png'
+                          : '/auth/jobsetulight.png'
                       }
                       alt="JobSetu Logo"
                       fit="contain"

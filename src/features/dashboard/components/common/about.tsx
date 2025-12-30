@@ -53,17 +53,17 @@ const About = () => {
             >
               <Stack gap="lg">
                 <Title order={2} fw={700} c={isDark ? 'white' : '#0c0c0cff'}>
-                  About Iglobus JobSetu
+                  About iGlobus JobSetu
                 </Title>
 
                 <Text size="md" c="dimmed" lh={1.7}>
-                  Iglobus JobSetu is a staffing and recruitment platform built
+                  iGlobus JobSetu is a staffing and recruitment platform built
                   to simplify hiring and connect organizations with the right
                   talent across IT and Non-IT domains.
                 </Text>
 
                 <Text size="md" c="dimmed" lh={1.7}>
-                  A product of Iglobus Corporate Consulting, founded in 2015,
+                  A product of iGlobus Corporate Consulting, founded in 2015,
                   JobSetu combines over a decade of recruitment expertise with a
                   technology-driven hiring ecosystem.
                 </Text>

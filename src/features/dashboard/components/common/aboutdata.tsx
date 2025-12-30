@@ -18,7 +18,7 @@ import { Header } from './header';
 const cardData = [
   {
     title: 'Our Journey',
-    text: `Since our inception in 2015, Iglobus has supported organizations across industries by delivering reliable talent for:
+    text: `Since our inception in 2015, iGlobus has supported organizations across industries by delivering reliable talent for:
         • Technical roles
         • Functional and support roles
         • Service-based and operations-driven positions for IT and Non-IT
@@ -52,7 +52,7 @@ const cardData = [
         • Candidates find clarity, opportunity, and growth
         • Recruitment teams operate with efficiency, transparency, and purpose
 
-      With strong roots in traditional recruitment practices and a forward-looking platform mindset, Iglobus JobSetu stands at the intersection of experience and innovation.`,
+      With strong roots in traditional recruitment practices and a forward-looking platform mindset, iGlobus JobSetu stands at the intersection of experience and innovation.`,
   },
 ];
 
