@@ -13,6 +13,7 @@ import {
   Progress,
   SegmentedControl,
   Select,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
@@ -758,7 +759,7 @@ const CandidateProfilePage = (): JSX.Element => {
 
           <Divider my="lg" />
 
-          <Group grow align="flex-start">
+          <SimpleGrid cols={{ base: 1, sm: 2 }}>
             <Controller
               name="email"
               control={control}
@@ -787,7 +788,7 @@ const CandidateProfilePage = (): JSX.Element => {
                 />
               )}
             />
-          </Group>
+          </SimpleGrid>
         </Card>
         {/* Job Preference & Resume Section */}
         <Card withBorder radius="md" p="xl" shadow="xs">
