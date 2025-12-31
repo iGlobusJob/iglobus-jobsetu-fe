@@ -10,7 +10,6 @@ import {
   Group,
   Loader,
   PasswordInput,
-  Select,
   Stack,
   Text,
   TextInput,
@@ -500,57 +499,10 @@ const ClientProfilePage = (): JSX.Element => {
               <Text fw={600} size="md">
                 Business Information
               </Text>
-
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                  gap: '1.5rem',
-                }}
-              >
-                <Controller
-                  name="category"
-                  control={control}
-                  render={({ field }) => (
-                    <Stack gap={8}>
-                      <Text size="sm" fw={500} c="dimmed">
-                        Business Category
-                      </Text>
-                      {editMode ? (
-                        <div>
-                          <Select
-                            placeholder="Select category"
-                            data={[
-                              { value: 'IT', label: '💻 IT' },
-                              { value: 'NON_IT', label: '🏢 Non-IT' },
-                            ]}
-                            value={field.value}
-                            onChange={field.onChange}
-                            radius="md"
-                            disabled
-                            styles={{
-                              input: {
-                                borderColor: errors.category?.message
-                                  ? 'var(--mantine-color-red-5)'
-                                  : 'var(--mantine-color-gray-3)',
-                              },
-                            }}
-                          />
-                          {errors.category?.message && (
-                            <Text size="xs" c="red" mt={4}>
-                              {errors.category.message}
-                            </Text>
-                          )}
-                        </div>
-                      ) : (
-                        <Text fw={600} size="md">
-                          {categoryValue === 'IT' ? '💻 IT' : '🏢 Non-IT'}
-                        </Text>
-                      )}
-                    </Stack>
-                  )}
-                />
-              </div>
+              <ReadOnlyField
+                label="Business Category"
+                value={categoryValue === 'IT' ? '💻 IT' : '🏢 Non-IT'}
+              />
             </Stack>
 
             <Divider />

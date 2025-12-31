@@ -126,7 +126,9 @@ export const AdminLoginPage: React.FC = () => {
                 }
               >
                 <Image
-                  src={isDark ? '/jobseti-darks.png' : '/jobseti-lights.png'}
+                  src={
+                    isDark ? '/auth/jobsetudark.png' : '/auth/jobsetulight.png'
+                  }
                   alt="Logo"
                   fit="contain"
                   h={isTablet ? 50 : 70}
@@ -189,7 +191,11 @@ export const AdminLoginPage: React.FC = () => {
                   }}
                 >
                   <Image
-                    src={isDark ? '/jobseti-darks.png' : '/jobseti-lights.png'}
+                    src={
+                      isDark
+                        ? '/auth/jobsetudark.png'
+                        : '/auth/jobsetulight.png'
+                    }
                     alt="JobSetu Logo"
                     fit="contain"
                     h={isMobile ? 55 : 70}

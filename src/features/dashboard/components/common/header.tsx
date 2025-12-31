@@ -20,9 +20,8 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
-  IconBrandFacebook,
   IconBrandInstagram,
-  IconBrandWhatsapp,
+  IconBrandLinkedin,
   IconChevronDown,
   IconChevronRight,
   IconMail,
@@ -74,52 +73,67 @@ export function Header() {
           <Container size="xl" py="xs">
             <Flex justify="space-between" align="center" wrap="wrap" gap="md">
               {/* Left Side - Location & Social */}
-              <Flex align="center" gap="lg" wrap="wrap">
-                <Flex gap="xs">
+              <Flex align="center" justify="center" gap="md" wrap="wrap">
+                <Flex gap="sm">
                   <ActionIcon
-                    variant="subtle"
-                    color="gray"
+                    variant="light"
+                    radius="xl"
+                    size="lg"
                     component="a"
-                    href="#"
-                    aria-label="WhatsApp"
+                    href="https://www.linkedin.com/company/iglobus-jobsetu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn"
+                    style={{
+                      color: '#0A66C2',
+                    }}
                   >
-                    <IconBrandWhatsapp size={16} />
+                    <IconBrandLinkedin size={18} />
                   </ActionIcon>
                   <ActionIcon
-                    variant="subtle"
-                    color="gray"
+                    variant="light"
+                    radius="xl"
+                    size="lg"
                     component="a"
-                    href="#"
-                    aria-label="Facebook"
-                  >
-                    <IconBrandFacebook size={16} />
-                  </ActionIcon>
-                  <ActionIcon
-                    variant="subtle"
-                    color="gray"
-                    component="a"
-                    href="#"
+                    href="https://www.instagram.com/iglobusjobsetu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label="Instagram"
+                    style={{
+                      color: '#E1306C',
+                    }}
                   >
-                    <IconBrandInstagram size={16} />
+                    <IconBrandInstagram size={18} />
                   </ActionIcon>
                   <ActionIcon
-                    variant="subtle"
-                    color="gray"
                     component="a"
-                    href="#"
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=iglobusjobsetu@gmail.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="light"
+                    radius="xl"
+                    size="lg"
                     aria-label="Email"
+                    style={{
+                      color: '#495057',
+                    }}
                   >
-                    <IconMail size={16} />
+                    <IconMail size={18} />
                   </ActionIcon>
                   <ActionIcon
-                    variant="subtle"
-                    color="gray"
+                    variant="light"
+                    radius="xl"
+                    size="lg"
                     component="a"
-                    href="#"
-                    aria-label="Twitter"
+                    href="https://x.com/iglobusjobsetu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="X"
+                    style={{
+                      color: '#000000',
+                    }}
                   >
-                    <IconX size={16} />
+                    <IconX size={18} stroke={2.8} />
                   </ActionIcon>
                 </Flex>
               </Flex>
@@ -157,12 +171,12 @@ export function Header() {
               <Image
                 src={
                   colorScheme === 'dark'
-                    ? '/jobseti-darks.png'
-                    : '/jobseti-lights.png'
+                    ? '/auth/jobsetudark.png'
+                    : '/auth/jobsetulight.png'
                 }
                 alt="JobSetu Logo"
-                width={56}
-                height={56}
+                width={50}
+                height={50}
                 radius="md"
               />
             </Anchor>
@@ -188,20 +202,24 @@ export function Header() {
                   <Menu.Item component="a" href="/services">
                     Services
                   </Menu.Item>
-                  {role !== 'client' && (
-                    <Menu.Item component="a" href="/recruiter">
-                      Recruiter
-                    </Menu.Item>
-                  )}
-                  <Menu.Item component="a" href="/client/login">
-                    Client
-                  </Menu.Item>
-                  {![
-                    '/recruiter',
-                    '/client/login',
-                    '/client/register',
-                  ].includes(path) && (
-                    <Menu.Item onClick={() => openModal()}>Candidate</Menu.Item>
+                  {!isLoggedIn && (
+                    <>
+                      <Menu.Item component="a" href="/recruiter">
+                        Recruiter
+                      </Menu.Item>
+                      <Menu.Item component="a" href="/client/login">
+                        Client
+                      </Menu.Item>
+                      {![
+                        '/recruiter',
+                        '/client/login',
+                        '/client/register',
+                      ].includes(path) && (
+                        <Menu.Item onClick={() => openModal()}>
+                          Candidate
+                        </Menu.Item>
+                      )}
+                    </>
                   )}
                 </Menu.Dropdown>
               </Menu>
@@ -237,9 +255,11 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="/#browse-jobs">
-                    Browse Jobs
-                  </Menu.Item>
+                  {!isLoggedIn && (
+                    <Menu.Item component="a" href="/#browse-jobs">
+                      Browse Jobs
+                    </Menu.Item>
+                  )}
                   <Menu.Item onClick={() => openModal()}>Saved Jobs</Menu.Item>
                   <Menu.Item onClick={() => openModal()}>
                     Candidate Profile
@@ -514,41 +534,43 @@ export function Header() {
                 >
                   <Text>Services</Text>
                 </Anchor>
-                {role !== 'client' && (
-                  <Anchor
-                    component={Link}
-                    to="/recruiter"
-                    style={{
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      padding: '8px 0',
-                    }}
-                  >
-                    <Text>Recruiter</Text>
-                  </Anchor>
+                {!isLoggedIn && (
+                  <>
+                    <Anchor
+                      component={Link}
+                      to="/recruiter"
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        padding: '8px 0',
+                      }}
+                    >
+                      <Text>Recruiter</Text>
+                    </Anchor>
+                    <Anchor
+                      href="/client/login"
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        padding: '8px 0',
+                      }}
+                    >
+                      <Text>Client</Text>
+                    </Anchor>
+                    <UnstyledButton
+                      onClick={() => {
+                        openModal();
+                      }}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '8px 0',
+                      }}
+                    >
+                      <Text>Candidate</Text>
+                    </UnstyledButton>
+                  </>
                 )}
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Client</Text>
-                </Anchor>
-                <UnstyledButton
-                  onClick={() => {
-                    openModal();
-                  }}
-                  style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Candidate</Text>
-                </UnstyledButton>
               </Stack>
             </Collapse>
           </Box>
@@ -619,16 +641,18 @@ export function Header() {
             </UnstyledButton>
             <Collapse in={candidatesOpen}>
               <Stack gap={0} pl="lg">
-                <Anchor
-                  href="/#browse-jobs"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Browse Jobs</Text>
-                </Anchor>
+                {!isLoggedIn && (
+                  <Anchor
+                    href="/#browse-jobs"
+                    style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      padding: '8px 0',
+                    }}
+                  >
+                    <Text>Browse Jobs</Text>
+                  </Anchor>
+                )}
                 <Anchor
                   onClick={() => openModal()}
                   style={{
@@ -757,43 +781,63 @@ export function Header() {
             <Flex gap="md">
               <ActionIcon
                 variant="light"
-                color="blue"
+                radius="xl"
                 size="lg"
                 component="a"
-                href="#"
-                aria-label="WhatsApp"
+                href="https://www.linkedin.com/company/iglobus-jobsetu"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                style={{
+                  color: '#0A66C2',
+                }}
               >
-                <IconBrandWhatsapp size={20} />
+                <IconBrandLinkedin size={18} />
               </ActionIcon>
               <ActionIcon
                 variant="light"
-                color="blue"
+                radius="xl"
                 size="lg"
                 component="a"
-                href="#"
-                aria-label="Facebook"
-              >
-                <IconBrandFacebook size={20} />
-              </ActionIcon>
-              <ActionIcon
-                variant="light"
-                color="blue"
-                size="lg"
-                component="a"
-                href="#"
+                href="https://www.instagram.com/iglobusjobsetu/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
+                style={{
+                  color: '#E1306C',
+                }}
               >
-                <IconBrandInstagram size={20} />
+                <IconBrandInstagram size={18} />
               </ActionIcon>
               <ActionIcon
-                variant="subtle"
-                color="gray"
+                component="a"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=iglobusjobsetu@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="light"
+                radius="xl"
+                size="lg"
+                aria-label="Email"
+                style={{
+                  color: '#495057',
+                }}
+              >
+                <IconMail size={18} />
+              </ActionIcon>
+              <ActionIcon
+                variant="light"
+                radius="xl"
                 size="lg"
                 component="a"
-                href="#"
-                aria-label="Twitter"
+                href="https://x.com/iglobusjobsetu"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X"
+                style={{
+                  color: '#000000',
+                }}
               >
-                <IconX size={20} />
+                <IconX size={18} stroke={2.8} />
               </ActionIcon>
             </Flex>
           </Box>

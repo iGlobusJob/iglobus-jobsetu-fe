@@ -15,7 +15,12 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { IconMapPin, IconSearch, IconX } from '@tabler/icons-react';
+import {
+  IconAlertCircle,
+  IconMapPin,
+  IconSearch,
+  IconX,
+} from '@tabler/icons-react';
 import { useEffect, useMemo, useState, type JSX, type MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,6 +36,8 @@ const formatJobType = (type: string): string => {
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
 };
+
+const formatINR = (value: number) => value.toLocaleString('en-IN');
 
 interface ApiJob {
   id: string;
@@ -204,22 +211,27 @@ export const JobListingsSection = (): JSX.Element => {
   const [bookmarkedJobs, setBookmarkedJobs] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedJobType, setSelectedJobType] = useState<string | null>(null);
-  const [salaryRange, setSalaryRange] = useState<[number, number]>([500, 500]);
+  const [salaryRange, setSalaryRange] = useState<[number, number]>([0, 0]);
   const [experienceFilter, setExperienceFilter] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [maxSalary, setMaxSalary] = useState(300000);
+  const [userFiltered, setUserFiltered] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadJobs = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const data = await getAllJobs();
         const mapped = data.map(mapJob);
         setJobs(mapped);
         const max = Math.max(...mapped.map((job) => job.salaryMax || 0));
-        setSalaryRange([500, max]);
+        setSalaryRange([0, max]);
         setMaxSalary(max);
       } catch (err) {
         console.error('Failed to fetch jobs:', err);
+        setError('Failed to load jobs. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -272,7 +284,29 @@ export const JobListingsSection = (): JSX.Element => {
 
     // Experience filter
     if (experienceFilter) {
-      list = list.filter((job) => job.experienceLevel === experienceFilter);
+      list = list.filter((job) => {
+        const [minExp, maxExp] = job.experienceLevel
+          .replace(' years', '')
+          .split(' - ')
+          .map(Number);
+
+        switch (experienceFilter) {
+          case 'ENTRY':
+            return minExp === 0 && maxExp <= 1;
+
+          case 'ONE_TWO':
+            return minExp === 1 && maxExp <= 2;
+
+          case 'TWO_THREE':
+            return minExp === 2 && maxExp <= 3;
+
+          case 'FOUR_PLUS':
+            return minExp >= 4;
+
+          default:
+            return true;
+        }
+      });
     }
 
     return list;
@@ -294,9 +328,10 @@ export const JobListingsSection = (): JSX.Element => {
   const resetFilters = (): void => {
     setSearchQuery('');
     setSelectedJobType(null);
-    setSalaryRange([500, maxSalary]);
+    setSalaryRange([0, maxSalary]);
     setExperienceFilter('');
     setCurrentPage(1);
+    setUserFiltered(false);
   };
 
   return (
@@ -304,31 +339,47 @@ export const JobListingsSection = (): JSX.Element => {
       <Container size="xl">
         {/* Search & Filters */}
         <Paper p="xl" radius="md" mb={40} withBorder>
-          {/* Search Bar */}
           <TextInput
             placeholder="Search by job title, company, or location..."
             leftSection={<IconSearch size={18} />}
             rightSection={
               searchQuery ? (
-                <ActionIcon onClick={() => setSearchQuery('')}>
-                  <IconX size={16} />
+                <ActionIcon
+                  onClick={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                    setUserFiltered(false);
+                  }}
+                  size="xs"
+                  color="gray"
+                  radius="xl"
+                  variant="transparent"
+                >
+                  <IconX size={14} />
                 </ActionIcon>
               ) : null
             }
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setUserFiltered(true);
+              setCurrentPage(1);
+            }}
             mb="lg"
             radius="md"
           />
 
-          {/* Filters Grid */}
           <Grid>
             <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
               <Select
                 label="Job Type"
                 placeholder="All Types"
                 value={selectedJobType}
-                onChange={setSelectedJobType}
+                onChange={(value) => {
+                  setSelectedJobType(value);
+                  setUserFiltered(true);
+                  setCurrentPage(1);
+                }}
                 data={[
                   { value: 'full-time', label: 'Full-Time' },
                   { value: 'part-time', label: 'Part-Time' },
@@ -346,12 +397,16 @@ export const JobListingsSection = (): JSX.Element => {
                 label="Experience Level"
                 placeholder="All Levels"
                 value={experienceFilter}
-                onChange={(v) => setExperienceFilter(v ?? '')}
+                onChange={(value) => {
+                  setExperienceFilter(value ?? '');
+                  setUserFiltered(true);
+                  setCurrentPage(1);
+                }}
                 data={[
-                  { value: '0 - 1 years', label: 'Entry Level' },
-                  { value: '1 - 2 years', label: '1-2 Years' },
-                  { value: '2 - 3 years', label: '2-3 Years' },
-                  { value: '4+ years', label: '4+ Years' },
+                  { value: 'ENTRY', label: 'Entry Level (0–1)' },
+                  { value: 'ONE_TWO', label: '1–2 Years' },
+                  { value: 'TWO_THREE', label: '2–3 Years' },
+                  { value: 'FOUR_PLUS', label: '4+ Years' },
                 ]}
                 clearable
                 searchable
@@ -360,29 +415,55 @@ export const JobListingsSection = (): JSX.Element => {
 
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Text size="sm" fw={500} mb={8}>
-                Salary Range: ₹{salaryRange[0]} - ₹{salaryRange[1]}
+                Salary Range: ₹{formatINR(salaryRange[0])} - ₹
+                {formatINR(salaryRange[1])}
               </Text>
               <RangeSlider
                 value={salaryRange}
-                onChange={setSalaryRange}
-                min={500}
+                onChange={(value) => {
+                  setSalaryRange(value);
+                  setUserFiltered(true);
+                  setCurrentPage(1);
+                }}
+                min={0}
                 max={maxSalary}
-                step={1000}
+                step={5000}
                 marks={[
-                  { value: 0, label: '₹500' },
-                  { value: maxSalary, label: `₹${maxSalary}` },
+                  { value: 0, label: '₹0' },
+                  { value: maxSalary, label: `₹${formatINR(maxSalary)}` },
                 ]}
               />
             </Grid.Col>
           </Grid>
 
-          {/* Reset Button */}
-          {(searchQuery || selectedJobType || experienceFilter) && (
-            <Button size="xs" mt="md" variant="light" onClick={resetFilters}>
+          {userFiltered && (
+            <Button
+              size="xs"
+              mt="md"
+              variant="light"
+              onClick={resetFilters}
+              leftSection={<IconX size={14} />}
+            >
               Reset Filters
             </Button>
           )}
         </Paper>
+
+        {/* Error Message */}
+        {error && (
+          <Paper
+            p="md"
+            radius="md"
+            mb={40}
+            style={{ backgroundColor: '#ffe0e0', borderColor: '#ff6b6b' }}
+            withBorder
+          >
+            <Flex align="center" gap="sm">
+              <IconAlertCircle color="#ff6b6b" size={20} />
+              <Text c="#cc0000">{error}</Text>
+            </Flex>
+          </Paper>
+        )}
 
         {/* Results Count */}
         <Flex justify="space-between" align="center" mb="lg">

@@ -9,12 +9,15 @@ import {
   Paper,
   Anchor,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 
 import { useSystemTheme } from '@/hooks/useSystemTheme';
 
 const About = () => {
   const systemTheme = useSystemTheme();
   const isDark = systemTheme === 'dark';
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(max-width: 1024px)');
 
   return (
     <Box id="about" py={65} style={{ marginTop: -250 }}>
@@ -25,11 +28,10 @@ const About = () => {
               src="/about-logo.png"
               alt="About Us"
               radius="sm"
-              fit="cover"
-              height="370"
-              width="100"
+              fit={isMobile ? 'contain' : 'cover'}
+              height={isMobile ? 220 : isTablet ? 300 : 370}
               style={{
-                objectFit: 'cover',
+                width: '100%',
                 borderRadius: '10px',
                 filter: isDark ? 'brightness(0.85)' : 'brightness(1)',
               }}
@@ -51,18 +53,18 @@ const About = () => {
             >
               <Stack gap="lg">
                 <Title order={2} fw={700} c={isDark ? 'white' : '#0c0c0cff'}>
-                  About Iglobus Jobsetu
+                  About iGlobus JobSetu
                 </Title>
 
                 <Text size="md" c="dimmed" lh={1.7}>
-                  Iglobus Jobsetu is a staffing and recruitment platform built
+                  iGlobus JobSetu is a staffing and recruitment platform built
                   to simplify hiring and connect organizations with the right
                   talent across IT and Non-IT domains.
                 </Text>
 
                 <Text size="md" c="dimmed" lh={1.7}>
-                  A product of Iglobus Corporate Consulting, founded in 2015,
-                  Jobsetu combines over a decade of recruitment expertise with a
+                  A product of iGlobus Corporate Consulting, founded in 2015,
+                  JobSetu combines over a decade of recruitment expertise with a
                   technology-driven hiring ecosystem.
                 </Text>
 

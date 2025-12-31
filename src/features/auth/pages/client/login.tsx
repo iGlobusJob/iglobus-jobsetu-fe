@@ -223,7 +223,7 @@ export const Login: React.FC = () => {
                       {...form.getInputProps('remember', { type: 'checkbox' })}
                     />
 
-                    <Text
+                    {/* <Text
                       component="a"
                       href="/reset-password"
                       size="sm"
@@ -231,7 +231,7 @@ export const Login: React.FC = () => {
                       td="underline"
                     >
                       Forgot Password?
-                    </Text>
+                    </Text> */}
                   </Group>
 
                   <Button

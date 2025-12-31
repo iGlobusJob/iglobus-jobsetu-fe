@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import type { ApiError } from '@/common';
 import type { CandidateProfileFormData } from '@/features/candidate/pages/candidateprofile';
 import type { CandidateJob } from '@/features/dashboard/types/candidatejobs';
 import type { ApiJob } from '@/features/dashboard/types/job';
@@ -127,10 +128,9 @@ export const updateCandidateProfile = async (data: {
     });
 
     return response.data.data;
-  } catch (err) {
-    throw new Error(
-      err instanceof Error ? err.message : 'Unable to update candidate'
-    );
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
   }
 };
 
