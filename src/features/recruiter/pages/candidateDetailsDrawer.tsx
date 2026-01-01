@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Divider,
   Drawer,
@@ -99,10 +100,16 @@ const CandidateDetailDrawer: React.FC<Props> = ({
           </Avatar>
 
           <Stack gap={4}>
-            <Title order={3} fw={700}>
-              {candidate.firstName || '—'} {candidate.lastName || ''}
-            </Title>
-
+            <Group gap={8} align="center">
+              <Title order={3} fw={700}>
+                {candidate.firstName || '—'} {candidate.lastName || ''}
+              </Title>
+              {candidate.category && (
+                <Badge variant="light" color="blue" radius="sm">
+                  {candidate.category}
+                </Badge>
+              )}
+            </Group>
             <Group gap={6}>
               <IconMail size={16} />
               <Text size="sm">{details?.email || '—'}</Text>

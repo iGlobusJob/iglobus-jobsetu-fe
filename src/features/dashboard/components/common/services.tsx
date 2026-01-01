@@ -153,10 +153,10 @@ export function ServicesData() {
             maw={720}
             c={isDark ? theme.colors.gray[4] : theme.colors.gray[7]}
           >
-            At iGlobus Job Setu, we bridge talent and opportunity with
-            precision, speed, and old-school recruitment discipline backed by
-            modern AI workflows. Whether you’re scaling fast or hiring for niche
-            skill sets, we’ve got you covered end-to-end.
+            At iGlobus JobSetu, we bridge talent and opportunity with precision,
+            speed, and old-school recruitment discipline backed by modern AI
+            workflows. Whether you’re scaling fast or hiring for niche skill
+            sets, we’ve got you covered end-to-end.
           </Text>
 
           <Grid gutter="xl">

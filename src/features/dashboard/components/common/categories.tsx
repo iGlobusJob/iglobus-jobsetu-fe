@@ -190,7 +190,7 @@ export const Categories = () => {
         <Box mt={rem(60)} style={{ textAlign: 'center' }}>
           <Button
             component="a"
-            href="/job-categories"
+            href="/#categories"
             size="lg"
             rightSection={<IconArrowRight size={18} />}
             variant="gradient"
