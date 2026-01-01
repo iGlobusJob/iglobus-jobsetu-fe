@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  Center,
   Checkbox,
   Container,
   Group,
@@ -22,7 +21,6 @@ import { toast } from 'react-toastify';
 import type { ApiError } from '@/common';
 import { FooterSubscribe } from '@/features/dashboard/components/common/footer';
 import { Header } from '@/features/dashboard/components/common/header';
-import { useSystemTheme } from '@/hooks/useSystemTheme';
 import { recruiterLogin } from '@/services/recruiter-services';
 
 import { loginSchema } from '../../dashboard/forms/login';
@@ -32,8 +30,6 @@ import AppLoader from '../../dashboard/utlis/loader/loader';
 export const RecruiterLoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const systemTheme = useSystemTheme();
-  const isDark = systemTheme === 'dark';
 
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
@@ -65,8 +61,6 @@ export const RecruiterLoginPage: React.FC = () => {
       setLoading(false);
     }
   };
-
-  const goHome = () => navigate('/');
 
   return (
     <Box
@@ -143,43 +137,8 @@ export const RecruiterLoginPage: React.FC = () => {
                 transition: 'background-color 0.2s ease',
               }}
             >
-              {isMobile && (
-                <Center mb="lg">
-                  <Box
-                    onClick={goHome}
-                    style={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '0.5rem',
-                      borderRadius: '10px',
-                      transition: 'transform 120ms ease, box-shadow 200ms ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
-                    <Image
-                      src={
-                        isDark
-                          ? '/auth/jobsetudark.png'
-                          : '/auth/jobsetulight.png'
-                      }
-                      alt="JobSetu Logo"
-                      fit="contain"
-                      h={isMobile ? 55 : 70}
-                      w="auto"
-                    />
-                  </Box>
-                </Center>
-              )}
-
               <Stack align="center" mb="lg">
-                <Title order={isMobile ? 4 : 1}>Recruiter Login</Title>
+                <Title order={isMobile ? 3 : 1}>Recruiter Login</Title>
                 <Text size={isMobile ? 'sm' : 'md'} ta="center">
                   Sign in to continue to the Recruiter Dashboard.
                 </Text>

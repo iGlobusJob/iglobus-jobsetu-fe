@@ -57,6 +57,10 @@ export function Header() {
   const { token } = useAuthStore();
   const location = useLocation();
   const path = location.pathname;
+  const isCandidateUser = isLoggedIn && role === 'candidate';
+  const isClientUser = isLoggedIn && role === 'client';
+  const isEmployerGuest = !isLoggedIn;
+  const showEmployerMenu = isEmployerGuest || isClientUser;
   return (
     <Paper shadow="md">
       {/* Top Bar - Hidden on Mobile */}
@@ -235,10 +239,10 @@ export function Header() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item component="a" href="#categories">
+                  <Menu.Item component="a" href="/#categories">
                     Job Categories
                   </Menu.Item>
-                  <Menu.Item component="a" href="#testimonials">
+                  <Menu.Item component="a" href="/#testimonials">
                     Testimonials
                   </Menu.Item>
                 </Menu.Dropdown>
@@ -260,44 +264,86 @@ export function Header() {
                       Browse Jobs
                     </Menu.Item>
                   )}
-                  <Menu.Item onClick={() => openModal()}>Saved Jobs</Menu.Item>
-                  <Menu.Item onClick={() => openModal()}>
-                    Candidate Profile
-                  </Menu.Item>
-                  <Menu.Item onClick={() => openModal()}>
-                    Upload Resume
-                  </Menu.Item>
+                  {isCandidateUser ? (
+                    <Menu.Item component="a" href="/candidate/saved-jobs">
+                      Saved Jobs
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item onClick={() => openModal()}>
+                      Saved Jobs
+                    </Menu.Item>
+                  )}
+                  {isCandidateUser ? (
+                    <Menu.Item component="a" href="/candidate/profile">
+                      Candidate Profile
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item onClick={() => openModal()}>
+                      Candidate Profile
+                    </Menu.Item>
+                  )}
+                  {isCandidateUser ? (
+                    <Menu.Item component="a" href="/candidate/profile">
+                      Upload Resume
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item onClick={() => openModal()}>
+                      Upload Resume
+                    </Menu.Item>
+                  )}
                 </Menu.Dropdown>
               </Menu>
 
               {/* Employers Dropdown */}
-              <Menu trigger="hover" position="bottom">
-                <Menu.Target>
-                  <UnstyledButton>
-                    <Flex align="center" gap={5}>
-                      <Text fw={500}>Employers</Text>
-                      <IconChevronDown size={14} />
-                    </Flex>
-                  </UnstyledButton>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item component="a" href="/client/login">
-                    Login
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/client/register">
-                    Register
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/client/jobs/new">
-                    Post a Job
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/client/jobs/manage-jobs">
-                    Manage Jobs
-                  </Menu.Item>
-                  <Menu.Item component="a" href="/client/dashboard">
-                    Employer Dashboard
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+              {showEmployerMenu && (
+                <Menu trigger="hover" position="bottom">
+                  <Menu.Target>
+                    <UnstyledButton>
+                      <Flex align="center" gap={5}>
+                        <Text fw={500}>Employers</Text>
+                        <IconChevronDown size={14} />
+                      </Flex>
+                    </UnstyledButton>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {isEmployerGuest && (
+                      <>
+                        <Menu.Item component="a" href="/client/login">
+                          Login
+                        </Menu.Item>
+                        <Menu.Item component="a" href="/client/register">
+                          Register
+                        </Menu.Item>
+                        <Menu.Item component="a" href="/client/login">
+                          Post a Job
+                        </Menu.Item>
+                        <Menu.Item component="a" href="/client/login">
+                          Manage Jobs
+                        </Menu.Item>
+                        <Menu.Item component="a" href="/client/login">
+                          Employer Dashboard
+                        </Menu.Item>
+                      </>
+                    )}
+                    {isClientUser && (
+                      <>
+                        <Menu.Item component="a" href="/client/jobs/new">
+                          Post a Job
+                        </Menu.Item>
+                        <Menu.Item
+                          component="a"
+                          href="/client/jobs/manage-jobs"
+                        >
+                          Manage Jobs
+                        </Menu.Item>
+                        <Menu.Item component="a" href="/client/dashboard">
+                          Employer Dashboard
+                        </Menu.Item>
+                      </>
+                    )}
+                  </Menu.Dropdown>
+                </Menu>
+              )}
 
               {/* Contact Link */}
               {/* <Anchor
@@ -653,111 +699,90 @@ export function Header() {
                     <Text>Browse Jobs</Text>
                   </Anchor>
                 )}
-                <Anchor
-                  onClick={() => openModal()}
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Saved Jobs</Text>
-                </Anchor>
-                <Anchor
-                  onClick={() => openModal()}
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Candidate Profile</Text>
-                </Anchor>
-                <Anchor
-                  onClick={() => openModal()}
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Upload Resume</Text>
-                </Anchor>
+                {isCandidateUser ? (
+                  <>
+                    <Anchor component="a" href="/candidate/saved-jobs">
+                      <Text>Saved Jobs</Text>
+                    </Anchor>
+                    <Anchor component="a" href="/candidate/profile">
+                      <Text>Candidate Profile</Text>
+                    </Anchor>
+                    <Anchor component="a" href="/candidate/profile">
+                      <Text>Upload Resume</Text>
+                    </Anchor>
+                  </>
+                ) : (
+                  <>
+                    <Anchor onClick={() => openModal()}>
+                      <Text>Saved Jobs</Text>
+                    </Anchor>
+                    <Anchor onClick={() => openModal()}>
+                      <Text>Candidate Profile</Text>
+                    </Anchor>
+                    <Anchor onClick={() => openModal()}>
+                      <Text>Upload Resume</Text>
+                    </Anchor>
+                  </>
+                )}
               </Stack>
             </Collapse>
           </Box>
           <Divider />
-          <Box>
-            <UnstyledButton
-              onClick={() => setEmployerOpen(!employerOpen)}
-              style={{ width: '100%' }}
-            >
-              <Flex justify="space-between" align="center" p="xs">
-                <Text fw={500}>Employer</Text>
-                <IconChevronRight
-                  size={18}
-                  style={{
-                    transform: employerOpen ? 'rotate(90deg)' : 'none',
-                    transition: 'transform 0.2s',
-                  }}
-                />
-              </Flex>
-            </UnstyledButton>
-            <Collapse in={employerOpen}>
-              <Stack gap={0} pl="lg">
-                <Anchor
-                  href="/client/login"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Login</Text>
-                </Anchor>
-                <Anchor
-                  href="/client/register"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Register</Text>
-                </Anchor>
-                <Anchor
-                  href="/client/jobs/new"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Post a Job</Text>
-                </Anchor>
-                <Anchor
-                  href="/client/jobs/manage-jobs"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Manage Jobs</Text>
-                </Anchor>
-                <Anchor
-                  href="/employer-dashboard"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    padding: '8px 0',
-                  }}
-                >
-                  <Text>Employer Dashboard</Text>
-                </Anchor>
-              </Stack>
-            </Collapse>
-          </Box>
+          {showEmployerMenu && (
+            <Box>
+              <UnstyledButton
+                onClick={() => setEmployerOpen(!employerOpen)}
+                style={{ width: '100%' }}
+              >
+                <Flex justify="space-between" align="center" p="xs">
+                  <Text fw={500}>Employer</Text>
+                  <IconChevronRight
+                    size={18}
+                    style={{
+                      transform: employerOpen ? 'rotate(90deg)' : 'none',
+                      transition: 'transform 0.2s',
+                    }}
+                  />
+                </Flex>
+              </UnstyledButton>
+              <Collapse in={employerOpen}>
+                <Stack gap={0} pl="lg">
+                  {isEmployerGuest && (
+                    <>
+                      <Anchor component="a" href="/client/login">
+                        <Text>Login</Text>
+                      </Anchor>
+                      <Anchor component="a" href="/client/register">
+                        <Text>Register</Text>
+                      </Anchor>
+                      <Anchor component="a" href="/client/login">
+                        <Text>Post a Job</Text>
+                      </Anchor>
+                      <Anchor component="a" href="/client/login">
+                        <Text>Manage Jobs</Text>
+                      </Anchor>
+                      <Anchor component="a" href="/client/login">
+                        <Text>Employer Dashboard</Text>
+                      </Anchor>
+                    </>
+                  )}
+                  {isClientUser && (
+                    <>
+                      <Anchor component="a" href="/client/jobs/new">
+                        <Text>Post a Job</Text>
+                      </Anchor>
+                      <Anchor component="a" href="/client/jobs/manage-jobs">
+                        <Text>Manage Jobs</Text>
+                      </Anchor>
+                      <Anchor component="a" href="/client/dashboard">
+                        <Text>Employer Dashboard</Text>
+                      </Anchor>
+                    </>
+                  )}
+                </Stack>
+              </Collapse>
+            </Box>
+          )}
 
           <Divider />
 
