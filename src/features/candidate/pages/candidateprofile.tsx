@@ -208,12 +208,16 @@ const CandidateProfilePage = (): JSX.Element => {
   });
 
   const calculateCompletion = useCallback(
-    (data: CandidateProfileFormData): number => {
+    (
+      data: CandidateProfileFormData,
+      resume: string | null,
+      picture: string | null
+    ): number => {
       let totalScore = 0;
 
       if (data.email) totalScore += 25;
       if (data.mobileNumber) totalScore += 20;
-      if (resumeUrl) totalScore += 20;
+      if (resume) totalScore += 20;
 
       if (data.firstName) totalScore += 8;
       if (data.lastName) totalScore += 8;
@@ -221,10 +225,10 @@ const CandidateProfilePage = (): JSX.Element => {
       if (data.dateOfBirth) totalScore += 5;
       if (data.address) totalScore += 5;
 
-      if (profilePicturePreview) totalScore += 4;
+      if (picture) totalScore += 4;
       return totalScore;
     },
-    [resumeUrl, profilePicturePreview]
+    []
   );
 
   const getProgressColor = (percentage: number): string => {
@@ -300,23 +304,23 @@ const CandidateProfilePage = (): JSX.Element => {
     if (!profile) return;
 
     setCompletionPercentage(
-      calculateCompletion({
-        ...profile,
-        resume: null,
-      })
+      calculateCompletion(profile, resumeUrl, profilePicturePreview)
     );
-  }, [profile, calculateCompletion]);
+  }, [profile, resumeUrl, profilePicturePreview, calculateCompletion]);
 
-  // Update completion percentage when form data changes
+  // ✅ FIXED: Update completion percentage when form data changes
   useEffect(() => {
     const subscription = watch((data) => {
       setCompletionPercentage(
-        calculateCompletion(data as CandidateProfileFormData)
+        calculateCompletion(
+          data as CandidateProfileFormData,
+          resumeUrl,
+          profilePicturePreview
+        )
       );
     });
     return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watch]);
+  }, [watch, resumeUrl, profilePicturePreview, calculateCompletion]);
 
   // Handle form submission
   const onSubmit = async (data: CandidateProfileFormData): Promise<void> => {
@@ -339,18 +343,21 @@ const CandidateProfilePage = (): JSX.Element => {
       const updated = await updateCandidateProfile(payload);
       setProfile(updated);
 
-      // Update resume URL if new file was uploaded
+      let newResumeUrl = resumeUrl;
+      let newPictureUrl = profilePicturePreview;
+
       if (updated.profileUrl) {
+        newResumeUrl = updated.profileUrl;
         setResumeUrl(updated.profileUrl);
         setResumeFileName(extractFileName(updated.profileUrl));
       }
 
-      // Update profile picture if new file was uploaded
       if (updated.profilePictureUrl) {
+        newPictureUrl = updated.profilePictureUrl;
         setProfilePicturePreview(updated.profilePictureUrl);
       }
 
-      // Recalculate completion percentage
+      // Now calculate with the actual values
       const updatedFormData: CandidateProfileFormData = {
         firstName: updated.firstName || '',
         lastName: updated.lastName || '',
@@ -360,14 +367,16 @@ const CandidateProfilePage = (): JSX.Element => {
         dateOfBirth: updated.dateOfBirth || '',
         address: updated.address || '',
         category: updated.category || 'IT',
-        resume: updated.profileUrl || null,
-        profileUrl: updated.profileUrl || null,
-        profilePictureFile:
-          data.profilePictureFile instanceof File
-            ? data.profilePictureFile
-            : null,
+        resume: null,
+        profileUrl: newResumeUrl || null,
+        profilePictureUrl: newPictureUrl || null,
       };
-      const percentage = calculateCompletion(updatedFormData);
+
+      const percentage = calculateCompletion(
+        updatedFormData,
+        newResumeUrl,
+        newPictureUrl
+      );
       setCompletionPercentage(percentage);
 
       setProfilePictureFile(null);
@@ -558,8 +567,6 @@ const CandidateProfilePage = (): JSX.Element => {
       </div>
     );
   };
-
-  console.log('render');
 
   return (
     <Container size="lg" py="xl">
