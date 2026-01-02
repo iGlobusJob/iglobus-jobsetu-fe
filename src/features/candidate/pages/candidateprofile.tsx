@@ -296,7 +296,6 @@ const CandidateProfilePage = (): JSX.Element => {
     };
 
     void fetchCandidate();
-    // 🔒 INTENTIONALLY EMPTY DEP ARRAY
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -308,7 +307,6 @@ const CandidateProfilePage = (): JSX.Element => {
     );
   }, [profile, resumeUrl, profilePicturePreview, calculateCompletion]);
 
-  // ✅ FIXED: Update completion percentage when form data changes
   useEffect(() => {
     const subscription = watch((data) => {
       setCompletionPercentage(
