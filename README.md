@@ -301,7 +301,7 @@ Consistent code formatting across the project.
 
 ## 📄 License
 
-This project is private and proprietary.
+This project is licensed under the ISC License.
 
 ## 👥 Support
 
