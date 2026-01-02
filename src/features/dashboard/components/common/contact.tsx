@@ -1,4 +1,3 @@
-//contact us
 import {
   Container,
   Title,
@@ -7,52 +6,90 @@ import {
   Button,
   Stack,
   Paper,
+  Group,
 } from '@mantine/core';
+import { useForm, zodResolver } from '@mantine/form';
 
-export function ContactUsSection() {
+import { sendContactUsMail } from '@/services/common-services';
+
+import { contactSchema, type ContactFormData } from '../../forms/contactSchema';
+
+const ContactUsSection = () => {
+  const form = useForm({
+    initialValues: {
+      name: '',
+      customerEmail: '',
+      subject: '',
+      message: '',
+    },
+    validate: zodResolver(contactSchema),
+  });
+
+  const handleSubmit = async (values: ContactFormData) => {
+    try {
+      await sendContactUsMail(values);
+      form.reset();
+    } catch (error) {
+      console.error('Failed to send contact email', error);
+    }
+  };
+
   return (
-    <Container size="sm" py="xl">
-      <Title order={2} ta="center" mb={4}>
+    <Container size="sm" py="md">
+      <Title order={2} ta="center" mb={8}>
         Contact Us
       </Title>
 
       <Paper withBorder radius="md" p="lg">
-        <Stack gap="md">
-          <TextInput
-            label="Full Name"
-            placeholder="Enter your full name"
-            required
-          />
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <Stack gap="md">
+            <TextInput
+              label="Name"
+              placeholder="Enter your name"
+              required
+              {...form.getInputProps('name')}
+            />
 
-          <TextInput
-            label="Email Address"
-            type="email"
-            placeholder="Enter your email"
-            required
-          />
+            <TextInput
+              label="Email Address"
+              type="email"
+              required
+              placeholder="Enter your email"
+              {...form.getInputProps('customerEmail')}
+            />
 
-          <TextInput label="Subject" placeholder="Message subject " required />
+            <TextInput
+              label="Subject"
+              required
+              placeholder="Message subject"
+              {...form.getInputProps('subject')}
+            />
 
-          <Textarea
-            label="Message"
-            placeholder="Your message"
-            minRows={4}
-            autosize
-            required
-          />
+            <Textarea
+              label="Message"
+              required
+              placeholder="Your message"
+              minRows={4}
+              autosize
+              {...form.getInputProps('message')}
+            />
 
-          <Button
-            mt="md"
-            size="md"
-            radius="md"
-            style={{
-              background: 'linear-gradient(135deg, #4dabf7 0%, #339af0 100%)',
-            }}
-          >
-            Submit
-          </Button>
-        </Stack>
+            <Group justify="flex-end">
+              <Button
+                type="submit"
+                size="md"
+                w={100}
+                radius="lg"
+                variant="gradient"
+                loading={form.submitting}
+              >
+                Submit
+              </Button>
+            </Group>
+          </Stack>
+        </form>
       </Paper>
     </Container>
   );
-}
+};
+export default ContactUsSection;

@@ -87,6 +87,13 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
       }}
+      onClick={() => {
+        if (!isLoggedIn) {
+          openModal(job.id);
+        } else {
+          navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id));
+        }
+      }}
     >
       {/* Bookmark Button */}
       {showBookmark && (
@@ -224,13 +231,6 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
         variant="light"
         size="sm"
         rightSection={<IconChevronRight size={14} />}
-        onClick={() => {
-          if (!isLoggedIn) {
-            openModal(job.id);
-          } else {
-            navigate(CANDIDATE_PATHS.JOB_DETAILS(job.id));
-          }
-        }}
         disabled={isBookmarking}
       >
         View Details
