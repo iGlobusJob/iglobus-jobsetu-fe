@@ -117,6 +117,9 @@ export function FooterSubscribe() {
                       );
                     })}
                   </Group>
+                  <Text size="xs" mt="md" c="rgba(255, 255, 255, 0.6)">
+                    © iGlobus JobSetu 2025 - 2026 | All Rights Reserved
+                  </Text>
                 </Box>
               </Stack>
             </Grid.Col>
@@ -239,7 +242,7 @@ export function FooterSubscribe() {
       <Box bg="#111827" style={{ padding: '25px 0' }}>
         <Container size="lg">
           <Text size="sm" c="rgba(255, 255, 255, 0.6)" ta="center">
-            Powered and Managed by SRYTAL Systems India Pvt Ltd –{' '}
+            Powered and Managed by SRYTAL Systems India Private Limited |{' '}
             <Text
               component="a"
               href="https://www.srytal.com"

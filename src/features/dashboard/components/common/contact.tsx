@@ -35,7 +35,7 @@ const ContactUsSection = () => {
   };
 
   return (
-    <Container size="sm" py="md">
+    <Container size="sm" py="md" id="contact">
       <Title order={2} ta="center" mb={8}>
         Contact Us
       </Title>
@@ -51,7 +51,7 @@ const ContactUsSection = () => {
             />
 
             <TextInput
-              label="Email Address"
+              label="Email"
               type="email"
               required
               placeholder="Enter your email"
@@ -61,7 +61,7 @@ const ContactUsSection = () => {
             <TextInput
               label="Subject"
               required
-              placeholder="Message subject"
+              placeholder="Subject"
               {...form.getInputProps('subject')}
             />
 
