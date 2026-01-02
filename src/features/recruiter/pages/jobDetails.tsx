@@ -68,24 +68,6 @@ const formatDate = (dateString: string): string => {
   });
 };
 
-// const parseHtmlContent = (htmlString: string): string => {
-//   const tmp = document.createElement('DIV');
-//   tmp.innerHTML = htmlString;
-//   return tmp.textContent || tmp.innerText || '';
-// };
-
-// const sanitizeHtml = (htmlString: string): string => {
-//   const div = document.createElement('div');
-//   div.innerHTML = htmlString;
-
-//   // Convert HTML to readable text with basic formatting
-//   const paragraphs = div.querySelectorAll('p, div, li, h1, h2, h3, h4, h5, h6');
-//   if (paragraphs.length > 0) {
-//     return htmlString;
-//   }
-//   return htmlString;
-// };
-
 export const JobDetailPage = (): JSX.Element => {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();

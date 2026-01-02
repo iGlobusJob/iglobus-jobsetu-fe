@@ -171,7 +171,6 @@ const ClientProfilePage = (): JSX.Element => {
     setSubmitting(true);
 
     try {
-      // Remove email and status from data (uneditable fields)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { email, status, ...updatedData } = data;
 
