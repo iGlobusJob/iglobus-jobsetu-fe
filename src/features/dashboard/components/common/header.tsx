@@ -346,12 +346,12 @@ export function Header() {
               )}
 
               {/* Contact Link */}
-              {/* <Anchor
-                href="/contact"
+              <Anchor
+                href="/#contact"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <Text fw={500}>Contact</Text>
-              </Anchor> */}
+              </Anchor>
             </Flex>
 
             {/* Right Side - Notifications & User */}
@@ -787,8 +787,8 @@ export function Header() {
           <Divider />
 
           {/* Contact Link */}
-          {/* <Anchor
-            href="/contact"
+          <Anchor
+            href="/#contact"
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <Flex align="center" p="sm">
@@ -796,7 +796,7 @@ export function Header() {
             </Flex>
           </Anchor>
 
-          <Divider /> */}
+          <Divider />
 
           {/* Social Links */}
           <Box p="xs">
