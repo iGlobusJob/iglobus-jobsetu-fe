@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Avatar,
   Box,
   Button,
@@ -22,15 +23,17 @@ import {
   IconCalendarCheck,
   IconMail,
   IconPlus,
+  IconTrash,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
+import { openDeleteRecruiterModal } from '@/features/admin/pages/DeleteModal';
 import type { CreateRecruiterInput } from '@/features/dashboard/types/admin';
 import type { Recruiter } from '@/features/dashboard/types/recruiter';
 import { createRecruiter, getAllRecruiters } from '@/services/admin-services';
-
+import { deleterecruiter } from '@/services/recruiter-services';
 const PAGE_SIZE = 10;
 
 const RecruiterDashboard: React.FC = () => {
@@ -211,6 +214,42 @@ const RecruiterDashboard: React.FC = () => {
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
   };
+  interface DeleteRecruiterButtonProps {
+    recruiterId: string;
+    onDeleted?: (id: string) => void;
+    style?: React.CSSProperties;
+    size?: 'sm' | 'md' | 'lg';
+  }
+
+  const DeleteRecruiterButton: React.FC<DeleteRecruiterButtonProps> = ({
+    recruiterId,
+    onDeleted,
+    style,
+    size = 'sm',
+  }) => {
+    const handleDelete = () => {
+      openDeleteRecruiterModal(recruiterId, async (id) => {
+        try {
+          await deleterecruiter(id);
+          if (onDeleted) onDeleted(id);
+          toast.success('Recruiter deleted successfully !');
+        } catch {
+          toast.error('Failed to delete recruiter.');
+        }
+      });
+    };
+    return (
+      <ActionIcon
+        color="red"
+        variant="subtle"
+        size={size}
+        style={{ position: 'absolute', top: 40, right: 20, ...style }}
+        onClick={handleDelete}
+      >
+        <IconTrash size={20} />
+      </ActionIcon>
+    );
+  };
 
   // MOBILE CARD COMPONENT
   const MobileRecruiterCard = ({ recruiter }: { recruiter: Recruiter }) => (
@@ -218,6 +257,13 @@ const RecruiterDashboard: React.FC = () => {
       <Stack gap={10}>
         <Group justify="space-between" align="center">
           <Group>
+            <DeleteRecruiterButton
+              recruiterId={recruiter.id}
+              onDeleted={(id) =>
+                setRecruiters((prev) => prev.filter((r) => r.id !== id))
+              }
+            />
+
             <Avatar size={50} radius="xl">
               {(recruiter.firstName?.[0] || '?').toUpperCase()}
             </Avatar>
@@ -385,6 +431,12 @@ const RecruiterDashboard: React.FC = () => {
                       (e.currentTarget.style.transform = 'scale(1)')
                     }
                   >
+                    <DeleteRecruiterButton
+                      recruiterId={recruiter.id}
+                      onDeleted={(id) =>
+                        setRecruiters((prev) => prev.filter((r) => r.id !== id))
+                      }
+                    />
                     <Group
                       wrap="nowrap"
                       align="center"
@@ -411,7 +463,11 @@ const RecruiterDashboard: React.FC = () => {
 
                       <Stack
                         gap={6}
-                        style={{ flex: 1, alignItems: 'flex-end' }}
+                        style={{
+                          flex: 1,
+                          alignItems: 'flex-end',
+                          marginRight: 40,
+                        }}
                       >
                         <Group align="center" gap={6} wrap="nowrap">
                           <IconCalendar size={16} color="#5c7cfa" />

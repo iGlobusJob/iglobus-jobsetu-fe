@@ -71,3 +71,16 @@ export const getCandidatesDetailsById = async (candidateId: string) => {
     throw new Error(err?.response?.data?.message || err?.message);
   }
 };
+
+export const deleterecruiter = async (recruiterId: string) => {
+  try {
+    const response = await apiClient.delete(`/deleterecruiter/${recruiterId}`);
+    if (!response.data?.success) {
+      throw new Error(response.data?.message || 'Failed to delete recruiter');
+    }
+    return response.data;
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
+  }
+};
