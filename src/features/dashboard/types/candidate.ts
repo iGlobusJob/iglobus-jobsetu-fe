@@ -13,6 +13,7 @@ export interface CandidateProfile {
   createdAt: string;
   updatedAt: string;
   profilePicture: string;
+  profileUrl?: string;
 }
 
 export interface CandidateJobs {
