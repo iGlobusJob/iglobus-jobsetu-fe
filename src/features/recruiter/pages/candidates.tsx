@@ -16,8 +16,9 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
-  IconCalendar,
+  IconBriefcase,
   IconCalendarCheck,
+  IconIdBadge,
   IconMail,
   IconMapPin,
   IconPhone,
@@ -145,12 +146,18 @@ const CandidatesPage: React.FC = () => {
         </Group>
 
         <Group gap={6}>
-          <IconCalendar size={16} color="#5c7cfa" />
+          <IconBriefcase size={16} color="#5c7cfa" />
           <Text size="xs">
-            <strong>DOB:</strong> {formatDate(c.dateOfBirth)}
+            <strong>Experience:</strong> {c.experience}
           </Text>
         </Group>
 
+        <Group gap={6}>
+          <IconIdBadge size={16} color="#5c7cfa" />
+          <Text size="xs">
+            <strong>Designation:</strong> {c.designation}
+          </Text>
+        </Group>
         <Group gap={6}>
           <IconCalendarCheck size={16} color="#228be6" />
           <Text size="xs">
@@ -252,7 +259,7 @@ const CandidatesPage: React.FC = () => {
                       <Group gap="md" style={{ flex: 1 }}>
                         <Group align="center">
                           <Avatar
-                            size={60}
+                            size={70}
                             radius="xl"
                             src={c.profilePicture || undefined}
                           >
@@ -261,7 +268,7 @@ const CandidatesPage: React.FC = () => {
                           </Avatar>
                         </Group>
 
-                        <Stack gap={6}>
+                        <Stack gap={12}>
                           <Group gap="xs" align="center">
                             <Text fw={700} size="lg" tt="capitalize">
                               {c.firstName} {c.lastName}
@@ -286,17 +293,23 @@ const CandidatesPage: React.FC = () => {
 
                       <Stack gap={6} style={{ flex: 1 }}>
                         <Group align="center" gap={6} wrap="nowrap">
-                          <IconCalendar
+                          <IconBriefcase
                             size={16}
                             stroke={1.5}
                             color="#5c7cfa"
                           />
                           <Text fw={600} miw={100} size="sm">
-                            DOB
+                            Experience
                           </Text>
-                          <Text size="sm">
-                            {c.dateOfBirth ? formatDate(c.dateOfBirth) : '—'}
+                          <Text size="sm">{c.experience || '—'}</Text>
+                        </Group>
+
+                        <Group align="center" gap={6} wrap="nowrap">
+                          <IconIdBadge size={16} stroke={1.5} color="#5c7cfa" />
+                          <Text fw={600} miw={100} size="sm">
+                            Designation
                           </Text>
+                          <Text size="sm">{c.designation || '—'}</Text>
                         </Group>
 
                         <Group align="center" gap={6} wrap="nowrap">

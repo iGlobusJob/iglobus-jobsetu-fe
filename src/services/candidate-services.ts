@@ -88,6 +88,8 @@ export const updateCandidateProfile = async (data: {
   dateOfBirth?: string;
   gender?: string;
   category?: string;
+  experience?: string;
+  designation?: string;
   resumeFile?: File | null;
   profilePictureFile?: File | null;
 }): Promise<CandidateProfileFormData> => {
@@ -100,6 +102,8 @@ export const updateCandidateProfile = async (data: {
     formData.append('dateOfBirth', data.dateOfBirth || '');
     formData.append('gender', data.gender || '');
     formData.append('category', data.category || '');
+    formData.append('experience', data.experience || '');
+    formData.append('designation', data.designation || '');
     formData.append('profilepicture', data.profilePictureFile || '');
 
     if (data.resumeFile instanceof File) {
