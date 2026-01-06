@@ -232,7 +232,7 @@ const RecruiterDashboard: React.FC = () => {
         try {
           await deleterecruiter(id);
           if (onDeleted) onDeleted(id);
-          toast.success('Recruiter deleted successfully!');
+          toast.success('Recruiter deleted successfully !');
         } catch {
           toast.error('Failed to delete recruiter.');
         }
@@ -243,7 +243,7 @@ const RecruiterDashboard: React.FC = () => {
         color="red"
         variant="subtle"
         size={size}
-        style={{ position: 'absolute', top: 10, right: 10, ...style }}
+        style={{ position: 'absolute', top: 40, right: 20, ...style }}
         onClick={handleDelete}
       >
         <IconTrash size={20} />

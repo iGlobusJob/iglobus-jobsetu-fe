@@ -1,4 +1,4 @@
-import { Group, Text } from '@mantine/core';
+import { Group, Stack, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconAlertTriangle } from '@tabler/icons-react';
 
@@ -7,6 +7,7 @@ export const openDeleteRecruiterModal = (
   onConfirm: (id: string) => void
 ) => {
   modals.openConfirmModal({
+    size: 'md',
     title: (
       <Group gap={8}>
         <IconAlertTriangle size={20} color="red" />
@@ -15,12 +16,15 @@ export const openDeleteRecruiterModal = (
     ),
 
     children: (
-      <Text c="dimmed" size="sm">
-        Are you sure you want to delete this recruiter? <br />
-        <Text span fw={600} c="red">
+      <Stack gap="md" pb={28}>
+        <Text c="dark" size="md" fw={600}>
+          Are you sure you want to delete this recruiter?
+        </Text>
+
+        <Text fw={600} c="red" size="md">
           This action is irreversible.
         </Text>
-      </Text>
+      </Stack>
     ),
 
     labels: { confirm: 'Confirm Delete', cancel: 'Cancel' },
