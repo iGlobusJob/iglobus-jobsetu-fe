@@ -59,9 +59,13 @@ const candidateProfileSchema = z.object({
   category: z.enum(['IT', 'Non-IT']),
   experience: z
     .string()
-    .regex(/^[0-9]{0,2}$/, 'Experience must be a number')
-    .optional()
-    .or(z.literal('')),
+    .trim()
+    .refine(
+      (val) =>
+        val === '' || (/^\d+(\.\d{1,2})?$/.test(val) && Number(val) <= 50),
+      'Experience must be a valid number (e.g., 2 or 2.5) and not exceed 50 years'
+    )
+    .optional(),
   designation: z.string().optional().or(z.literal('')),
   resume: z
     .union([z.instanceof(File), z.string()])

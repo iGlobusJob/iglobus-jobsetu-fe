@@ -293,6 +293,13 @@ const CandidatesPage: React.FC = () => {
 
                       <Stack gap={6} style={{ flex: 1 }}>
                         <Group align="center" gap={6} wrap="nowrap">
+                          <IconIdBadge size={16} stroke={1.5} color="#5c7cfa" />
+                          <Text fw={600} miw={100} size="sm">
+                            Designation
+                          </Text>
+                          <Text size="sm">{c.designation || '—'}</Text>
+                        </Group>
+                        <Group align="center" gap={6} wrap="nowrap">
                           <IconBriefcase
                             size={16}
                             stroke={1.5}
@@ -302,14 +309,6 @@ const CandidatesPage: React.FC = () => {
                             Experience
                           </Text>
                           <Text size="sm">{c.experience || '—'}</Text>
-                        </Group>
-
-                        <Group align="center" gap={6} wrap="nowrap">
-                          <IconIdBadge size={16} stroke={1.5} color="#5c7cfa" />
-                          <Text fw={600} miw={100} size="sm">
-                            Designation
-                          </Text>
-                          <Text size="sm">{c.designation || '—'}</Text>
                         </Group>
 
                         <Group align="center" gap={6} wrap="nowrap">
