@@ -848,6 +848,7 @@ const CandidateProfilePage = (): JSX.Element => {
           <SimpleGrid
             cols={{ base: 2, sm: 2 }}
             spacing={{ base: 'md', sm: 'md' }}
+            mt="md"
           >
             <Controller
               name="experience"
@@ -901,7 +902,7 @@ const CandidateProfilePage = (): JSX.Element => {
             name="resume"
             control={control}
             render={({ field }) => (
-              <Stack gap="xs">
+              <Stack gap="xs" mt="md">
                 <Text fw={500} size="sm">
                   Resume
                 </Text>
