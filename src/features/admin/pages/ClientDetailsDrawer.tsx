@@ -74,12 +74,12 @@ const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
     setForm((prev) =>
       prev
         ? {
-          ...prev,
-          [parent]: {
-            ...prev[parent],
-            [key]: value,
-          },
-        }
+            ...prev,
+            [parent]: {
+              ...prev[parent],
+              [key]: value,
+            },
+          }
         : prev
     );
   };
@@ -275,22 +275,23 @@ const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
               disabled
             />
 
-            <TextInput
-              label="Mobile Number"
-              placeholder="+91 98765 43210"
-              size={isMobile ? 'sm' : 'md'}
-              value={form.mobile}
-              onChange={(e) => updateField('mobile', e.target.value)}
-            />
+            <Group grow>
+              <TextInput
+                label="Mobile Number"
+                placeholder="+91 98765 43210"
+                size={isMobile ? 'sm' : 'md'}
+                value={form.mobile}
+                onChange={(e) => updateField('mobile', e.target.value)}
+              />
 
-            <TextInput
-              label="Location"
-              placeholder="e.g. Mumbai"
-              size={isMobile ? 'sm' : 'md'}
-              value={form.location}
-              onChange={(e) => updateField('location', e.target.value)}
-            />
-
+              <TextInput
+                label="Location"
+                placeholder="e.g. Mumbai"
+                size={isMobile ? 'sm' : 'md'}
+                value={form.location}
+                onChange={(e) => updateField('location', e.target.value)}
+              />
+            </Group>
             <Group grow>
               <TextInput
                 label="GSTIN"

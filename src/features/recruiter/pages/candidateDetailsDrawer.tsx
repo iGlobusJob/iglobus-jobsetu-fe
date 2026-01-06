@@ -172,18 +172,18 @@ const CandidateDetailDrawer: React.FC<Props> = ({
 
             <Grid.Col span={6}>
               <TextInput
-                label="Experience"
-                leftSection={<IconBriefcase size={16} />}
-                value={details?.experience || '-'}
+                label="Designation"
+                leftSection={<IconIdBadge size={16} />}
+                value={details?.designation || '-'}
                 readOnly
               />
             </Grid.Col>
 
             <Grid.Col span={6}>
               <TextInput
-                label="designation"
-                leftSection={<IconIdBadge size={16} />}
-                value={details?.designation || '-'}
+                label="Experience"
+                leftSection={<IconBriefcase size={16} />}
+                value={details?.experience || '-'}
                 readOnly
               />
             </Grid.Col>

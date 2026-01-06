@@ -13,8 +13,10 @@ import {
   Title,
 } from '@mantine/core';
 import {
+  IconBriefcase,
   IconCalendar,
   IconCalendarCheck,
+  IconIdBadge,
   IconMail,
   IconMapPin,
   IconPhone,
@@ -165,6 +167,24 @@ const CandidateDetailsDrawer: React.FC<Props> = ({
                 label="Date of Birth"
                 leftSection={<IconCalendar size={16} />}
                 value={formatDate(details?.dateOfBirth ?? '')}
+                readOnly
+              />
+            </Grid.Col>
+
+            <Grid.Col span={6}>
+              <TextInput
+                label="Designation"
+                leftSection={<IconIdBadge size={16} />}
+                value={details?.designation || '-'}
+                readOnly
+              />
+            </Grid.Col>
+
+            <Grid.Col span={6}>
+              <TextInput
+                label="Experience"
+                leftSection={<IconBriefcase size={16} />}
+                value={details?.experience || '-'}
                 readOnly
               />
             </Grid.Col>
