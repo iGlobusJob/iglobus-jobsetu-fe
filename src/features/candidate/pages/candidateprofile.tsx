@@ -57,6 +57,12 @@ const candidateProfileSchema = z.object({
   dateOfBirth: z.string().optional(),
   address: z.string().min(5).optional().or(z.literal('')),
   category: z.enum(['IT', 'Non-IT']),
+  experience: z
+    .string()
+    .regex(/^[0-9]{0,2}$/, 'Experience must be a number')
+    .optional()
+    .or(z.literal('')),
+  designation: z.string().optional().or(z.literal('')),
   resume: z
     .union([z.instanceof(File), z.string()])
     .optional()
@@ -204,6 +210,8 @@ const CandidateProfilePage = (): JSX.Element => {
     mode: 'onBlur',
     defaultValues: {
       category: 'IT',
+      experience: '',
+      designation: '',
     },
   });
 
@@ -272,6 +280,8 @@ const CandidateProfilePage = (): JSX.Element => {
           dateOfBirth: data.dateOfBirth || '',
           address: data.address || '',
           category: data.category || 'IT',
+          experience: data.experience || '',
+          designation: data.designation || '',
           resume: null,
           profileUrl: data.profileUrl || null,
           profilePictureUrl: data.profilePictureUrl || null,
@@ -332,6 +342,8 @@ const CandidateProfilePage = (): JSX.Element => {
         dateOfBirth: data.dateOfBirth || '',
         gender: data.gender || '',
         category: data.category,
+        experience: data.experience || '',
+        designation: data.designation || '',
         resumeFile:
           data.resume instanceof File ? data.resume : (null as File | null),
         profileUrl: data.profileUrl,
@@ -365,6 +377,8 @@ const CandidateProfilePage = (): JSX.Element => {
         dateOfBirth: updated.dateOfBirth || '',
         address: updated.address || '',
         category: updated.category || 'IT',
+        experience: data.experience || '',
+        designation: data.designation || '',
         resume: null,
         profileUrl: newResumeUrl || null,
         profilePictureUrl: newPictureUrl || null,
@@ -831,6 +845,58 @@ const CandidateProfilePage = (): JSX.Element => {
               </Stack>
             )}
           />
+          <SimpleGrid
+            cols={{ base: 2, sm: 2 }}
+            spacing={{ base: 'md', sm: 'md' }}
+          >
+            <Controller
+              name="experience"
+              control={control}
+              render={({ field }) => (
+                <Stack gap="xs">
+                  <Text fw={500} size="sm">
+                    Experience (in years)
+                  </Text>
+                  {editMode ? (
+                    <>
+                      <TextInput
+                        {...field}
+                        placeholder="Enter experience in years"
+                      />
+                      {/* Error message goes here */}
+                      {errors.experience?.message && (
+                        <Text c="red" size="xs">
+                          {errors.experience.message}
+                        </Text>
+                      )}
+                    </>
+                  ) : (
+                    <Text size="sm">{field.value || '-'}</Text>
+                  )}
+                </Stack>
+              )}
+            />
+
+            <Controller
+              name="designation"
+              control={control}
+              render={({ field }) => (
+                <Stack gap="xs">
+                  <Text fw={500} size="sm">
+                    Designation
+                  </Text>
+                  {editMode ? (
+                    <TextInput
+                      {...field}
+                      placeholder="e.g. Frontend Developer"
+                    />
+                  ) : (
+                    <Text size="sm">{field.value || '-'}</Text>
+                  )}
+                </Stack>
+              )}
+            />
+          </SimpleGrid>
           <Controller
             name="resume"
             control={control}
