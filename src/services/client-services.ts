@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import type { ApiError } from '@/common';
+import type { ClientProfileFormData } from '@/features/client/interface/updateProfileForm';
 import type {
   JobPostFormData,
   JobPostResponse,
@@ -9,7 +11,6 @@ import type {
   RegisterClientPayload,
   ClientRegisterResponse,
 } from '@/features/dashboard/types/register';
-import type { ClientProfileFormData } from '@/features/client/interface/updateProfileForm';
 import { useAuthStore } from '@/store/userDetails';
 
 import { removeEmptyValues } from './helper';
@@ -189,4 +190,54 @@ export const updateJobById = async (
     jobId,
   });
   return response.data;
+};
+
+export const sendClientOtp = async (email: string) => {
+  try {
+    const response = await apiClientPublic.post('/sendOTP', { email });
+    return response.data as {
+      success: boolean;
+      message: string;
+      data?: { email: string };
+    };
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
+  }
+};
+
+export const validateClientOtp = async (payload: {
+  email: string;
+  otp: string;
+}) => {
+  try {
+    const response = await apiClientPublic.post('/clientvalidateOTP', payload);
+    return response.data as {
+      success: boolean;
+      message: string;
+    };
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
+  }
+};
+
+export const updateClientPassword = async (payload: {
+  email: string;
+  newPassword: string;
+  reEnterNewPassword: string;
+}) => {
+  try {
+    const response = await apiClientPublic.put(
+      '/updateClientPassword',
+      payload
+    );
+    return response.data as {
+      success: boolean;
+      message: string;
+    };
+  } catch (error) {
+    const err = error as ApiError;
+    throw new Error(err?.response?.data?.message || err?.message);
+  }
 };

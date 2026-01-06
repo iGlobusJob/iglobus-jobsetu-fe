@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { ForgotPasswordModal } from '@/features/auth/components/modal/forgotPasswordModal';
 import { FooterSubscribe } from '@/features/dashboard/components/common/footer';
 import { Header } from '@/features/dashboard/components/common/header';
 import type { ApiError } from '@common';
@@ -36,6 +37,7 @@ export const Login: React.FC = () => {
 
   const [showErrors, setShowErrors] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [forgotOpened, setForgotOpened] = useState(false);
 
   const form = useForm<LoginFormValues>({
     initialValues: {
@@ -223,15 +225,16 @@ export const Login: React.FC = () => {
                       {...form.getInputProps('remember', { type: 'checkbox' })}
                     />
 
-                    {/* <Text
+                    <Text
                       component="a"
-                      href="/reset-password"
                       size="sm"
                       c="cyan.5"
                       td="underline"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setForgotOpened(true)}
                     >
                       Forgot Password?
-                    </Text> */}
+                    </Text>
                   </Group>
 
                   <Button
@@ -266,6 +269,10 @@ export const Login: React.FC = () => {
         </Container>
       </Box>
       <FooterSubscribe />
+      <ForgotPasswordModal
+        opened={forgotOpened}
+        onClose={() => setForgotOpened(false)}
+      />
     </Box>
   );
 };
