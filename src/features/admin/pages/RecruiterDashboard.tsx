@@ -6,6 +6,7 @@ import {
   Card,
   Center,
   Container,
+  Divider,
   Group,
   LoadingOverlay,
   Modal,
@@ -334,6 +335,7 @@ const RecruiterDashboard: React.FC = () => {
             leftSection={<IconPlus size={18} />}
             onClick={() => setModalOpened(true)}
             size={isMobile ? 'sm' : 'md'}
+            radius="xl"
           >
             Add Recruiter
           </Button>
@@ -542,7 +544,7 @@ const RecruiterDashboard: React.FC = () => {
               >
                 <IconPlus size={20} color="white" strokeWidth={2.5} />
               </Box>
-              <Stack gap={2}>
+              <Stack gap={4} mt={4}>
                 <Title order={3} fw={700}>
                   Add New Recruiter
                 </Title>
@@ -558,17 +560,17 @@ const RecruiterDashboard: React.FC = () => {
           padding="xl"
           styles={{
             header: {
-              paddingBottom: '20px',
-              borderBottom: '1px solid #e9ecef',
+              paddingBottom: '5px',
             },
             body: {
               paddingTop: '24px',
             },
           }}
         >
+          <Divider />
           <Stack gap="lg">
             <Box>
-              <Title order={4} fw={600} mb={15} c="dimmed">
+              <Title order={4} fw={600} mb={15} c="dimmed" mt={10}>
                 Personal Information
               </Title>
               <Group grow gap="md" align="flex-start">
@@ -667,14 +669,8 @@ const RecruiterDashboard: React.FC = () => {
                 />
               </Stack>
             </Box>
-
-            <Group
-              justify="flex-end"
-              mt="xl"
-              pt="lg"
-              wrap="nowrap"
-              style={{ borderTop: '1px solid #e9ecef' }}
-            >
+            <Divider />
+            <Group justify="flex-end" mt="sm" wrap="nowrap">
               <Button
                 variant="light"
                 color="gray"

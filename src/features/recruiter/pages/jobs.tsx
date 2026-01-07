@@ -156,29 +156,35 @@ const JobCard = ({ job }: JobCardProps): JSX.Element => {
         </Box>
 
         <Flex
-          direction={isMobile ? 'column' : 'row'}
-          align={isMobile ? 'flex-start' : 'center'}
-          justify="space-around"
-          gap={isMobile ? 'xs' : 'xl'}
+          align="center"
+          justify="space-between"
+          gap="sm"
+          style={{ width: '100%' }}
         >
           <Box style={{ flex: 1, minWidth: 0 }}>
-            <Title order={4} size="h5" fw={600} mb={2} lineClamp={1}>
+            <Title
+              order={4}
+              size={isMobile ? 'h5' : 'h4'}
+              fw={600}
+              mb={2}
+              style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
+            >
               {job.jobTitle}
             </Title>
-            <Text size="sm" c="dimmed" fw={500} lineClamp={1}>
+            <Text
+              size={isMobile ? 'xs' : 'sm'}
+              c="dimmed"
+              fw={500}
+              style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
+            >
               {job.organizationName || 'Unknown Company'}
             </Text>
           </Box>
           <Badge
             color={getStatusColor(job.status)}
             variant="filled"
-            size={isMobile ? 'sm' : 'md'}
-            styles={{
-              root: {
-                textTransform: 'capitalize',
-                alignSelf: isMobile ? 'flex-start' : 'center',
-              },
-            }}
+            size="sm"
+            style={{ flexShrink: 0 }}
           >
             {job.status}
           </Badge>
