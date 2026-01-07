@@ -182,7 +182,7 @@ const JobCardUI = ({
           {!job.logo && job.organizationName?.[0]?.toUpperCase()}
         </Box>
 
-        <Box style={{ flex: 1 }}>
+        <Box style={{ flex: 1 }} mt={4}>
           <Title order={4} lineClamp={1} size="h5">
             {job.jobTitle}
           </Title>
@@ -210,7 +210,8 @@ const JobCardUI = ({
             Salary
           </Text>
           <Text size="sm" fw={600}>
-            ₹{salaryMin.toLocaleString()} - ₹{salaryMax.toLocaleString()}
+            ₹{salaryMin.toLocaleString('en-IN')} - ₹
+            {salaryMax.toLocaleString('en-IN')}
           </Text>
         </Grid.Col>
         <Grid.Col span={6}>

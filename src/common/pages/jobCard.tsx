@@ -159,7 +159,7 @@ export const JobCard = ({ job, onBookmark }: JobCardProps): JSX.Element => {
           {!job.logo && (job.organizationName?.[0]?.toUpperCase() ?? '?')}
         </Avatar>
 
-        <Box style={{ flex: 1 }}>
+        <Box style={{ flex: 1 }} mt={4}>
           <Flex gap={8} align="center">
             <Title order={4} size="h5" lineClamp={1}>
               {job.jobTitle}

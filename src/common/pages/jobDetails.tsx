@@ -14,6 +14,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconArrowLeft,
   IconBriefcase,
@@ -80,7 +81,7 @@ export const JobDetailPage = (): JSX.Element => {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
   const onBack = () => navigate(-1);
-
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const [job, setJob] = useState<JobDetail>();
   const [bookmarked, setBookmarked] = useState(false);
   const [applied, setApplied] = useState(false);
@@ -384,63 +385,64 @@ export const JobDetailPage = (): JSX.Element => {
 
           {/* Sidebar */}
           <Grid.Col span={{ base: 12, md: 4 }}>
-            <Stack gap="lg">
-              {/* Apply Card */}
-              <Paper
-                p="lg"
-                radius="lg"
-                withBorder
-                style={{ position: 'sticky', top: 20 }}
-              >
-                <Stack gap="md">
-                  <Box>
-                    <Text size="sm" c="dimmed" mb={4}>
-                      Salary Range
-                    </Text>
-                    <Title order={3} size="h3" c="blue" fw={700}>
-                      {salaryRange}
-                    </Title>
-                  </Box>
+            <Box
+              style={
+                isDesktop
+                  ? { position: 'sticky', top: 120, alignSelf: 'flex-start' }
+                  : {}
+              }
+            >
+              <Stack gap="lg">
+                {/* Apply Card */}
+                <Paper p="lg" radius="lg" withBorder>
+                  <Stack gap="md">
+                    <Box>
+                      <Text size="sm" c="dimmed" mb={4}>
+                        Salary Range
+                      </Text>
+                      <Title order={3} size="h3" c="blue" fw={700}>
+                        {salaryRange}
+                      </Title>
+                    </Box>
 
-                  <Box>
-                    <Text size="sm" c="dimmed" mb={4}>
-                      Per Year
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      Competitive salary based on experience
-                    </Text>
-                  </Box>
+                    <Box>
+                      <Text size="sm" c="dimmed" mb={4}>
+                        Per Year
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Competitive salary based on experience
+                      </Text>
+                    </Box>
 
-                  <Divider />
+                    <Divider />
 
-                  <Button
-                    fullWidth
-                    size="md"
-                    onClick={handleApply}
-                    disabled={daysLeft <= 0 || applied}
-                    variant={applied ? 'light' : 'filled'}
-                  >
-                    {daysLeft <= 0
-                      ? 'Position Closed'
-                      : applied
-                        ? 'Applied'
-                        : 'Apply Now'}
-                  </Button>
+                    <Button
+                      fullWidth
+                      size="md"
+                      onClick={handleApply}
+                      disabled={daysLeft <= 0 || applied}
+                      variant={applied ? 'light' : 'filled'}
+                    >
+                      {daysLeft <= 0
+                        ? 'Position Closed'
+                        : applied
+                          ? 'Applied'
+                          : 'Apply Now'}
+                    </Button>
 
-                  {daysLeft <= 0 && (
-                    <Text size="xs" c="red" style={{ textAlign: 'center' }}>
-                      Applications are closed for this position
-                    </Text>
-                  )}
-                </Stack>
-              </Paper>
+                    {daysLeft <= 0 && (
+                      <Text size="xs" c="red" style={{ textAlign: 'center' }}>
+                        Applications are closed for this position
+                      </Text>
+                    )}
+                  </Stack>
+                </Paper>
 
-              {/* Company Info Card */}
-              <Paper p="lg" radius="lg" withBorder>
-                <Title order={4} size="h5" mb="md">
-                  About the Company
-                </Title>
-                <Stack gap="md">
+                {/* Company Info Card */}
+                <Paper p="lg" radius="lg" withBorder>
+                  <Title order={4} size="h5" mb="md">
+                    About the Company
+                  </Title>
                   <Group gap="md">
                     <Avatar
                       src={job.logo || undefined}
@@ -455,7 +457,7 @@ export const JobDetailPage = (): JSX.Element => {
                       {!job.logo &&
                         (job.organizationName?.[0]?.toUpperCase() ?? '?')}
                     </Avatar>
-                    <Stack gap={0}>
+                    <Stack gap={2}>
                       <Text fw={600} size="sm">
                         {job.organizationName}
                       </Text>
@@ -465,42 +467,42 @@ export const JobDetailPage = (): JSX.Element => {
                       </Text>
                     </Stack>
                   </Group>
-                </Stack>
-              </Paper>
+                </Paper>
 
-              {/* Requirements Card */}
-              <Paper p="lg" radius="lg" withBorder>
-                <Title order={4} size="h5" mb="md">
-                  What We're Looking For
-                </Title>
-                <Stack gap="sm">
-                  <Group gap="sm">
-                    <Badge variant="light" color="cyan" size="sm">
-                      Experience
-                    </Badge>
-                    <Text size="sm">{experienceRange}</Text>
-                  </Group>
-                  <Group gap="sm">
-                    <Badge variant="light" color="cyan" size="sm">
-                      Job Type
-                    </Badge>
-                    <Text size="sm">{formatJobType(job.jobType)}</Text>
-                  </Group>
-                  <Group gap="sm">
-                    <Badge variant="light" color="cyan" size="sm">
-                      Location
-                    </Badge>
-                    <Text size="sm">{job.jobLocation}</Text>
-                  </Group>
-                  <Group gap="sm">
-                    <Badge variant="light" color="cyan" size="sm">
-                      Positions
-                    </Badge>
-                    <Text size="sm">{job.noOfPositions}</Text>
-                  </Group>
-                </Stack>
-              </Paper>
-            </Stack>
+                {/* Requirements Card */}
+                <Paper p="lg" radius="lg" withBorder>
+                  <Title order={4} size="h5" mb="md">
+                    What We're Looking For
+                  </Title>
+                  <Stack gap="sm">
+                    <Group gap="sm">
+                      <Badge variant="light" color="cyan" size="sm">
+                        Experience
+                      </Badge>
+                      <Text size="sm">{experienceRange}</Text>
+                    </Group>
+                    <Group gap="sm">
+                      <Badge variant="light" color="cyan" size="sm">
+                        Job Type
+                      </Badge>
+                      <Text size="sm">{formatJobType(job.jobType)}</Text>
+                    </Group>
+                    <Group gap="sm">
+                      <Badge variant="light" color="cyan" size="sm">
+                        Location
+                      </Badge>
+                      <Text size="sm">{job.jobLocation}</Text>
+                    </Group>
+                    <Group gap="sm">
+                      <Badge variant="light" color="cyan" size="sm">
+                        Positions
+                      </Badge>
+                      <Text size="sm">{job.noOfPositions}</Text>
+                    </Group>
+                  </Stack>
+                </Paper>
+              </Stack>
+            </Box>
           </Grid.Col>
         </Grid>
       </Container>

@@ -30,4 +30,5 @@ export interface CandidateJobs {
   bookmarked: boolean;
   category: string;
   logo: string | null;
+  status: string;
 }
