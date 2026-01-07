@@ -8,9 +8,12 @@ export interface CandidateProfile {
   dateOfBirth: string;
   gender: string;
   category: string;
+  experience: string;
+  designation: string;
   createdAt: string;
   updatedAt: string;
   profilePicture: string;
+  profileUrl?: string;
 }
 
 export interface CandidateJobs {

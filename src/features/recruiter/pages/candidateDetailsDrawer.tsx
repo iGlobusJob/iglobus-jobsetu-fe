@@ -13,8 +13,10 @@ import {
   Title,
 } from '@mantine/core';
 import {
+  IconBriefcase,
   IconCalendar,
   IconCalendarCheck,
+  IconIdBadge,
   IconMail,
   IconMapPin,
   IconPhone,
@@ -39,6 +41,21 @@ const formatDate = (date?: string | Date) => {
   const month = d.toLocaleString('en-US', { month: 'short' });
   const year = d.getFullYear();
   return `${day}-${month}-${year}`;
+};
+
+const getFileExtension = (url: string) => {
+  const cleanUrl = url.split('?')[0] as string;
+  return cleanUrl ? (cleanUrl.split('.').pop() ?? '').toLowerCase() : '';
+};
+
+const getViewerUrl = (fileUrl: string) => {
+  const ext = getFileExtension(fileUrl);
+
+  // PDF works naturally in iframe
+  if (ext === 'pdf') return fileUrl;
+
+  // For ALL other docs → use Microsoft Office Viewer
+  return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
 };
 
 const CandidateDetailDrawer: React.FC<Props> = ({
@@ -68,6 +85,8 @@ const CandidateDetailDrawer: React.FC<Props> = ({
   }, [candidate?.id]);
 
   if (!candidate) return null;
+
+  const resumeUrl = details?.profileUrl;
 
   return (
     <Drawer
@@ -168,6 +187,24 @@ const CandidateDetailDrawer: React.FC<Props> = ({
               />
             </Grid.Col>
 
+            <Grid.Col span={6}>
+              <TextInput
+                label="Designation"
+                leftSection={<IconIdBadge size={16} />}
+                value={details?.designation || '-'}
+                readOnly
+              />
+            </Grid.Col>
+
+            <Grid.Col span={6}>
+              <TextInput
+                label="Experience"
+                leftSection={<IconBriefcase size={16} />}
+                value={details?.experience || '-'}
+                readOnly
+              />
+            </Grid.Col>
+
             <Grid.Col span={12}>
               <TextInput
                 label="Address"
@@ -187,6 +224,24 @@ const CandidateDetailDrawer: React.FC<Props> = ({
           <Text>{formatDate(details?.createdAt)}</Text>
         </Group>
         <Divider />
+
+        {resumeUrl && (
+          <Box>
+            <Title order={4} fw={600} mb={15}>
+              Resume
+            </Title>
+            <iframe
+              src={getViewerUrl(resumeUrl)}
+              style={{
+                width: '100%',
+                height: '500px',
+                border: 'none',
+                borderRadius: '4px',
+              }}
+              title="Resume Preview"
+            />
+          </Box>
+        )}
       </Stack>
     </Drawer>
   );

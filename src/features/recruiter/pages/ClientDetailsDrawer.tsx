@@ -124,10 +124,11 @@ const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
 
             <TextInput label="Email Address" value={form.email} readOnly />
 
-            <TextInput label="Mobile Number" value={form.mobile} readOnly />
+            <Group grow>
+              <TextInput label="Mobile Number" value={form.mobile} readOnly />
 
-            <TextInput label="Location" value={form.location} readOnly />
-
+              <TextInput label="Location" value={form.location} readOnly />
+            </Group>
             <Group grow>
               <TextInput label="GSTIN" value={form.gstin || ''} readOnly />
 
