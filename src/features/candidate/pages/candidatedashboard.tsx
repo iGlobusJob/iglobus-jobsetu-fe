@@ -60,11 +60,12 @@ export default function JobPortalDashboard() {
     jobDescription: job.jobDescription,
     organizationName: job.organizationName,
     jobLocation: job.jobLocation,
-    salaryRange: `₹${job.minimumSalary.toLocaleString()} - ₹${job.maximumSalary.toLocaleString()}`,
+    salaryRange: `₹${job.minimumSalary.toLocaleString()} - ₹${job.maximumSalary.toLocaleString('en-IN')}`,
     salaryMin: job.minimumSalary,
     salaryMax: job.maximumSalary,
     experienceLevel: `${job.minimumExperience} - ${job.maximumExperience} years`,
     jobType: job.jobType,
+    status: job.status,
     bookmarked: false,
     category: 'IT',
     logo: job.logo,
@@ -176,7 +177,7 @@ export default function JobPortalDashboard() {
             ? salaries[mid]
             : (salaries[mid - 1] + salaries[mid]) / 2;
 
-        return `₹${Math.round(median).toLocaleString()}`;
+        return `₹${Math.round(median).toLocaleString('en-IN')}`;
       })(),
       color: 'teal',
     },

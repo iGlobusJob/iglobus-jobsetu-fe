@@ -303,7 +303,7 @@ const AllJobsComponent = () => {
                         </Group>
                       </div>
 
-                      <Group gap="sm" mt={{ base: 'sm', sm: 0 }}>
+                      <Group gap="sm">
                         <ActionIcon
                           variant="subtle"
                           onClick={() => onEdit(job.id)}

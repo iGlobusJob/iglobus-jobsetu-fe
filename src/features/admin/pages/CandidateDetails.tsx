@@ -103,7 +103,7 @@ const CandidateDetailsDrawer: React.FC<Props> = ({
 
           <Stack gap={4}>
             <Group gap={8} align="center">
-              <Title order={3} fw={700}>
+              <Title order={3} fw={700} tt="capitalize">
                 {candidate.firstName || '—'} {candidate.lastName || ''}
               </Title>
               {candidate.category && (

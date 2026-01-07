@@ -23,6 +23,7 @@ import {
   IconCalendarCheck,
   IconMail,
   IconPlus,
+  IconSearch,
   IconTrash,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -243,7 +244,12 @@ const RecruiterDashboard: React.FC = () => {
         color="red"
         variant="subtle"
         size={size}
-        style={{ position: 'absolute', top: 40, right: 20, ...style }}
+        style={{
+          position: 'absolute',
+          top: isMobile ? 70 : 40,
+          right: 20,
+          ...style,
+        }}
         onClick={handleDelete}
       >
         <IconTrash size={20} />
@@ -269,7 +275,7 @@ const RecruiterDashboard: React.FC = () => {
             </Avatar>
 
             <Stack gap={2}>
-              <Text fw={700} size="sm">
+              <Text fw={700} size="sm" tt="capitalize">
                 {recruiter.firstName} {recruiter.lastName}
               </Text>
               <Text size="xs" color="dimmed">
@@ -355,13 +361,13 @@ const RecruiterDashboard: React.FC = () => {
             >
               <TextInput
                 placeholder="Search by name or email"
+                leftSection={<IconSearch size={18} />}
                 value={search}
                 onChange={(e) => {
                   setSearch(e.currentTarget.value);
                   setActivePage(1);
                 }}
                 size={isMobile ? 'sm' : 'md'}
-                leftSection={null}
               />
             </Box>
             <Group
@@ -450,7 +456,7 @@ const RecruiterDashboard: React.FC = () => {
                         </Group>
 
                         <Stack gap={6}>
-                          <Text fw={700} size="lg">
+                          <Text fw={700} size="lg" tt="capitalize">
                             {recruiter.firstName} {recruiter.lastName}
                           </Text>
 
@@ -562,16 +568,9 @@ const RecruiterDashboard: React.FC = () => {
         >
           <Stack gap="lg">
             <Box>
-              <Text
-                size="sm"
-                fw={600}
-                mb="md"
-                c="dimmed"
-                tt="uppercase"
-                lts={0.5}
-              >
+              <Title order={4} fw={600} mb={15} c="dimmed">
                 Personal Information
-              </Text>
+              </Title>
               <Group grow gap="md" align="flex-start">
                 <TextInput
                   label="First Name"
@@ -616,16 +615,9 @@ const RecruiterDashboard: React.FC = () => {
             </Box>
 
             <Box>
-              <Text
-                size="sm"
-                fw={600}
-                mb="md"
-                c="dimmed"
-                tt="uppercase"
-                lts={0.5}
-              >
+              <Title order={4} fw={600} mb={15} c="dimmed">
                 Account Details
-              </Text>
+              </Title>
               <Stack gap="md">
                 <TextInput
                   label="Email Address"

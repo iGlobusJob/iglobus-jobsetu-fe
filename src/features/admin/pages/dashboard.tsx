@@ -22,6 +22,7 @@ import {
   IconCalendarCheck,
   IconMail,
   IconPhone,
+  IconSearch,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -324,7 +325,7 @@ const AdminDashboard: React.FC = () => {
                   setActivePage(1);
                 }}
                 size={isMobile ? 'sm' : 'md'}
-                leftSection={null}
+                leftSection={<IconSearch size={18} />}
               />
             </Box>
             <Group
@@ -346,7 +347,7 @@ const AdminDashboard: React.FC = () => {
                 onChange={(val) => {
                   setStatusFilter(
                     (val as 'all' | 'registered' | 'active' | 'inactive') ??
-                    'all'
+                      'all'
                   );
                   setActivePage(1);
                 }}

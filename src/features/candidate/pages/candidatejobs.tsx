@@ -37,6 +37,7 @@ interface ApiJob {
   maximumExperience: number;
   jobType: string;
   logo: string | null;
+  status: string;
 }
 
 const mapJob = (job: ApiJob): CandidateJobs => ({
@@ -53,6 +54,7 @@ const mapJob = (job: ApiJob): CandidateJobs => ({
   bookmarked: false,
   category: 'IT',
   logo: job.logo,
+  status: job.status,
 });
 
 const ITEMS_PER_PAGE = 6;

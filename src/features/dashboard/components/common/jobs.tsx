@@ -81,6 +81,7 @@ export const JobListingsSection = () => {
           applied: appliedSet.has(apiJob.id),
           category: apiJob.jobType || 'general',
           logo: apiJob.logo,
+          status: apiJob.status,
         }));
 
         setJobs(enrichedJobs);
