@@ -33,8 +33,8 @@ export const ScrollToTop = () => {
       onClick={scrollTop}
       style={{
         position: 'fixed',
-        bottom: rem(30),
-        right: rem(30),
+        bottom: rem(70),
+        right: rem(20),
         boxShadow: '0px 4px 14px rgba(0,0,0,0.25)',
         zIndex: 1000,
         transition: 'all 0.2s ease',

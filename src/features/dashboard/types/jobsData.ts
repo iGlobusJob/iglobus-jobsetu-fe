@@ -4,7 +4,8 @@ export const jobsData = (job: Job): JobCard => {
   return {
     id: job._id,
     jobTitle: job.jobTitle,
-    organizationName: job.organizationName || job.companyName || 'Unknown Company',
+    organizationName:
+      job.organizationName || job.companyName || 'Unknown Company',
     jobLocation: job.jobLocation,
     salaryRange: `₹ ${job.minimumSalary} - ₹ ${job.maximumSalary}`,
     salaryMin: job.minimumSalary,
@@ -15,5 +16,6 @@ export const jobsData = (job: Job): JobCard => {
     bookmarked: false,
     category: '',
     logo: job.logo || null,
+    status: job.status,
   };
 };

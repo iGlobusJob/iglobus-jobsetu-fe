@@ -15,6 +15,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconAlertCircle,
   IconMapPin,
@@ -50,6 +51,7 @@ interface ApiJob {
   minimumExperience: number;
   maximumExperience: number;
   jobType: string;
+  status: string;
   logo: string | null;
 }
 
@@ -66,6 +68,7 @@ const mapJob = (job: ApiJob): CandidateJobs => ({
   jobType: job.jobType,
   bookmarked: false,
   category: 'IT',
+  status: job.status,
   logo: job.logo,
 });
 
@@ -77,6 +80,24 @@ const ITEMS_PER_PAGE = 6;
 
 const JobCard = ({ job }: JobCardProps): JSX.Element => {
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
+  // Helpers
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case 'active':
+        return 'green';
+      case 'drafted':
+        return 'gray';
+      case 'closed':
+        return 'red';
+      default:
+        return 'blue';
+    }
+  };
+
+  const salaryMin = job.salaryMin || 0;
+  const salaryMax = job.salaryMax || 0;
 
   return (
     <Paper
@@ -134,14 +155,40 @@ const JobCard = ({ job }: JobCardProps): JSX.Element => {
           )}
         </Box>
 
-        <Box style={{ flex: 1, minWidth: 0, paddingRight: '50px' }}>
-          <Title order={4} size="h5" fw={600} mb={2} lineClamp={1}>
-            {job.jobTitle}
-          </Title>
-          <Text size="sm" c="dimmed" fw={500} lineClamp={1}>
-            {job.organizationName || 'Unknown Company'}
-          </Text>
-        </Box>
+        <Flex
+          align="center"
+          justify="space-between"
+          gap="sm"
+          style={{ width: '100%' }}
+        >
+          <Box style={{ flex: 1, minWidth: 0 }}>
+            <Title
+              order={4}
+              size={isMobile ? 'h5' : 'h4'}
+              fw={600}
+              mb={2}
+              style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
+            >
+              {job.jobTitle}
+            </Title>
+            <Text
+              size={isMobile ? 'xs' : 'sm'}
+              c="dimmed"
+              fw={500}
+              style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}
+            >
+              {job.organizationName || 'Unknown Company'}
+            </Text>
+          </Box>
+          <Badge
+            color={getStatusColor(job.status)}
+            variant="filled"
+            size="sm"
+            style={{ flexShrink: 0 }}
+          >
+            {job.status}
+          </Badge>
+        </Flex>
       </Flex>
 
       <Flex align="center" gap="md" mb="md" style={{ flexWrap: 'wrap' }}>
@@ -197,7 +244,8 @@ const JobCard = ({ job }: JobCardProps): JSX.Element => {
             Salary
           </Text>
           <Text size="sm" fw={600} c="blue">
-            {job.salaryRange}
+            ₹{salaryMin.toLocaleString('en-IN')} – ₹
+            {salaryMax.toLocaleString('en-IN')}
           </Text>
         </Box>
       </Group>

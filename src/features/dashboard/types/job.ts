@@ -11,6 +11,7 @@ export interface JobCard {
   jobType: string;
   bookmarked: boolean;
   category: string;
+  status: string;
   logo: string | null;
 }
 
@@ -25,6 +26,7 @@ export interface ApiJob {
   minimumExperience: number;
   maximumExperience: number;
   jobType: string;
+  status: string;
   logo: string | null;
 }
 export interface JobPostResponse {
