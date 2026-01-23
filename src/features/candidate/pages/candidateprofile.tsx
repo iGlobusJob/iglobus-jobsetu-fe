@@ -60,13 +60,13 @@ const candidateProfileSchema = z.object({
   experience: z
     .string()
     .trim()
+    .min(1, 'Experience is required')
     .refine(
-      (val) =>
-        val === '' || (/^\d+(\.\d{1,2})?$/.test(val) && Number(val) <= 50),
-      'Experience must be a valid number (e.g., 2 or 2.5) and not exceed 50 years'
+      (val) => /^\d+(\.\d{1,2})?$/.test(val),
+      'Experience must be a valid number (e.g., 2 or 2.5)'
     )
-    .optional(),
-  designation: z.string().optional().or(z.literal('')),
+    .refine((val) => Number(val) <= 50, 'Experience cannot exceed 50 years'),
+  designation: z.string().trim().min(1, 'Designation is required'),
   resume: z
     .union([z.instanceof(File), z.string()])
     .optional()
@@ -863,18 +863,11 @@ const CandidateProfilePage = (): JSX.Element => {
                     Experience (in years)
                   </Text>
                   {editMode ? (
-                    <>
-                      <TextInput
-                        {...field}
-                        placeholder="Enter experience in years"
-                      />
-                      {/* Error message goes here */}
-                      {errors.experience?.message && (
-                        <Text c="red" size="xs">
-                          {errors.experience.message}
-                        </Text>
-                      )}
-                    </>
+                    <TextInput
+                      {...field}
+                      placeholder="Enter experience in years"
+                      error={errors.experience?.message}
+                    />
                   ) : (
                     <Text size="sm">{field.value || '-'}</Text>
                   )}
@@ -894,6 +887,7 @@ const CandidateProfilePage = (): JSX.Element => {
                     <TextInput
                       {...field}
                       placeholder="e.g. Frontend Developer"
+                      error={errors.designation?.message}
                     />
                   ) : (
                     <Text size="sm">{field.value || '-'}</Text>

@@ -73,11 +73,12 @@ export function FooterSubscribe() {
                   style={{ display: 'inline-block' }}
                 >
                   <Image
-                    src="/auth/jobsetudark.png"
+                    src="/auth/jobsetulogos.png"
                     alt="JobSetu Logo"
                     fit="contain"
-                    width={50}
-                    height={50}
+                    width={100}
+                    height={100}
+                    radius={12}
                   />
                 </Anchor>
 
