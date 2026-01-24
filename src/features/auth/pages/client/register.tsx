@@ -47,7 +47,9 @@ const Register: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  const form = useForm<ClientRegisterValues & { termsAccepted: boolean }>({
+  const form = useForm<
+    ClientRegisterValues & { isTermsAndConditionsAgreed: boolean }
+  >({
     initialValues: {
       organizationName: '',
       primaryFirstName: '',
@@ -60,17 +62,17 @@ const Register: React.FC = () => {
       panCard: '',
       category: 'IT',
       logoImage: null,
-      termsAccepted: false,
+      isTermsAndConditionsAgreed: false,
     },
     validate: {
       ...zodResolver(clientRegisterSchema),
-      termsAccepted: (value) =>
-        value ? null : 'You must accept Terms & Conditions',
+      isTermsAndConditionsAgreed: (value) =>
+        value ? null : 'You must agree to the terms and conditions',
     },
   });
 
   const handleSubmit = async (values: ClientRegisterValues) => {
-    if (!values.termsAccepted) {
+    if (!values.isTermsAndConditionsAgreed) {
       toast.error('Accept Terms & Conditions to continue');
       return;
     }
@@ -90,6 +92,7 @@ const Register: React.FC = () => {
         panCard: values.panCard,
         category: values.category,
         logo: values.logoImage,
+        isTermsAndConditionsAgreed: values.isTermsAndConditionsAgreed,
       };
 
       const res = await registerClient(payload);
@@ -206,7 +209,7 @@ const Register: React.FC = () => {
 
           <Button
             onClick={() => {
-              form.setFieldValue('termsAccepted', true);
+              form.setFieldValue('isTermsAndConditionsAgreed', true);
               setTermsOpened(false);
             }}
           >
@@ -482,7 +485,7 @@ const Register: React.FC = () => {
                     p="md"
                     style={{
                       border: `1px solid ${
-                        form.errors.termsAccepted
+                        form.errors.isTermsAndConditionsAgreed
                           ? theme.colors.red[6]
                           : theme.colors.gray[3]
                       }`,
@@ -493,8 +496,17 @@ const Register: React.FC = () => {
                     }}
                   >
                     <Checkbox
-                      checked={form.values.termsAccepted}
-                      onChange={() => setTermsOpened(true)}
+                      checked={form.values.isTermsAndConditionsAgreed}
+                      onChange={(e) => {
+                        if (e.currentTarget.checked) {
+                          setTermsOpened(true);
+                        } else {
+                          form.setFieldValue(
+                            'isTermsAndConditionsAgreed',
+                            false
+                          );
+                        }
+                      }}
                       label={
                         <Text size="sm">
                           I agree to the{' '}
@@ -516,9 +528,9 @@ const Register: React.FC = () => {
                       }
                     />
 
-                    {form.errors.termsAccepted && (
+                    {form.errors.isTermsAndConditionsAgreed && (
                       <Text size="xs" c="red" mt={6}>
-                        {form.errors.termsAccepted}
+                        {form.errors.isTermsAndConditionsAgreed}
                       </Text>
                     )}
                   </Box>
