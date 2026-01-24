@@ -73,10 +73,6 @@ const Register: React.FC = () => {
   });
 
   const handleSubmit = async (values: ClientRegisterValues) => {
-    if (!values.isTermsAndConditionsAgreed) {
-      toast.error('Accept Terms & Conditions to continue');
-      return;
-    }
     setLoading(true);
     try {
       const payload = {
@@ -878,6 +874,12 @@ const Register: React.FC = () => {
                     gradient={{ from: 'blue', to: 'cyan' }}
                     radius="md"
                     mt={isMobile ? 'xs' : 'sm'}
+                    disabled={!form.values.isTermsAndConditionsAgreed}
+                    style={{
+                      cursor: !form.values.isTermsAndConditionsAgreed
+                        ? 'not-allowed'
+                        : 'pointer',
+                    }}
                   >
                     Register
                   </Button>
