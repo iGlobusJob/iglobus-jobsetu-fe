@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Box,
   Button,
   Card,
@@ -21,6 +22,9 @@ import {
   IconTarget,
   IconTrendingUp,
   IconUsers,
+  IconHelpCircle,
+  IconMail,
+  IconPhone,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -419,6 +423,41 @@ export default function JobPortalDashboard() {
             );
           })}
         </SimpleGrid>
+      </Container>
+
+      <Container size="xl" py="sm">
+        <Card radius="lg" p="xl" withBorder>
+          <Stack gap="md">
+            <Group gap="sm">
+              <ThemeIcon size="lg" radius="md" variant="light">
+                <IconHelpCircle size={20} />
+              </ThemeIcon>
+              <Title order={4}>Got stuck? Need help?</Title>
+            </Group>
+            <Text size="sm" color="dimmed">
+              Our support team is here to help you get back on track quickly.
+              Reach out to us anytime using the details below.
+            </Text>
+            <Group gap="xl" mt="sm">
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="xl" variant="light" color="blue">
+                  <IconMail size={14} />
+                </ThemeIcon>
+                <Anchor href="mailto:admin@jobsetu.com" size="sm" fw={500}>
+                  admin@jobsetu.com
+                </Anchor>
+              </Group>
+              <Group gap="xs">
+                <ThemeIcon size="sm" radius="xl" variant="light" color="green">
+                  <IconPhone size={14} />
+                </ThemeIcon>
+                <Anchor href="tel:+911234567890" size="sm" fw={500}>
+                  +91-1234567890
+                </Anchor>
+              </Group>
+            </Group>
+          </Stack>
+        </Card>
       </Container>
 
       {/* CTA Section */}
