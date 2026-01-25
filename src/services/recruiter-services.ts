@@ -100,3 +100,19 @@ export const getallassignedclientsbyrecruiter = async () => {
     throw new Error('Unable to fetch client list');
   }
 };
+
+export const getJobDetailsAndApplicentDetailsById = async (jobId: string) => {
+  try {
+    const response = await apiClient.get(
+      `/getjobdetailswithapplicants/${jobId}`
+    );
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch job details');
+    }
+
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to fetch job details');
+  }
+};

@@ -8,8 +8,10 @@ import {
   Divider,
   Grid,
   Group,
+  Modal,
   Paper,
   Stack,
+  Table,
   Text,
   Title,
 } from '@mantine/core';
@@ -26,7 +28,41 @@ import { useEffect, useState, type JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { getJobDetailsById } from '@/services/candidate-services';
+import { getJobDetailsAndApplicentDetailsById } from '@/services/recruiter-services';
+
+interface Candidate {
+  lastName: string;
+  firstName: string;
+  mobileNumber: string;
+  email: string;
+  designation: string;
+  experience: string;
+  appliedAt: string;
+}
+
+interface JobDetailResponse {
+  _id: string;
+  clientId: string;
+  organizationName: string;
+  primaryContactFirstName: string;
+  primaryContactLastName: string;
+  logo: string | null;
+  jobTitle: string;
+  jobDescription: string;
+  postStart: string;
+  postEnd: string;
+  noOfPositions: number;
+  minimumSalary: number;
+  maximumSalary: number;
+  jobType: string;
+  jobLocation: string;
+  minimumExperience: number;
+  maximumExperience: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  applicants: Candidate[];
+}
 
 interface JobDetail {
   _id: string;
@@ -74,6 +110,8 @@ export const JobDetailPage = (): JSX.Element => {
   const onBack = () => navigate(-1);
 
   const [job, setJob] = useState<JobDetail>();
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [showApplicantsModal, setShowApplicantsModal] = useState(false);
 
   const handleShare = (): void => {
     if (navigator.share) {
@@ -90,10 +128,15 @@ export const JobDetailPage = (): JSX.Element => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const jobDetails = await getJobDetailsById(jobId as string);
-        setJob(jobDetails);
+        const response = await getJobDetailsAndApplicentDetailsById(
+          jobId as string
+        );
+        const jobResponse = response as JobDetailResponse;
+        setJob(jobResponse);
+        setCandidates(jobResponse.applicants || []);
       } catch (error) {
         console.error('Failed to load job details', error);
+        toast.error('Failed to load job details');
       }
     };
 
@@ -124,6 +167,36 @@ export const JobDetailPage = (): JSX.Element => {
       </Container>
     );
   }
+
+  const rows = candidates.map((candidate) => (
+    <Table.Tr key={`${candidate.email}-${candidate.appliedAt}`}>
+      <Table.Td>
+        <Group gap="sm">
+          <Avatar size={32} radius="md" name={candidate.firstName} />
+          <Stack gap={0}>
+            <Text fw={500} size="sm">
+              {candidate.firstName} {candidate.lastName}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {candidate.email}
+            </Text>
+          </Stack>
+        </Group>
+      </Table.Td>
+      <Table.Td>
+        <Text size="sm">{candidate.mobileNumber}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Text size="sm">{candidate.designation || '-'}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Text size="sm">{candidate.experience || '-'}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Text size="sm">{formatDate(candidate.appliedAt)}</Text>
+      </Table.Td>
+    </Table.Tr>
+  ));
 
   return (
     <Box
@@ -317,6 +390,33 @@ export const JobDetailPage = (): JSX.Element => {
                     </Grid.Col>
                   </Grid>
                 </Box>
+
+                <Divider />
+
+                {/* Applicants Summary Section */}
+                <Box>
+                  <Group justify="space-between" align="center" mb="md">
+                    <Group gap="sm">
+                      <IconUsers size={24} color="#667eea" />
+                      <Title order={3} size="h4">
+                        Applicants
+                      </Title>
+                    </Group>
+                    <Badge size="lg" color="blue" variant="light">
+                      {candidates.length} applied
+                    </Badge>
+                  </Group>
+
+                  <Button
+                    fullWidth
+                    size="md"
+                    color="blue"
+                    variant="light"
+                    onClick={() => setShowApplicantsModal(true)}
+                  >
+                    View All Applicants
+                  </Button>
+                </Box>
               </Stack>
             </Paper>
           </Grid.Col>
@@ -351,6 +451,15 @@ export const JobDetailPage = (): JSX.Element => {
                   </Box>
 
                   <Divider />
+
+                  <Box>
+                    <Text size="sm" c="dimmed" mb={4}>
+                      Total Applicants
+                    </Text>
+                    <Title order={3} size="h3" fw={700}>
+                      {candidates.length}
+                    </Title>
+                  </Box>
 
                   {daysLeft <= 0 && (
                     <Text size="xs" c="red" style={{ textAlign: 'center' }}>
@@ -429,6 +538,55 @@ export const JobDetailPage = (): JSX.Element => {
           </Grid.Col>
         </Grid>
       </Container>
+
+      {/* Applicants Modal */}
+      <Modal
+        opened={showApplicantsModal}
+        onClose={() => setShowApplicantsModal(false)}
+        title={
+          <Group gap="sm">
+            <IconUsers size={24} color="#667eea" />
+            <Title order={3} size="h4">
+              Job Applicants
+            </Title>
+            <Badge size="lg" color="blue" variant="light" ml="auto">
+              {candidates.length} Total
+            </Badge>
+          </Group>
+        }
+        size="xl"
+        centered
+      >
+        {candidates.length > 0 ? (
+          <Box style={{ overflowX: 'auto' }}>
+            <Table striped highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Name & Email</Table.Th>
+                  <Table.Th>Phone</Table.Th>
+                  <Table.Th>Designation</Table.Th>
+                  <Table.Th>Experience</Table.Th>
+                  <Table.Th>Applied On</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Box>
+        ) : (
+          <Box
+            p="xl"
+            style={{
+              textAlign: 'center',
+              borderRadius: '8px',
+            }}
+          >
+            <IconUsers size={48} style={{ marginBottom: '16px' }} />
+            <Text c="dimmed" size="md">
+              No applicants yet for this position
+            </Text>
+          </Box>
+        )}
+      </Modal>
     </Box>
   );
 };
