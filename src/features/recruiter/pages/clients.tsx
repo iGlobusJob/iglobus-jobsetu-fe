@@ -26,7 +26,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { Client } from '@/features/dashboard/types/client';
-import { getAllClients } from '@/services/admin-services';
+import { getallassignedclientsbyrecruiter } from '@/services/recruiter-services';
 
 import ClientDetailsDrawer from './ClientDetailsDrawer';
 
@@ -54,7 +54,7 @@ const ClientsPage: React.FC = () => {
     const fetchClients = async () => {
       setLoading(true);
       try {
-        const data = await getAllClients();
+        const data = await getallassignedclientsbyrecruiter();
         setClients(data);
       } catch {
         toast.error('Failed to fetch clients');
