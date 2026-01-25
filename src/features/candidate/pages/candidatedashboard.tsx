@@ -443,16 +443,16 @@ export default function JobPortalDashboard() {
                 <ThemeIcon size="sm" radius="xl" variant="light" color="blue">
                   <IconMail size={14} />
                 </ThemeIcon>
-                <Anchor href="mailto:admin@jobsetu.com" size="sm" fw={500}>
-                  admin@jobsetu.com
+                <Anchor href="mailto:Info@iglobuscc.com" size="sm" fw={500}>
+                  Info@iglobuscc.com
                 </Anchor>
               </Group>
               <Group gap="xs">
                 <ThemeIcon size="sm" radius="xl" variant="light" color="green">
                   <IconPhone size={14} />
                 </ThemeIcon>
-                <Anchor href="tel:+911234567890" size="sm" fw={500}>
-                  +91-1234567890
+                <Anchor href="tel:+91 8464848389" size="sm" fw={500}>
+                  +91-8464848389
                 </Anchor>
               </Group>
             </Group>
