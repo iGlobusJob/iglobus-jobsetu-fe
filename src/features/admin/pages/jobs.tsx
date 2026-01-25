@@ -84,7 +84,9 @@ const AllJobs = () => {
       filtered = filtered.filter(
         (job) =>
           job.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          job.jobLocation.toLowerCase().includes(searchTerm.toLowerCase())
+          job.jobLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.organizationName?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 

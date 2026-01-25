@@ -25,16 +25,17 @@ import {
   IconSearch,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { Client } from '@/features/dashboard/types/client';
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
 import { getAllClients, updateClientByAdmin } from '@/services/admin-services';
-
-import ClientDetailsDrawer from './ClientDetailsDrawer';
 
 const PAGE_SIZE = 10;
 
 const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
@@ -46,8 +47,6 @@ const AdminDashboard: React.FC = () => {
     'all' | 'registered' | 'active' | 'inactive'
   >('all');
   const [activePage, setActivePage] = useState(1);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [sortFilter, setSortFilter] = useState<
     'none' | 'asc' | 'desc' | 'newest' | 'oldest'
   >('none');
@@ -68,8 +67,7 @@ const AdminDashboard: React.FC = () => {
   }, []);
 
   const openDetails = (client: Client) => {
-    setSelectedClient(client);
-    setDrawerOpen(true);
+    navigate(`${ADMIN_PATHS.CLIENTS}/${client.id}`);
   };
 
   const filtered = useMemo(() => {
@@ -127,10 +125,6 @@ const AdminDashboard: React.FC = () => {
     const month = d.toLocaleString('en-US', { month: 'short' });
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
-  };
-
-  const handleUpdateClient = (updated: Client) => {
-    setClients((prev) => prev.map((v) => (v.id === updated.id ? updated : v)));
   };
 
   const handleStatusChange = async (id: string, status: Client['status']) => {
@@ -515,15 +509,6 @@ const AdminDashboard: React.FC = () => {
             radius="md"
           />
         </Group>
-
-        {/* DRAWER */}
-        <ClientDetailsDrawer
-          opened={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-          client={selectedClient}
-          onUpdate={handleUpdateClient}
-          onStatusChange={handleStatusChange}
-        />
       </Container>
     </Box>
   );

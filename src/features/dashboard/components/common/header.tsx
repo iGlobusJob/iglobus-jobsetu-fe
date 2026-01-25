@@ -65,7 +65,7 @@ export function Header() {
     <Paper shadow="md">
       {/* Main Navigation */}
       <header>
-        <Container size="xl">
+        <Container size="xl" mt="sm">
           <Flex justify="space-between" align="center">
             {/* Logo */}
             <Anchor href="/" style={{ textDecoration: 'none' }}>
