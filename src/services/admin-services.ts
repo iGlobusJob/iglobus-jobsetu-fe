@@ -172,3 +172,17 @@ export const getAllRecruiters = async (): Promise<Recruiter[]> => {
     throw new Error('Unable to fetch recruiter list');
   }
 };
+
+export const getAllJobsByClient = async (clientId: string) => {
+  try {
+    const response = await apiClient.get(`/getalljobsbyclientid/${clientId}`);
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch jobs');
+    }
+
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to fetch jobs for this client');
+  }
+};
