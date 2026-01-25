@@ -84,3 +84,19 @@ export const deleterecruiter = async (recruiterId: string) => {
     throw new Error(err?.response?.data?.message || err?.message);
   }
 };
+
+export const getallassignedclientsbyrecruiter = async () => {
+  try {
+    const response = await apiClient.get(
+      '/recruiter/getallassignedclientsbyrecruiter'
+    );
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch clients');
+    }
+
+    return response.data.clients;
+  } catch {
+    throw new Error('Unable to fetch client list');
+  }
+};
