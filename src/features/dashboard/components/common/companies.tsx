@@ -3,28 +3,36 @@ import { useEffect, useRef, useState } from 'react';
 
 const initialCompanies = [
   {
-    name: 'Google',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/250px-Google_2015_logo.svg.png',
+    name: 'Starcare',
+    logo: '/companies/comp1.jpeg',
   },
   {
-    name: 'Amazon',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
+    name: 'Care tech',
+    logo: '/companies/comp2.jpeg',
   },
   {
-    name: 'IBM',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
+    name: 'Reliance Builders',
+    logo: '/companies/comp3.jpeg',
   },
   {
-    name: 'WordPress',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/9/98/WordPress_blue_logo.svg',
+    name: 'The lime',
+    logo: '/companies/comp4.jpeg',
   },
   {
-    name: 'Shopify',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg',
+    name: 'JR lifts',
+    logo: '/companies/comp5.jpeg',
   },
   {
-    name: 'PayPal',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg',
+    name: 'Snapmoney',
+    logo: '/companies/comp6.jpeg',
+  },
+  {
+    name: 'Spoc Interiors',
+    logo: '/companies/comp7.jpeg',
+  },
+  {
+    name: 'Design lattice',
+    logo: '/companies/comp8.jpeg',
   },
 ];
 
@@ -111,7 +119,7 @@ export function LogoShowcase() {
                 <Image
                   src={company.logo}
                   alt={company.name}
-                  h={isMobile ? 90 : 50}
+                  h={isMobile ? 90 : 80}
                   fit="contain"
                 />
               </Box>
