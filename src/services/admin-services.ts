@@ -121,7 +121,7 @@ export const getCandidateDetailsByAdmin = async (candidateId: string) => {
 };
 
 export const getAllJobsByAdmin = async () => {
-  const response = await apiClient.get(`/getalljobs`);
+  const response = await apiClient.get(`/getalljobsByAdmin`);
 
   if (!response.data?.success) {
     throw new Error(response.data?.message || 'Failed to fetch jobs');
