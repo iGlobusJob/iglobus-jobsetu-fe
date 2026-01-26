@@ -428,27 +428,33 @@ export default function JobPortalDashboard() {
 
       {/* CTA Section */}
       <Container size="xl" py="xl">
-        <Card withBorder p="xl" radius="md">
-          <Stack gap="lg">
-            <div>
-              <Title order={2} size="h2" mb="md">
+        <Card withBorder p="xl" radius="lg" shadow="sm">
+          <Stack gap="xl">
+            <Stack gap={6}>
+              <Title order={2} fw={700}>
                 Ready to accelerate your career?
               </Title>
-              <Text size="lg" mb="lg">
+              <Text size="md" c="dimmed" maw={600}>
                 Complete your profile with all details and get matched with the
                 best opportunities personalized just for you.
               </Text>
-            </div>
+            </Stack>
 
-            <Group>
-              <Button size="md" component={Link} to={CANDIDATE_PATHS.PROFILE}>
+            <Group gap="md" wrap="wrap">
+              <Button
+                size="md"
+                radius="md"
+                component={Link}
+                to={CANDIDATE_PATHS.PROFILE}
+              >
                 Complete Profile
               </Button>
               <Button
                 size="md"
+                radius="md"
+                variant="light"
                 component={Link}
                 to={CANDIDATE_PATHS.JOB_SEARCH}
-                variant="light"
               >
                 Browse All Jobs
               </Button>
@@ -469,7 +475,8 @@ export default function JobPortalDashboard() {
                   Got stuck? Need help?
                 </Title>
                 <Text size="sm" c="dimmed">
-                  Our support team is always ready to assist you.
+                  Our support team is here to help you get back on track
+                  quickly. Reach out to us anytime using the details below.
                 </Text>
               </Stack>
             </Group>
