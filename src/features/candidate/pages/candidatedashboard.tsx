@@ -13,6 +13,7 @@ import {
   Loader,
   Center,
   Grid,
+  Divider,
 } from '@mantine/core';
 import {
   IconArrowRight,
@@ -425,71 +426,111 @@ export default function JobPortalDashboard() {
         </SimpleGrid>
       </Container>
 
-      <Container size="xl" py="sm">
-        <Card radius="lg" p="xl" withBorder>
-          <Stack gap="md">
-            <Group gap="sm">
-              <ThemeIcon size="lg" radius="md" variant="light">
-                <IconHelpCircle size={20} />
-              </ThemeIcon>
-              <Title order={4}>Got stuck? Need help?</Title>
-            </Group>
-            <Text size="sm" color="dimmed">
-              Our support team is here to help you get back on track quickly.
-              Reach out to us anytime using the details below.
-            </Text>
-            <Group gap="xl" mt="sm">
-              <Group gap="xs">
-                <ThemeIcon size="sm" radius="xl" variant="light" color="blue">
-                  <IconMail size={14} />
-                </ThemeIcon>
-                <Anchor
-                  component="a"
-                  target="_blank"
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=info@iglobuscc.com"
-                >
-                  info@iglobuscc.com
-                </Anchor>
-              </Group>
-              <Group gap="xs">
-                <ThemeIcon size="sm" radius="xl" variant="light" color="green">
-                  <IconPhone size={14} />
-                </ThemeIcon>
-                <Anchor href="tel:+91 8464848389" size="sm" fw={500}>
-                  +91-8464848389
-                </Anchor>
-              </Group>
+      {/* CTA Section */}
+      <Container size="xl" py="xl">
+        <Card withBorder p="xl" radius="lg" shadow="sm">
+          <Stack gap="xl">
+            <Stack gap={6}>
+              <Title order={2} fw={700}>
+                Ready to accelerate your career?
+              </Title>
+              <Text size="md" c="dimmed" maw={600}>
+                Complete your profile with all details and get matched with the
+                best opportunities personalized just for you.
+              </Text>
+            </Stack>
+
+            <Group gap="md" wrap="wrap">
+              <Button
+                size="md"
+                radius="md"
+                component={Link}
+                to={CANDIDATE_PATHS.PROFILE}
+              >
+                Complete Profile
+              </Button>
+              <Button
+                size="md"
+                radius="md"
+                variant="light"
+                component={Link}
+                to={CANDIDATE_PATHS.JOB_SEARCH}
+              >
+                Browse All Jobs
+              </Button>
             </Group>
           </Stack>
         </Card>
       </Container>
 
-      {/* CTA Section */}
-      <Container size="xl" py="xl">
-        <Card withBorder p="xl" radius="md">
+      <Container size="xl" py="sm">
+        <Card radius="lg" p="xl" withBorder shadow="sm">
           <Stack gap="lg">
-            <div>
-              <Title order={2} size="h2" mb="md">
-                Ready to accelerate your career?
-              </Title>
-              <Text size="lg" mb="lg">
-                Complete your profile with all details and get matched with the
-                best opportunities personalized just for you.
-              </Text>
-            </div>
+            <Group gap="sm" align="center">
+              <ThemeIcon size={45} radius="md" variant="light" color="gray">
+                <IconHelpCircle size={25} />
+              </ThemeIcon>
+              <Stack gap={2}>
+                <Title order={3} fw={700}>
+                  Got stuck? Need help?
+                </Title>
+                <Text size="sm" c="dimmed">
+                  Our support team is here to help you get back on track
+                  quickly. Reach out to us anytime using the details below.
+                </Text>
+              </Stack>
+            </Group>
 
-            <Group>
-              <Button size="md" component={Link} to={CANDIDATE_PATHS.PROFILE}>
-                Complete Profile
-              </Button>
-              <Button
-                size="md"
-                component={Link}
-                to={CANDIDATE_PATHS.JOB_SEARCH}
-                variant="light"
+            <Divider />
+
+            <Group gap="xl" wrap="wrap">
+              <Card
+                withBorder
+                radius="md"
+                p="md"
+                style={{ flex: 1, minWidth: 240 }}
               >
-                Browse All Jobs
-              </Button>
+                <Group gap="sm">
+                  <ThemeIcon size="lg" radius="xl" variant="light" color="blue">
+                    <IconMail size={18} />
+                  </ThemeIcon>
+                  <Stack gap={0}>
+                    <Text fw={600}>Email Support</Text>
+                    <Anchor
+                      component="a"
+                      target="_blank"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=info@iglobuscc.com"
+                      size="sm"
+                    >
+                      info@iglobuscc.com
+                    </Anchor>
+                  </Stack>
+                </Group>
+              </Card>
+              <Card
+                withBorder
+                radius="md"
+                p="md"
+                style={{ flex: 1, minWidth: 240 }}
+              >
+                <Group gap="sm">
+                  <ThemeIcon
+                    size="lg"
+                    radius="xl"
+                    variant="light"
+                    color="green"
+                  >
+                    <IconPhone size={18} />
+                  </ThemeIcon>
+
+                  <Stack gap={0}>
+                    <Text fw={600}>Call Us</Text>
+                    <Anchor href="tel:+918464848389" size="sm">
+                      +91 84648 48389
+                    </Anchor>
+                  </Stack>
+                </Group>
+              </Card>
             </Group>
           </Stack>
         </Card>
