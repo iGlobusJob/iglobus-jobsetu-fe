@@ -443,8 +443,12 @@ export default function JobPortalDashboard() {
                 <ThemeIcon size="sm" radius="xl" variant="light" color="blue">
                   <IconMail size={14} />
                 </ThemeIcon>
-                <Anchor href="mailto:Info@iglobuscc.com" size="sm" fw={500}>
-                  Info@iglobuscc.com
+                <Anchor
+                  component="a"
+                  target="_blank"
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=info@iglobuscc.com"
+                >
+                  info@iglobuscc.com
                 </Anchor>
               </Group>
               <Group gap="xs">

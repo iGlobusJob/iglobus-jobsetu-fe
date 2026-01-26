@@ -20,10 +20,7 @@ import { useEffect, useMemo, useState, type JSX } from 'react';
 
 import { JobCard } from '@/common/pages/jobCard';
 import type { CandidateJobs } from '@/features/dashboard/types/candidate';
-import {
-  getAllJobsByCandidate,
-  getMyJobs,
-} from '@/services/candidate-services';
+import { getAllJobs, getMyJobs } from '@/services/candidate-services';
 
 interface ApiJob {
   id: string;
@@ -82,7 +79,7 @@ export const JobListingsSection = (): JSX.Element => {
         setError(null);
 
         const [jobsData, myJobsResponse] = await Promise.all([
-          getAllJobsByCandidate(),
+          getAllJobs(),
           getMyJobs(),
         ]);
 

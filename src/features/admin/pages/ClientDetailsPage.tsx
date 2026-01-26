@@ -36,6 +36,7 @@ import { clientDetailsSchema } from '@/features/dashboard/forms/clientdetails';
 import type { AdminUpdateClient } from '@/features/dashboard/types/admin';
 import type { Client } from '@/features/dashboard/types/client';
 import type { Job } from '@/features/dashboard/types/job';
+import { useSystemTheme } from '@/hooks/useSystemTheme';
 import {
   getAllJobsByClient,
   getClientById,
@@ -66,6 +67,8 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
   const [activeTab, setActiveTab] = useState<string | null>('general');
   const [jobsPage, setJobsPage] = useState(1);
   const JOBS_PER_PAGE = 10;
+  const systemTheme = useSystemTheme();
+  const isDark = systemTheme === 'dark';
 
   useEffect(() => {
     if (!clientId) return;
@@ -278,17 +281,22 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
             <IconArrowLeft size={20} />
           </ActionIcon>
           <div>
-            <Title order={2} fw={700}>
+            <Title order={isMobile ? 4 : 2} fw={700}>
               Client Details
             </Title>
-            <Text size="sm" c="dimmed">
+            <Text size={isMobile ? 'xs' : 'sm'} c="dimmed">
               Manage client information and posted jobs
             </Text>
           </div>
         </Group>
-        <Group justify="left" align="center" mb="xl" gap="lg">
+        <Group
+          align="center"
+          mb="xl"
+          gap="md"
+          wrap={isMobile ? 'wrap' : 'nowrap'}
+        >
           <Avatar
-            size={80}
+            size={isMobile ? 60 : 80}
             radius="xl"
             src={form.logo || undefined}
             color="blue"
@@ -296,11 +304,13 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
             {(form.organizationName?.[0] || '?').toUpperCase()}
           </Avatar>
           <Stack gap={7} align="flex-start">
-            <Text fw={700} size="lg">
+            <Text fw={700} size={isMobile ? 'md' : 'lg'}>
               {form.organizationName}
             </Text>
             <Group gap="xs">
-              <Badge variant="filled">{form.category}</Badge>
+              <Badge variant="filled" size={isMobile ? 'sm' : 'md'}>
+                {form.category}
+              </Badge>
               <Badge
                 variant="light"
                 color={
@@ -331,26 +341,32 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
               gap: '6px',
               padding: '5px',
               borderRadius: '999px',
-              backgroundColor: theme.colors.gray[1],
-              border: `1px solid ${theme.colors.gray[3]}`,
+              backgroundColor: isDark
+                ? theme.colors.dark[6]
+                : theme.colors.gray[1],
+              border: `1px solid ${
+                isDark ? theme.colors.dark[4] : theme.colors.gray[3]
+              }`,
               display: 'inline-flex',
             },
 
             tab: {
               fontWeight: 600,
-              fontSize: '14px',
-              padding: '10px 22px',
+              fontSize: isMobile ? '13px' : '14px',
+              padding: isMobile ? '8px 14px' : '10px 22px',
               borderRadius: '999px',
-              color: theme.colors.gray[7],
+              color: isDark ? theme.colors.dark[0] : theme.colors.gray[7],
               transition: 'all 0.2s ease',
 
               '&:hover': {
-                backgroundColor: theme.colors.gray[2],
+                backgroundColor: isDark
+                  ? theme.colors.dark[5]
+                  : theme.colors.gray[2],
               },
 
               '&[data-active]': {
-                backgroundColor: 'white',
-                color: theme.colors.dark[9],
+                backgroundColor: isDark ? theme.colors.dark[9] : 'white',
+                color: isDark ? 'white' : theme.colors.dark[9],
                 boxShadow: theme.shadows.sm,
               },
             },
