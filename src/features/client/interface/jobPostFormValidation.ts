@@ -34,12 +34,20 @@ export const jobPostSchema = z
     minimumExperience: z
       .number()
       .min(0, 'Minimum experience cannot be negative')
-      .max(50, 'Experience seems invalid'),
+      .max(50, 'Experience seems invalid')
+      .refine(
+        (val) => /^\d+(\.\d{0,2})?$/.test(val.toString()),
+        'Experience must have maximum 2 decimal places (e.g., 3.44)'
+      ),
 
     maximumExperience: z
       .number()
       .min(0, 'Maximum experience cannot be negative')
-      .max(50, 'Experience seems invalid'),
+      .max(50, 'Experience seems invalid')
+      .refine(
+        (val) => /^\d+(\.\d{0,2})?$/.test(val.toString()),
+        'Experience must have maximum 2 decimal places (e.g., 5.50)'
+      ),
 
     status: z
       .string()

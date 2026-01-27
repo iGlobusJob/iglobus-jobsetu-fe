@@ -612,7 +612,16 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
                       style={{
                         border: '1px solid #ddd',
                         borderRadius: '0.5rem',
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s ease',
                       }}
+                      onClick={() => navigate(`/admin/all-jobs`)}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = 'scale(1.01)')
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = 'scale(1)')
+                      }
                     >
                       <Stack gap="md">
                         <Group justify="space-between" align="flex-start">

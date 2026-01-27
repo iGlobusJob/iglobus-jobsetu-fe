@@ -47,8 +47,8 @@ const ClientsPage: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [sortFilter, setSortFilter] = useState<
-    'asc' | 'desc' | 'newest' | 'oldest'
-  >('asc');
+    'default' | 'asc' | 'desc' | 'newest' | 'oldest'
+  >('default');
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -71,46 +71,42 @@ const ClientsPage: React.FC = () => {
   };
 
   const filtered = useMemo(() => {
-    return clients
-      .filter((vend) => {
-        if (statusFilter !== 'all' && vend.status !== statusFilter)
-          return false;
-        if (search.trim()) {
-          const query = search.toLowerCase();
-          return (
-            vend.organizationName.toLowerCase().includes(query) ||
-            vend.email.toLowerCase().includes(query) ||
-            vend.mobile.includes(query)
-          );
-        }
+    let result = [...clients];
+    if (statusFilter !== 'all') {
+      result = result.filter((c) => c.status === statusFilter);
+    }
 
-        return true;
-      })
-      .sort((a, b) => {
+    if (search.trim()) {
+      const query = search.toLowerCase();
+      result = result.filter(
+        (c) =>
+          c.organizationName.toLowerCase().includes(query) ||
+          c.email.toLowerCase().includes(query) ||
+          c.mobile.includes(query)
+      );
+    }
+
+    if (sortFilter !== 'default') {
+      result.sort((a, b) => {
         const nameA = a.organizationName.toLowerCase();
         const nameB = b.organizationName.toLowerCase();
 
-        if (sortFilter === 'asc') {
-          return nameA.localeCompare(nameB);
-        }
-        if (sortFilter === 'desc') {
-          return nameB.localeCompare(nameA);
-        }
-
-        if (sortFilter === 'newest') {
+        if (sortFilter === 'asc') return nameA.localeCompare(nameB);
+        if (sortFilter === 'desc') return nameB.localeCompare(nameA);
+        if (sortFilter === 'newest')
           return (
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-        }
 
-        if (sortFilter === 'oldest') {
+        if (sortFilter === 'oldest')
           return (
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
-        }
 
         return 0;
       });
+    }
+    return result;
   }, [clients, search, statusFilter, sortFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -285,6 +281,7 @@ const ClientsPage: React.FC = () => {
               {/* SORT BY (asc & dec) */}
               <Select
                 data={[
+                  { value: 'default', label: 'Default' },
                   { value: 'asc', label: 'Name (A → Z)' },
                   { value: 'desc', label: 'Name (Z → A)' },
                   { value: 'newest', label: 'Newest → Oldest' },
@@ -293,7 +290,9 @@ const ClientsPage: React.FC = () => {
                 value={sortFilter}
                 onChange={(val) => {
                   if (val) {
-                    setSortFilter(val as 'asc' | 'desc' | 'newest' | 'oldest');
+                    setSortFilter(
+                      val as 'default' | 'asc' | 'desc' | 'newest' | 'oldest'
+                    );
                   }
                 }}
                 placeholder="Sort"

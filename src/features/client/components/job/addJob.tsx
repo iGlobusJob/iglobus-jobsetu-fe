@@ -510,8 +510,10 @@ export const JobPostForm = () => {
                       render={({ field }) => (
                         <NumberInput
                           label="Minimum Experience (Years)"
-                          placeholder="Enter minimum experience"
+                          placeholder="Enter minimum experience (e.g., 3.44)"
                           min={0}
+                          step={0.01}
+                          decimalScale={2}
                           {...field}
                           onChange={(val) =>
                             field.onChange(val ? Number(val) : 0)
@@ -530,8 +532,10 @@ export const JobPostForm = () => {
                       render={({ field }) => (
                         <NumberInput
                           label="Maximum Experience (Years)"
-                          placeholder="Enter maximum experience"
+                          placeholder="Enter maximum experience (e.g., 5.50)"
                           min={0}
+                          step={0.01}
+                          decimalScale={2}
                           {...field}
                           onChange={(val) =>
                             field.onChange(val ? Number(val) : 0)
