@@ -25,26 +25,25 @@ import {
   IconSearch,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { CandidateProfile } from '@/features/dashboard/types/candidate';
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import { getAllCandidatesByRecruiter } from '@/services/recruiter-services';
-
-import CandidateDetailDrawer from './candidateDetailsDrawer';
-
+import { useAuthStore } from '@/store/userDetails';
 const PAGE_SIZE = 10;
 
 const CandidatesPage: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const navigate = useNavigate();
 
   const [candidates, setCandidates] = useState<CandidateProfile[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState('');
   const [activePage, setActivePage] = useState(1);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] =
-    useState<CandidateProfile | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,9 +65,14 @@ const CandidatesPage: React.FC = () => {
   }, []);
 
   const openDetails = (candidate: CandidateProfile) => {
-    setSelectedCandidate(candidate);
-    setDrawerOpen(true);
+    const { userRole } = useAuthStore.getState();
+    if (userRole === 'recruiter') {
+      navigate(RECRUITER_PATHS.CANDIDATE_DETAILS(candidate.id));
+    } else if (userRole === 'admin') {
+      navigate(ADMIN_PATHS.CANDIDATE_DETAILS(candidate.id));
+    }
   };
+
   const formatDate = (date: string) => {
     const d = new Date(date);
     const day = d.getDate().toString().padStart(2, '0');
@@ -360,12 +364,6 @@ const CandidatesPage: React.FC = () => {
             radius="md"
           />
         </Group>
-
-        <CandidateDetailDrawer
-          opened={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-          candidate={selectedCandidate}
-        />
       </Container>
     </Box>
   );

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import type { ApiError } from '@/common';
+import type { CandidateJobApplication } from '@/features/dashboard/types/admin-candidate-job';
 import { useAuthStore } from '@/store/userDetails';
 
 export const apiClient = axios.create({
@@ -114,5 +115,26 @@ export const getJobDetailsAndApplicentDetailsById = async (jobId: string) => {
     return response.data.data;
   } catch {
     throw new Error('Unable to fetch job details');
+  }
+};
+
+export const getcandidatejobs = async (
+  candidateId: string
+): Promise<CandidateJobApplication[]> => {
+  try {
+    const response = await apiClient.get(`/getcandidatejobs/${candidateId}`);
+    const jobs = response.data.data;
+    return jobs.map((job: { jobId: { clientId: { logo: null } } }) => {
+      const logo = job.jobId?.clientId?.logo || null;
+      return {
+        ...job,
+        jobId: {
+          ...job.jobId,
+          logo,
+        },
+      };
+    });
+  } catch {
+    throw new Error('failed to get my jobs ');
   }
 };

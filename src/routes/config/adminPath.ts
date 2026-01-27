@@ -5,4 +5,5 @@ export const ADMIN_PATHS = {
   CLIENTS: '/admin/clients',
   CANDIDATES: '/admin/candidates',
   JOBS: '/admin/jobs',
+  CANDIDATE_DETAILS: (id: string) => `/admin/${id}/candidate`,
 } as const;
