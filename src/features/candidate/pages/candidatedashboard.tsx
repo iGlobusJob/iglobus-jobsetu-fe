@@ -467,7 +467,7 @@ export default function JobPortalDashboard() {
         <Card radius="lg" p="xl" withBorder shadow="sm">
           <Stack gap="lg">
             <Group gap="sm" align="center">
-              <ThemeIcon size={45} radius="md" variant="light" color="gray">
+              <ThemeIcon size={45} radius="md" variant="light" color="blue">
                 <IconHelpCircle size={25} />
               </ThemeIcon>
               <Stack gap={2}>
