@@ -12,7 +12,7 @@ const initialCompanies = [
   },
   {
     name: 'Reliance Builders',
-    logo: '/companies/comp3.jpeg',
+    logo: '/companies/comp2.webp',
   },
   {
     name: 'The lime',
@@ -32,7 +32,7 @@ const initialCompanies = [
   },
   {
     name: 'Design lattice',
-    logo: '/companies/comp8.jpeg',
+    logo: '/companies/comp8.png',
   },
 ];
 
