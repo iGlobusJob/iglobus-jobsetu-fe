@@ -25,16 +25,17 @@ import {
   IconSearch,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { Client } from '@/features/dashboard/types/client';
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
 import { getAllClients, updateClientByAdmin } from '@/services/admin-services';
-
-import ClientDetailsDrawer from './ClientDetailsDrawer';
 
 const PAGE_SIZE = 10;
 
 const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
@@ -46,11 +47,9 @@ const AdminDashboard: React.FC = () => {
     'all' | 'registered' | 'active' | 'inactive'
   >('all');
   const [activePage, setActivePage] = useState(1);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [sortFilter, setSortFilter] = useState<
-    'asc' | 'desc' | 'newest' | 'oldest'
-  >('asc');
+    'none' | 'asc' | 'desc' | 'newest' | 'oldest'
+  >('none');
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -68,51 +67,50 @@ const AdminDashboard: React.FC = () => {
   }, []);
 
   const openDetails = (client: Client) => {
-    setSelectedClient(client);
-    setDrawerOpen(true);
+    navigate(`${ADMIN_PATHS.CLIENTS}/${client.id}`);
   };
 
   const filtered = useMemo(() => {
-    return clients
-      .filter((vend) => {
-        if (statusFilter !== 'all' && vend.status !== statusFilter)
-          return false;
-        if (search.trim()) {
-          const query = search.toLowerCase();
-          return (
-            vend.organizationName.toLowerCase().includes(query) ||
-            vend.email.toLowerCase().includes(query) ||
-            vend.mobile.includes(query)
-          );
-        }
+    let result = clients.filter((vend) => {
+      if (statusFilter !== 'all' && vend.status !== statusFilter) return false;
+      if (search.trim()) {
+        const query = search.toLowerCase();
+        return (
+          vend.organizationName.toLowerCase().includes(query) ||
+          vend.email.toLowerCase().includes(query) ||
+          vend.mobile.includes(query)
+        );
+      }
 
-        return true;
-      })
-      .sort((a, b) => {
-        const nameA = a.organizationName.toLowerCase();
-        const nameB = b.organizationName.toLowerCase();
+      return true;
+    });
 
-        if (sortFilter === 'asc') {
-          return nameA.localeCompare(nameB);
-        }
-        if (sortFilter === 'desc') {
-          return nameB.localeCompare(nameA);
-        }
+    if (sortFilter === 'asc') {
+      result = [...result].sort((a, b) =>
+        a.organizationName.localeCompare(b.organizationName)
+      );
+    }
+    if (sortFilter === 'desc') {
+      result = [...result].sort((a, b) =>
+        b.organizationName.localeCompare(a.organizationName)
+      );
+    }
 
-        if (sortFilter === 'newest') {
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        }
+    if (sortFilter === 'newest') {
+      result = [...result].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
 
-        if (sortFilter === 'oldest') {
-          return (
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
-        }
+    if (sortFilter === 'oldest') {
+      result = [...result].sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    }
 
-        return 0;
-      });
+    return result;
   }, [clients, search, statusFilter, sortFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -127,10 +125,6 @@ const AdminDashboard: React.FC = () => {
     const month = d.toLocaleString('en-US', { month: 'short' });
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
-  };
-
-  const handleUpdateClient = (updated: Client) => {
-    setClients((prev) => prev.map((v) => (v.id === updated.id ? updated : v)));
   };
 
   const handleStatusChange = async (id: string, status: Client['status']) => {
@@ -359,6 +353,7 @@ const AdminDashboard: React.FC = () => {
               {/* SORT BY (asc & dec) */}
               <Select
                 data={[
+                  { value: 'none', label: 'Default' },
                   { value: 'asc', label: 'Name (A → Z)' },
                   { value: 'desc', label: 'Name (Z → A)' },
                   { value: 'newest', label: 'Newest → Oldest' },
@@ -514,15 +509,6 @@ const AdminDashboard: React.FC = () => {
             radius="md"
           />
         </Group>
-
-        {/* DRAWER */}
-        <ClientDetailsDrawer
-          opened={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-          client={selectedClient}
-          onUpdate={handleUpdateClient}
-          onStatusChange={handleStatusChange}
-        />
       </Container>
     </Box>
   );

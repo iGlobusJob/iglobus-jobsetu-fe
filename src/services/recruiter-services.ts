@@ -84,3 +84,35 @@ export const deleterecruiter = async (recruiterId: string) => {
     throw new Error(err?.response?.data?.message || err?.message);
   }
 };
+
+export const getallassignedclientsbyrecruiter = async () => {
+  try {
+    const response = await apiClient.get(
+      '/recruiter/getallassignedclientsbyrecruiter'
+    );
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch clients');
+    }
+
+    return response.data.clients;
+  } catch {
+    throw new Error('Unable to fetch client list');
+  }
+};
+
+export const getJobDetailsAndApplicentDetailsById = async (jobId: string) => {
+  try {
+    const response = await apiClient.get(
+      `/getjobdetailswithapplicants/${jobId}`
+    );
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch job details');
+    }
+
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to fetch job details');
+  }
+};

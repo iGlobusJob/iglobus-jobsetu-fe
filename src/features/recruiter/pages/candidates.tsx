@@ -86,7 +86,8 @@ const CandidatesPage: React.FC = () => {
         c.firstName.toLowerCase().includes(query) ||
         c.lastName.toLowerCase().includes(query) ||
         c.email.toLowerCase().includes(query) ||
-        c.mobileNumber.includes(query)
+        c.mobileNumber.includes(query) ||
+        c.designation.toLowerCase().includes(query)
       );
     });
   }, [candidates, search]);

@@ -11,7 +11,7 @@ export interface ClientRegisterValues {
   panCard: string;
   category: 'IT' | 'Non-IT';
   logoImage: File | null;
-  termsAccepted: boolean;
+  isTermsAndConditionsAgreed: boolean;
 }
 // Payload sent to backend
 export interface RegisterClientPayload {
@@ -26,6 +26,7 @@ export interface RegisterClientPayload {
   location: string;
   gstin: string;
   panCard: string;
+  isTermsAndConditionsAgreed: boolean;
 }
 
 // Backend response

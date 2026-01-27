@@ -63,124 +63,21 @@ export function Header() {
   const showEmployerMenu = isEmployerGuest || isClientUser;
   return (
     <Paper shadow="md">
-      {/* Top Bar - Hidden on Mobile */}
-      {!['/client/login', '/client/register', '/recruiter'].includes(path) && (
-        <Box
-          visibleFrom="md"
-          style={{
-            borderBottom:
-              colorScheme === 'dark'
-                ? '1px solid #2c2c2c'
-                : '1px solid #e9ecef',
-          }}
-        >
-          <Container size="xl" py="xs">
-            <Flex justify="space-between" align="center" wrap="wrap" gap="md">
-              {/* Left Side - Location & Social */}
-              <Flex align="center" justify="center" gap="md" wrap="wrap">
-                <Flex gap="sm">
-                  <ActionIcon
-                    variant="light"
-                    radius="xl"
-                    size="lg"
-                    component="a"
-                    href="https://www.linkedin.com/company/iglobus-jobsetu"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="LinkedIn"
-                    style={{
-                      color: '#0A66C2',
-                    }}
-                  >
-                    <IconBrandLinkedin size={18} />
-                  </ActionIcon>
-                  <ActionIcon
-                    variant="light"
-                    radius="xl"
-                    size="lg"
-                    component="a"
-                    href="https://www.instagram.com/iglobusjobsetu/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    style={{
-                      color: '#E1306C',
-                    }}
-                  >
-                    <IconBrandInstagram size={18} />
-                  </ActionIcon>
-                  <ActionIcon
-                    component="a"
-                    href="https://mail.google.com/mail/?view=cm&fs=1&to=iglobusjobsetu@gmail.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="light"
-                    radius="xl"
-                    size="lg"
-                    aria-label="Email"
-                    style={{
-                      color: '#495057',
-                    }}
-                  >
-                    <IconMail size={18} />
-                  </ActionIcon>
-                  <ActionIcon
-                    variant="light"
-                    radius="xl"
-                    size="lg"
-                    component="a"
-                    href="https://x.com/iglobusjobsetu"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="X"
-                    style={{
-                      color: '#000000',
-                    }}
-                  >
-                    <IconX size={18} stroke={2.8} />
-                  </ActionIcon>
-                </Flex>
-              </Flex>
-
-              {/* Right Side - Sign Up & Language */}
-              {!token && (
-                <Menu trigger="hover" position="bottom">
-                  <Menu.Target>
-                    <Button
-                      variant="subtle"
-                      radius="xl"
-                      fw={600}
-                      style={{
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
-                        color: colorScheme === 'dark' ? '#fff' : '#333',
-                        borderColor: 'blue',
-                      }}
-                      onClick={() => openModal()}
-                    >
-                      Join as Candidate
-                    </Button>
-                  </Menu.Target>
-                </Menu>
-              )}
-            </Flex>
-          </Container>
-        </Box>
-      )}
       {/* Main Navigation */}
       <header>
-        <Container py="md" size="xl">
+        <Container size="xl" mt="sm">
           <Flex justify="space-between" align="center">
             {/* Logo */}
             <Anchor href="/" style={{ textDecoration: 'none' }}>
               <Image
                 src={
                   colorScheme === 'dark'
-                    ? '/auth/jobsetudark.png'
-                    : '/auth/jobsetulight.png'
+                    ? '/auth/jobsetulogos.png'
+                    : '/auth/jobsetulogos.png'
                 }
                 alt="JobSetu Logo"
-                width={50}
-                height={50}
+                width={100}
+                height={100}
                 radius="md"
               />
             </Anchor>
@@ -353,6 +250,39 @@ export function Header() {
                 <Text fw={500}>Contact</Text>
               </Anchor>
             </Flex>
+            {!['/client/login', '/client/register', '/recruiter'].includes(
+              path
+            ) && (
+              <Box
+                visibleFrom="md"
+                style={{
+                  borderBottom:
+                    colorScheme === 'dark'
+                      ? '1px solid #2c2c2c'
+                      : '1px solid #e9ecef',
+                }}
+              >
+                {!token && (
+                  <Menu trigger="hover" position="bottom">
+                    <Menu.Target>
+                      <Button
+                        variant="subtle"
+                        radius="xl"
+                        fw={600}
+                        style={{
+                          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
+                          color: colorScheme === 'dark' ? '#fff' : '#333',
+                          borderColor: 'blue',
+                        }}
+                        onClick={() => openModal()}
+                      >
+                        Join as Candidate
+                      </Button>
+                    </Menu.Target>
+                  </Menu>
+                )}
+              </Box>
+            )}
 
             {/* Right Side - Notifications & User */}
 

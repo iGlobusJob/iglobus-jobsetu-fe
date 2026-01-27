@@ -121,7 +121,7 @@ export const getCandidateDetailsByAdmin = async (candidateId: string) => {
 };
 
 export const getAllJobsByAdmin = async () => {
-  const response = await apiClient.get(`/getalljobs`);
+  const response = await apiClient.get(`/getalljobsByAdmin`);
 
   if (!response.data?.success) {
     throw new Error(response.data?.message || 'Failed to fetch jobs');
@@ -170,5 +170,35 @@ export const getAllRecruiters = async (): Promise<Recruiter[]> => {
     return response.data.recruiters;
   } catch {
     throw new Error('Unable to fetch recruiter list');
+  }
+};
+
+export const getAllJobsByClient = async (clientId: string) => {
+  try {
+    const response = await apiClient.get(`/getalljobsbyclientid/${clientId}`);
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch jobs');
+    }
+
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to fetch jobs for this client');
+  }
+};
+
+export const getJobDetailsAndApplicentDetailsById = async (jobId: string) => {
+  try {
+    const response = await apiClient.get(
+      `/getjobdetailswithapplicants/${jobId}`
+    );
+
+    if (!response.data?.success) {
+      throw new Error('Failed to fetch job details');
+    }
+
+    return response.data.data;
+  } catch {
+    throw new Error('Unable to fetch job details');
   }
 };
