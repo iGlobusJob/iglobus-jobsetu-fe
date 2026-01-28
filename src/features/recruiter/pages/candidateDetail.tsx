@@ -184,6 +184,10 @@ const CandidateDetailPage: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
+                fontSize: 24,
+                fontWeight: 700,
+                color: '#fff',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               }}
             >
               {company.logo ? (
@@ -201,7 +205,7 @@ const CandidateDetailPage: React.FC = () => {
                   }}
                 />
               ) : (
-                <Text size="lg" fw={600} c="dimmed">
+                <Text size="lg" fw={600} c="white">
                   {company.organizationName?.charAt(0) || '?'}
                 </Text>
               )}
