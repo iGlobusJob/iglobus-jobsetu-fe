@@ -610,7 +610,7 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
                       key={job.id || job._id}
                       p="lg"
                       style={{
-                        border: '1px solid #ddd',
+                        border: '1px solid #808080',
                         borderRadius: '0.5rem',
                         cursor: 'pointer',
                         transition: 'transform 0.2s ease',

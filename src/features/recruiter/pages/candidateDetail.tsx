@@ -153,7 +153,7 @@ const CandidateDetailPage: React.FC = () => {
       <Box
         style={{
           borderRadius: '12px',
-          border: '1px solid #e9ecef',
+          border: '1px solid #808080',
           padding: '20px',
           marginBottom: '16px',
           transition: 'all 0.3s ease',
@@ -163,11 +163,11 @@ const CandidateDetailPage: React.FC = () => {
         onClick={() => navigate(`/admin/all-jobs`)}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-          e.currentTarget.style.borderColor = '#d0ebff';
+          e.currentTarget.style.borderColor = '#696969';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
-          e.currentTarget.style.borderColor = '#e9ecef';
+          e.currentTarget.style.borderColor = '#808080';
         }}
       >
         {/* Header with logo, title, and status */}
