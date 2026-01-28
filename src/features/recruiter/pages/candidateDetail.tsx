@@ -20,6 +20,8 @@ import {
   IconBriefcase,
   IconCalendar,
   IconCalendarCheck,
+  IconClock,
+  IconCurrencyRupee,
   IconIdBadge,
   IconMail,
   IconMapPin,
@@ -171,14 +173,19 @@ const CandidateDetailPage: React.FC = () => {
         }}
       >
         {/* Header with logo, title, and status */}
-        <Group justify="space-between" align="flex-start" mb="lg">
+        <Group
+          justify={isMobile ? 'flex-start' : 'space-between'}
+          align="flex-start"
+          mb="lg"
+          px="sm"
+        >
           <Group align="center" gap="lg">
             {/* Company Logo */}
             <Box
               style={{
                 width: '60px',
                 height: '60px',
-                borderRadius: '100%',
+                borderRadius: '10px',
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
@@ -223,78 +230,87 @@ const CandidateDetailPage: React.FC = () => {
           </Group>
 
           {/* Status Badge */}
-          <Badge
-            variant="light"
-            color={job.status === 'active' ? 'green' : 'orange'}
-            size="lg"
-            radius="md"
-            style={{ textTransform: 'capitalize' }}
-          >
-            {job.status}
-          </Badge>
+          <Box pr="xl">
+            <Badge
+              variant="light"
+              color={job.status === 'active' ? 'green' : 'orange'}
+              size="lg"
+              radius="md"
+              mt={isMobile ? 'sm' : 0}
+              style={{ textTransform: 'capitalize' }}
+            >
+              {job.status}
+            </Badge>
+          </Box>
         </Group>
 
         {/* Job Details Grid */}
-        <Grid gutter="md" mb="lg">
+        <Grid gutter="md" mb="xs">
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                LOCATION
-              </Text>
-              <Group gap={6}>
-                <IconMapPin size={16} color="#1c7ed6" />
-                <Text size="sm" fw={500}>
+            <Group gap="xs">
+              <IconMapPin size={16} color="#5c7cfa" />
+              <div>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Location
+                </Text>
+                <Text size="sm" fw={600}>
                   {job.jobLocation}
                 </Text>
-              </Group>
-            </Box>
+              </div>
+            </Group>
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
             <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                EMPLOYMENT TYPE
+              <Text size="xs" fw={500} c="dimmed" mb={4}>
+                Employment Type
               </Text>
-              <Text size="sm" fw={500} style={{ textTransform: 'capitalize' }}>
+              <Badge size="sm" fw={500} style={{ textTransform: 'capitalize' }}>
                 {job.jobType}
-              </Text>
+              </Badge>
             </Box>
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                SALARY RANGE
-              </Text>
-              <Text size="sm" fw={500}>
-                ₹{(job.minimumSalary / 100000).toFixed(1)}L - ₹
-                {(job.maximumSalary / 100000).toFixed(1)}L
-              </Text>
-            </Box>
+            <Group gap="xs">
+              <IconCurrencyRupee size={16} color="#51cf66" />
+              <div>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Salary
+                </Text>
+                <Text size="sm" fw={600}>
+                  ₹{job.minimumSalary?.toLocaleString()} - ₹
+                  {job.maximumSalary?.toLocaleString()}
+                </Text>
+              </div>
+            </Group>
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                EXPERIENCE
-              </Text>
-              <Text size="sm" fw={500}>
-                {job.minimumExperience}-{job.maximumExperience} yrs
-              </Text>
-            </Box>
+            <Group gap="xs">
+              <IconClock size={16} color="#ff922b" />
+              <div>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Experience
+                </Text>
+                <Text size="sm" fw={600}>
+                  {job.minimumExperience} - {job.maximumExperience} years
+                </Text>
+              </div>
+            </Group>
           </Grid.Col>
         </Grid>
 
         {/* Job Description */}
         <Box
-          mb="lg"
+          mb="md"
           style={{
-            padding: '12px',
+            padding: '10px',
             borderRadius: '8px',
           }}
         >
-          <Text size="xs" fw={600} c="dimmed" mb={6}>
-            JOB DESCRIPTION
+          <Text size="sm" fw={600} c="dimmed" mb={1}>
+            Job Description
           </Text>
           <Text
             size="sm"
@@ -309,11 +325,16 @@ const CandidateDetailPage: React.FC = () => {
         </Box>
 
         {/* Footer with dates */}
-        <Group justify="space-between" align="center">
-          <Group gap="lg">
+        <Group
+          justify={isMobile ? 'flex-start' : 'space-between'}
+          align="center"
+          px="md"
+          py={7}
+        >
+          <Group gap="xl">
             <Box>
               <Text size="xs" fw={600} c="dimmed" mb={2}>
-                APPLIED ON
+                Applied On
               </Text>
               <Group gap={4}>
                 <IconCalendarCheck size={16} color="#1c7ed6" />
@@ -325,7 +346,7 @@ const CandidateDetailPage: React.FC = () => {
 
             <Box>
               <Text size="xs" fw={600} c="dimmed" mb={2}>
-                POST DEADLINE
+                Post Deadline
               </Text>
               <Group gap={4}>
                 <IconCalendar size={16} color="#e03131" />
@@ -337,7 +358,7 @@ const CandidateDetailPage: React.FC = () => {
 
             <Box>
               <Text size="xs" fw={600} c="dimmed" mb={2}>
-                POSITIONS
+                Positions
               </Text>
               <Text size="sm" fw={500}>
                 {job.noOfPositions} open
@@ -345,9 +366,17 @@ const CandidateDetailPage: React.FC = () => {
             </Box>
           </Group>
 
-          <Badge color="blue" variant="light" size="md" radius="md">
-            ✓ Applied
-          </Badge>
+          <Box mr="md">
+            <Badge
+              color="blue"
+              variant="light"
+              size="md"
+              radius="md"
+              style={{ marginLeft: isMobile ? 0 : 'auto' }}
+            >
+              ✓ Applied
+            </Badge>
+          </Box>
         </Group>
       </Box>
     );

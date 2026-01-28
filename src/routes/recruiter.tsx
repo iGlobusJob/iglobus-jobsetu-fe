@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
+import ClientDetailsPage from '@/features/recruiter/pages/ClientDetailsPage';
 import CandidateDetailPage from '@/features/recruiter/pages/candidateDetail';
 import CandidatesPage from '@/features/recruiter/pages/candidates';
 import ClientsPage from '@/features/recruiter/pages/clients';
@@ -14,6 +15,7 @@ export const RecruiterRoutes = () => {
       <Route element={<RoleRoute allowedRoles={['recruiter']} />}>
         <Route path="jobs" element={<JobListingsSection />} />
         <Route path=":jobId/job-details" element={<JobDetailPage />} />
+        <Route path="clients/:clientId" element={<ClientDetailsPage />} />
         <Route path="clients" element={<ClientsPage />} />
         <Route path="candidates" element={<CandidatesPage />} />
         <Route
