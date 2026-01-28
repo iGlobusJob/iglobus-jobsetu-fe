@@ -14,6 +14,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconArrowLeft,
   IconBriefcase,
@@ -31,6 +32,7 @@ import { toast } from 'react-toastify';
 
 import type { CandidateJobApplication } from '@/features/dashboard/types/admin-candidate-job';
 import type { CandidateProfile } from '@/features/dashboard/types/candidate';
+import { useSystemTheme } from '@/hooks/useSystemTheme';
 import {
   getCandidatesDetailsById,
   getcandidatejobs,
@@ -64,15 +66,23 @@ const CandidateDetailPage: React.FC = () => {
   const [appliedJobsLoading, setAppliedJobsLoading] = useState(false);
   const [details, setDetails] = useState<CandidateProfile | null>(null);
   const [appliedJobs, setAppliedJobs] = useState<CandidateJobApplication[]>([]);
+  const [appliedJobsFetched, setAppliedJobsFetched] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>('overview');
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const systemTheme = useSystemTheme();
+  const isDark = systemTheme === 'dark';
 
   useEffect(() => {
     const fetchCandidate = async () => {
       if (!candidateId) return;
       setLoading(true);
+      setAppliedJobs([]);
+      setAppliedJobsFetched(false);
 
       try {
         const data = await getCandidatesDetailsById(candidateId);
         setDetails(data);
+        await fetchAppliedJobsData(candidateId);
       } catch {
         toast.error('Failed to fetch candidate details');
       } finally {
@@ -82,6 +92,19 @@ const CandidateDetailPage: React.FC = () => {
 
     fetchCandidate();
   }, [candidateId]);
+
+  const fetchAppliedJobsData = async (id: string) => {
+    try {
+      const data = await getcandidatejobs(id);
+      const appliedOnly = data.filter(
+        (job) => job.isJobApplied && job.appliedAt
+      );
+      setAppliedJobs(appliedOnly);
+      setAppliedJobsFetched(true);
+    } catch {
+      console.error('Failed to fetch applied jobs');
+    }
+  };
 
   const fetchAppliedJobs = async () => {
     if (!candidateId) return;
@@ -94,6 +117,7 @@ const CandidateDetailPage: React.FC = () => {
         (job) => job.isJobApplied && job.appliedAt
       );
       setAppliedJobs(appliedOnly);
+      setAppliedJobsFetched(true);
     } catch {
       toast.error('Failed to fetch applied jobs');
     } finally {
@@ -102,7 +126,7 @@ const CandidateDetailPage: React.FC = () => {
   };
 
   const handleAppliedJobsTab = () => {
-    if (appliedJobs.length === 0) {
+    if (!appliedJobsFetched || appliedJobs.length === 0) {
       fetchAppliedJobs();
     }
   };
@@ -133,9 +157,10 @@ const CandidateDetailPage: React.FC = () => {
           padding: '20px',
           marginBottom: '16px',
           transition: 'all 0.3s ease',
-
+          cursor: 'pointer',
           boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
         }}
+        onClick={() => navigate(`/admin/all-jobs`)}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
           e.currentTarget.style.borderColor = '#d0ebff';
@@ -153,7 +178,7 @@ const CandidateDetailPage: React.FC = () => {
               style={{
                 width: '60px',
                 height: '60px',
-                borderRadius: '8px',
+                borderRadius: '100%',
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
@@ -168,8 +193,8 @@ const CandidateDetailPage: React.FC = () => {
                   style={{
                     width: '100%',
                     height: '100%',
-                    objectFit: 'contain',
-                    padding: '6px',
+                    objectFit: 'cover',
+                    display: 'block',
                   }}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
@@ -339,9 +364,15 @@ const CandidateDetailPage: React.FC = () => {
         </Button>
 
         {/* Header */}
-        <Group align="flex-start" gap="lg" mb="xl" wrap="wrap">
+        <Group
+          align="flex-start"
+          gap="lg"
+          mb="xl"
+          wrap="wrap"
+          justify="flex-start"
+        >
           <Avatar
-            size={100}
+            size={isMobile ? 80 : 90}
             radius="xl"
             color="blue"
             src={details?.profilePicture || null}
@@ -350,9 +381,16 @@ const CandidateDetailPage: React.FC = () => {
             {(details.lastName?.[0] || '').toUpperCase()}
           </Avatar>
 
-          <Stack gap={8} style={{ flex: 1 }}>
-            <Group gap={12} align="center" wrap="wrap">
-              <Title order={1} size="h2" fw={700}>
+          <Stack
+            gap={8}
+            style={{
+              flex: 1,
+              textAlign: 'left',
+              alignItems: 'flex-start',
+            }}
+          >
+            <Group gap={12} wrap="wrap" justify="flex-start">
+              <Title order={1} size={isMobile ? 'h3' : 'h2'} fw={700}>
                 {details.firstName || '—'} {details.lastName || ''}
               </Title>
               {details.category && (
@@ -361,27 +399,83 @@ const CandidateDetailPage: React.FC = () => {
                 </Badge>
               )}
             </Group>
-            <Group gap={8} wrap="wrap">
-              <Group gap={6}>
+            <Stack gap={6}>
+              <Group gap={6} justify="flex-start">
                 <IconMail size={18} color="#1c7ed6" />
                 <Text size="sm">{details?.email || '—'}</Text>
               </Group>
-              <Group gap={6}>
+              <Group gap={6} justify="flex-start">
                 <IconPhone size={18} color="#e03131" />
                 <Text size="sm">{details?.mobileNumber || '—'}</Text>
               </Group>
-            </Group>
+            </Stack>
           </Stack>
         </Group>
 
         <Divider mb="xl" />
 
         {/* Tabs */}
-        <Tabs defaultValue="overview">
+        <Tabs
+          defaultValue="overview"
+          variant="pills"
+          radius="xl"
+          value={activeTab}
+          onChange={setActiveTab}
+          styles={(theme) => ({
+            list: {
+              gap: '6px',
+              padding: '5px',
+              borderRadius: '999px',
+              backgroundColor: isDark
+                ? theme.colors.dark[6]
+                : theme.colors.gray[1],
+              border: `1px solid ${
+                isDark ? theme.colors.dark[4] : theme.colors.gray[3]
+              }`,
+              display: 'inline-flex',
+            },
+
+            tab: {
+              fontWeight: 600,
+              fontSize: isMobile ? '13px' : '14px',
+              padding: isMobile ? '8px 14px' : '10px 22px',
+              borderRadius: '999px',
+              color: isDark ? theme.colors.dark[0] : theme.colors.gray[7],
+              transition: 'all 0.2s ease',
+
+              '&:hover': {
+                backgroundColor: isDark
+                  ? theme.colors.dark[5]
+                  : theme.colors.gray[2],
+              },
+
+              '&[data-active]': {
+                backgroundColor: isDark ? theme.colors.dark[9] : 'white',
+                color: isDark ? 'white' : theme.colors.dark[9],
+                boxShadow: theme.shadows.sm,
+              },
+            },
+          })}
+        >
           <Tabs.List>
-            <Tabs.Tab value="overview">Overview</Tabs.Tab>
-            <Tabs.Tab value="appliedJobs" onClick={handleAppliedJobsTab}>
-              Applied Jobs
+            <Tabs.Tab
+              value="overview"
+              leftSection={<IconUser size={16} stroke={1.8} />}
+            >
+              Overview
+            </Tabs.Tab>
+
+            <Tabs.Tab
+              value="appliedJobs"
+              leftSection={<IconBriefcase size={16} stroke={1.8} />}
+              onClick={handleAppliedJobsTab}
+            >
+              <Group gap={6}>
+                Applied Jobs
+                <Badge size="sm" variant="filled" radius="xl">
+                  {appliedJobs.length}
+                </Badge>
+              </Group>
             </Tabs.Tab>
           </Tabs.List>
 
