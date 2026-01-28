@@ -721,11 +721,25 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
                           </Group>
                         </Group>
 
-                        <Box>
+                        <Box
+                          mb="md"
+                          style={{
+                            padding: '5px',
+                            borderRadius: '8px',
+                          }}
+                        >
+                          <Text size="sm" fw={600} c="dimmed" mb={1}>
+                            Job Description
+                          </Text>
                           <Text
                             size="sm"
-                            c="dimmed"
                             lineClamp={2}
+                            style={{
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                            }}
                             dangerouslySetInnerHTML={{
                               __html: job.jobDescription,
                             }}
