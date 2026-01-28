@@ -28,9 +28,13 @@ import { useEffect, useState, type JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import { getJobDetailsAndApplicentDetailsById } from '@/services/recruiter-services';
+import { useAuthStore } from '@/store/userDetails';
 
 interface Candidate {
+  id: string;
   lastName: string;
   firstName: string;
   mobileNumber: string;
@@ -108,6 +112,7 @@ export const JobDetailPage = (): JSX.Element => {
   const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
   const onBack = () => navigate(-1);
+  const { userRole } = useAuthStore();
 
   const [job, setJob] = useState<JobDetail>();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
@@ -122,6 +127,14 @@ export const JobDetailPage = (): JSX.Element => {
       });
     } else {
       toast.info('Share functionality not available on this device');
+    }
+  };
+
+  const handleCandidateCardClick = (candidateId: string): void => {
+    if (userRole === 'admin') {
+      navigate(ADMIN_PATHS.CANDIDATE_DETAILS(candidateId));
+    } else {
+      navigate(RECRUITER_PATHS.CANDIDATE_DETAILS(candidateId));
     }
   };
 
@@ -169,7 +182,10 @@ export const JobDetailPage = (): JSX.Element => {
   }
 
   const rows = candidates.map((candidate) => (
-    <Table.Tr key={`${candidate.email}-${candidate.appliedAt}`}>
+    <Table.Tr
+      key={`${candidate.email}-${candidate.appliedAt}`}
+      onClick={() => handleCandidateCardClick(candidate.id)}
+    >
       <Table.Td>
         <Group gap="sm">
           <Avatar size={32} radius="md" name={candidate.firstName} />
