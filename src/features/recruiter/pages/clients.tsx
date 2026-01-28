@@ -23,16 +23,17 @@ import {
   IconSearch,
 } from '@tabler/icons-react';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { Client } from '@/features/dashboard/types/client';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import { getallassignedclientsbyrecruiter } from '@/services/recruiter-services';
-
-import ClientDetailsDrawer from './ClientDetailsDrawer';
 
 const PAGE_SIZE = 10;
 
 const ClientsPage: React.FC = () => {
+  const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
@@ -44,8 +45,6 @@ const ClientsPage: React.FC = () => {
     'all' | 'registered' | 'active' | 'inactive'
   >('all');
   const [activePage, setActivePage] = useState(1);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [sortFilter, setSortFilter] = useState<
     'default' | 'asc' | 'desc' | 'newest' | 'oldest'
   >('default');
@@ -66,8 +65,7 @@ const ClientsPage: React.FC = () => {
   }, []);
 
   const openDetails = (client: Client) => {
-    setSelectedClient(client);
-    setDrawerOpen(true);
+    navigate(`${RECRUITER_PATHS.CLIENTS}/${client.id}`);
   };
 
   const filtered = useMemo(() => {
@@ -439,13 +437,6 @@ const ClientsPage: React.FC = () => {
             radius="md"
           />
         </Group>
-
-        {/* DRAWER */}
-        <ClientDetailsDrawer
-          opened={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-          client={selectedClient}
-        />
       </Container>
     </Box>
   );

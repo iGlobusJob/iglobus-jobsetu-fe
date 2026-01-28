@@ -48,8 +48,8 @@ const RecruiterDashboard: React.FC = () => {
   const [search, setSearch] = useState('');
   const [activePage, setActivePage] = useState(1);
   const [sortFilter, setSortFilter] = useState<
-    'asc' | 'desc' | 'newest' | 'oldest'
-  >('asc');
+    'default' | 'asc' | 'desc' | 'newest' | 'oldest'
+  >('default');
 
   // Modal state
   const [modalOpened, setModalOpened] = useState(false);
@@ -177,6 +177,9 @@ const RecruiterDashboard: React.FC = () => {
         return true;
       })
       .sort((a, b) => {
+        if (sortFilter === 'default') {
+          return 0;
+        }
         const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
         const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
 
@@ -382,9 +385,9 @@ const RecruiterDashboard: React.FC = () => {
               {/* SORT BY (asc & dec) */}
               <Select
                 data={[
+                  { value: 'default', label: 'Default' },
                   { value: 'asc', label: 'Name (A → Z)' },
                   { value: 'desc', label: 'Name (Z → A)' },
-                  { value: 'newest', label: 'Newest → Oldest' },
                   { value: 'oldest', label: 'Oldest → Newest' },
                 ]}
                 value={sortFilter}
