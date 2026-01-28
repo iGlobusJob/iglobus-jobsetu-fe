@@ -37,11 +37,14 @@ import type { AdminUpdateClient } from '@/features/dashboard/types/admin';
 import type { Client } from '@/features/dashboard/types/client';
 import type { Job } from '@/features/dashboard/types/job';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import {
   getAllJobsByClient,
   getClientById,
   updateClientByAdmin,
 } from '@/services/admin-services';
+import { useAuthStore } from '@/store/userDetails';
 
 interface ClientDetailsPageProps {
   onUpdate?: (updatedClient: Client) => void;
@@ -244,6 +247,16 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
     }
 
     setActionLoading(false);
+  };
+
+  const { userRole } = useAuthStore();
+  const handleJobCardClick = (jobId: string) => {
+    console.log(jobId);
+    if (userRole === 'admin') {
+      navigate(ADMIN_PATHS.JOB_DETAILS(jobId));
+    } else if (userRole === 'recruiter') {
+      navigate(RECRUITER_PATHS.JOB_DETAILS(jobId));
+    }
   };
 
   if (!form) {
@@ -615,7 +628,7 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
                         cursor: 'pointer',
                         transition: 'transform 0.2s ease',
                       }}
-                      onClick={() => navigate(`/admin/all-jobs`)}
+                      onClick={() => handleJobCardClick(job.id)}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.transform = 'scale(1.01)')
                       }
