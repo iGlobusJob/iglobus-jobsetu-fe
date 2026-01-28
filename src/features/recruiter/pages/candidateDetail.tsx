@@ -33,10 +33,13 @@ import { toast } from 'react-toastify';
 import type { CandidateJobApplication } from '@/features/dashboard/types/admin-candidate-job';
 import type { CandidateProfile } from '@/features/dashboard/types/candidate';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import {
   getCandidatesDetailsById,
   getcandidatejobs,
 } from '@/services/recruiter-services';
+import { useAuthStore } from '@/store/userDetails';
 
 const formatDate = (date?: string | Date) => {
   if (!date) return '—';
@@ -148,6 +151,15 @@ const CandidateDetailPage: React.FC = () => {
   }) => {
     const job = application.jobId;
     const company = job.clientId;
+    const { userRole } = useAuthStore();
+    const handleJobCardClick = (jobId: string) => {
+      console.log(jobId);
+      if (userRole === 'admin') {
+        navigate(ADMIN_PATHS.JOB_DETAILS(jobId));
+      } else if (userRole === 'recruiter') {
+        navigate(RECRUITER_PATHS.JOB_DETAILS(jobId));
+      }
+    };
 
     return (
       <Box
@@ -160,7 +172,7 @@ const CandidateDetailPage: React.FC = () => {
           cursor: 'pointer',
           boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
         }}
-        onClick={() => navigate(`/admin/all-jobs`)}
+        onClick={() => handleJobCardClick(job.id)}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
           e.currentTarget.style.borderColor = isDark ? '#696969' : '#ddd';

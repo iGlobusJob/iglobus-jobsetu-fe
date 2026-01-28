@@ -30,13 +30,18 @@ import {
 } from '@tabler/icons-react';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import type { ApiError } from '@/common';
 import type { Job } from '@/features/dashboard/types/job';
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import { getAllJobsByAdmin } from '@/services/admin-services';
+import { useAuthStore } from '@/store/userDetails';
 
 const AllJobs = () => {
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +57,8 @@ const AllJobs = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const { userRole } = useAuthStore();
 
   useEffect(() => {
     setCurrentPage(1);
@@ -153,6 +160,15 @@ const AllJobs = () => {
     );
   }
 
+  const handleJobCardClick = (jobId: string) => {
+    console.log(jobId);
+    if (userRole === 'admin') {
+      navigate(ADMIN_PATHS.JOB_DETAILS(jobId));
+    } else if (userRole === 'recruiter') {
+      navigate(RECRUITER_PATHS.JOB_DETAILS(jobId));
+    }
+  };
+
   return (
     <Container size="xl" py="xl">
       <Stack mb="xl" gap={8}>
@@ -246,6 +262,7 @@ const AllJobs = () => {
 
               return (
                 <Card
+                  onClick={() => handleJobCardClick(job.id)}
                   key={job.id}
                   withBorder
                   radius="lg"
