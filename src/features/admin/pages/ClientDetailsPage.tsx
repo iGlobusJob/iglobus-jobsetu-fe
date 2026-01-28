@@ -704,7 +704,7 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
                             </Group>
                           </Grid.Col>
                         </Grid>
-                        <Group gap="lg">
+                        <Group gap="xl">
                           <Group gap="xs">
                             <IconCalendar size={16} color="#5c7cfa" />
                             <Text size="sm">
@@ -728,11 +728,12 @@ const ClientDetailsPage: React.FC<ClientDetailsPageProps> = ({
                             borderRadius: '8px',
                           }}
                         >
-                          <Text size="sm" fw={600} c="dimmed" mb={1}>
+                          <Text size="sm" fw={600} mb={1}>
                             Job Description
                           </Text>
                           <Text
                             size="sm"
+                            c="dimmed"
                             lineClamp={2}
                             style={{
                               display: '-webkit-box',

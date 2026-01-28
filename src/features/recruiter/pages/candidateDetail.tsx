@@ -309,11 +309,12 @@ const CandidateDetailPage: React.FC = () => {
             borderRadius: '8px',
           }}
         >
-          <Text size="sm" fw={600} c="dimmed" mb={1}>
+          <Text fw={600} size="sm" mb={1}>
             Job Description
           </Text>
           <Text
             size="sm"
+            c="dimmed"
             style={{
               display: '-webkit-box',
               WebkitLineClamp: 2,
