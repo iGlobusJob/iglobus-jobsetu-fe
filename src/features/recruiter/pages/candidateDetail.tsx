@@ -103,9 +103,11 @@ const CandidateDetailPage: React.FC = () => {
   const fetchAppliedJobsData = async (id: string) => {
     try {
       const data = await getcandidatejobs(id);
+      console.log('fetchAppliedJobsData is:', data);
       const appliedOnly = data.filter(
         (job) => job.isJobApplied && job.appliedAt
       );
+      console.log('appliedOnly is:', appliedOnly);
       setAppliedJobs(appliedOnly);
       setAppliedJobsFetched(true);
     } catch {
