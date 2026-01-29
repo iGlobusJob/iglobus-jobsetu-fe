@@ -8,6 +8,7 @@ import ClientDashboard from '@/features/admin/pages/dashboard';
 import AllJobs from '@/features/admin/pages/jobs';
 import CandidateDetailPage from '@/features/recruiter/pages/candidateDetail';
 import CandidatesPage from '@/features/recruiter/pages/candidates';
+import JobDetailPage from '@/features/recruiter/pages/jobDetails';
 
 import { RoleRoute } from './guards';
 
@@ -22,6 +23,7 @@ export const AdminRoutes = () => {
         <Route path="clients/:clientId" element={<ClientDetailsPage />} />
         <Route path="candidates" element={<CandidatesPage />} />
         <Route path="recruiters" element={<RecruiterDashboard />} />
+        <Route path=":jobId/job-details" element={<JobDetailPage />} />
         {/* Add more admin routes here */}
         <Route path="add-admin" element={<AddAdminPage />} />
         <Route path="all-jobs" element={<AllJobs />} />

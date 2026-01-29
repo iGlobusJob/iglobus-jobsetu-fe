@@ -10,6 +10,7 @@ import {
   Group,
   Image,
   Modal,
+  PasswordInput,
   ScrollArea,
   SegmentedControl,
   Stack,
@@ -21,11 +22,11 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUpload } from '@tabler/icons-react';
+import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import type { ApiError } from '@/common';
 import { FooterSubscribe } from '@/features/dashboard/components/common/footer';
 import { Header } from '@/features/dashboard/components/common/header';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
@@ -101,8 +102,16 @@ const Register: React.FC = () => {
       }
       toast.error(res.data?.message || 'Something went wrong.');
     } catch (err: unknown) {
-      const error = err as ApiError;
-      toast.error(error?.response?.data?.message || error?.message);
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data;
+        if (data?.missingFields?.length) {
+          toast.error(data.missingFields[0].message);
+          return;
+        }
+        toast.error(data?.message || 'Something went wrong');
+      } else {
+        toast.error('Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -708,7 +717,7 @@ const Register: React.FC = () => {
                       {...form.getInputProps('email')}
                     />
 
-                    <TextInput
+                    <PasswordInput
                       label={'Password'}
                       required
                       type="password"

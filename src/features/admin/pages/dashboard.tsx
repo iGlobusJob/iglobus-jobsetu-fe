@@ -30,12 +30,15 @@ import { toast } from 'react-toastify';
 
 import type { Client } from '@/features/dashboard/types/client';
 import { ADMIN_PATHS } from '@/routes/config/adminPath';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import { getAllClients, updateClientByAdmin } from '@/services/admin-services';
+import { useAuthStore } from '@/store/userDetails';
 
 const PAGE_SIZE = 10;
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { userRole } = useAuthStore();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
@@ -67,7 +70,11 @@ const AdminDashboard: React.FC = () => {
   }, []);
 
   const openDetails = (client: Client) => {
-    navigate(`${ADMIN_PATHS.CLIENTS}/${client.id}`);
+    if (userRole === 'admin') {
+      navigate(ADMIN_PATHS.CLIENT_DETAILS(client.id));
+    } else if (userRole === 'recruiter') {
+      navigate(RECRUITER_PATHS.CLIENT_DETAILS(client.id));
+    }
   };
 
   const filtered = useMemo(() => {

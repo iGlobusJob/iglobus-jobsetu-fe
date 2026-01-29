@@ -20,6 +20,8 @@ import {
   IconBriefcase,
   IconCalendar,
   IconCalendarCheck,
+  IconClock,
+  IconCurrencyRupee,
   IconIdBadge,
   IconMail,
   IconMapPin,
@@ -33,10 +35,13 @@ import { toast } from 'react-toastify';
 import type { CandidateJobApplication } from '@/features/dashboard/types/admin-candidate-job';
 import type { CandidateProfile } from '@/features/dashboard/types/candidate';
 import { useSystemTheme } from '@/hooks/useSystemTheme';
+import { ADMIN_PATHS } from '@/routes/config/adminPath';
+import { RECRUITER_PATHS } from '@/routes/config/recruiterPath';
 import {
   getCandidatesDetailsById,
   getcandidatejobs,
 } from '@/services/recruiter-services';
+import { useAuthStore } from '@/store/userDetails';
 
 const formatDate = (date?: string | Date) => {
   if (!date) return '—';
@@ -148,6 +153,15 @@ const CandidateDetailPage: React.FC = () => {
   }) => {
     const job = application.jobId;
     const company = job.clientId;
+    const { userRole } = useAuthStore();
+    const handleJobCardClick = (jobId: string) => {
+      console.log(jobId);
+      if (userRole === 'admin') {
+        navigate(ADMIN_PATHS.JOB_DETAILS(jobId));
+      } else if (userRole === 'recruiter') {
+        navigate(RECRUITER_PATHS.JOB_DETAILS(jobId));
+      }
+    };
 
     return (
       <Box
@@ -160,7 +174,7 @@ const CandidateDetailPage: React.FC = () => {
           cursor: 'pointer',
           boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
         }}
-        onClick={() => navigate(`/admin/all-jobs`)}
+        onClick={() => handleJobCardClick(job.id)}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
           e.currentTarget.style.borderColor = isDark ? '#696969' : '#ddd';
@@ -171,14 +185,19 @@ const CandidateDetailPage: React.FC = () => {
         }}
       >
         {/* Header with logo, title, and status */}
-        <Group justify="space-between" align="flex-start" mb="lg">
+        <Group
+          justify={isMobile ? 'flex-start' : 'space-between'}
+          align="flex-start"
+          mb="lg"
+          px="sm"
+        >
           <Group align="center" gap="lg">
             {/* Company Logo */}
             <Box
               style={{
                 width: '60px',
                 height: '60px',
-                borderRadius: '100%',
+                borderRadius: '10px',
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
@@ -223,81 +242,91 @@ const CandidateDetailPage: React.FC = () => {
           </Group>
 
           {/* Status Badge */}
-          <Badge
-            variant="light"
-            color={job.status === 'active' ? 'green' : 'orange'}
-            size="lg"
-            radius="md"
-            style={{ textTransform: 'capitalize' }}
-          >
-            {job.status}
-          </Badge>
+          <Box pr="xl">
+            <Badge
+              variant="light"
+              color={job.status === 'active' ? 'green' : 'orange'}
+              size="lg"
+              radius="md"
+              mt={isMobile ? 'sm' : 0}
+              style={{ textTransform: 'capitalize' }}
+            >
+              {job.status}
+            </Badge>
+          </Box>
         </Group>
 
         {/* Job Details Grid */}
-        <Grid gutter="md" mb="lg">
+        <Grid gutter="md" mb="xs">
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                LOCATION
-              </Text>
-              <Group gap={6}>
-                <IconMapPin size={16} color="#1c7ed6" />
-                <Text size="sm" fw={500}>
+            <Group gap="xs">
+              <IconMapPin size={16} color="#5c7cfa" />
+              <div>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Location
+                </Text>
+                <Text size="sm" fw={600}>
                   {job.jobLocation}
                 </Text>
-              </Group>
-            </Box>
+              </div>
+            </Group>
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
             <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                EMPLOYMENT TYPE
+              <Text size="xs" fw={500} c="dimmed" mb={4}>
+                Employment Type
               </Text>
-              <Text size="sm" fw={500} style={{ textTransform: 'capitalize' }}>
+              <Badge size="sm" fw={500} style={{ textTransform: 'capitalize' }}>
                 {job.jobType}
-              </Text>
+              </Badge>
             </Box>
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                SALARY RANGE
-              </Text>
-              <Text size="sm" fw={500}>
-                ₹{(job.minimumSalary / 100000).toFixed(1)}L - ₹
-                {(job.maximumSalary / 100000).toFixed(1)}L
-              </Text>
-            </Box>
+            <Group gap="xs">
+              <IconCurrencyRupee size={16} color="#51cf66" />
+              <div>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Salary
+                </Text>
+                <Text size="sm" fw={600}>
+                  ₹{job.minimumSalary?.toLocaleString()} - ₹
+                  {job.maximumSalary?.toLocaleString()}
+                </Text>
+              </div>
+            </Group>
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box>
-              <Text size="xs" fw={600} c="dimmed" mb={4}>
-                EXPERIENCE
-              </Text>
-              <Text size="sm" fw={500}>
-                {job.minimumExperience}-{job.maximumExperience} yrs
-              </Text>
-            </Box>
+            <Group gap="xs">
+              <IconClock size={16} color="#ff922b" />
+              <div>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Experience
+                </Text>
+                <Text size="sm" fw={600}>
+                  {job.minimumExperience} - {job.maximumExperience} years
+                </Text>
+              </div>
+            </Group>
           </Grid.Col>
         </Grid>
 
         {/* Job Description */}
         <Box
-          mb="lg"
+          mb="md"
           style={{
-            padding: '12px',
+            padding: '10px',
             borderRadius: '8px',
           }}
         >
-          <Text size="xs" fw={600} c="dimmed" mb={6}>
-            JOB DESCRIPTION
+          <Text fw={600} size="sm" mb={1}>
+            Job Description
           </Text>
           <Text
             size="sm"
+            c="dimmed"
             style={{
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -309,11 +338,16 @@ const CandidateDetailPage: React.FC = () => {
         </Box>
 
         {/* Footer with dates */}
-        <Group justify="space-between" align="center">
-          <Group gap="lg">
+        <Group
+          justify={isMobile ? 'flex-start' : 'space-between'}
+          align="center"
+          px="md"
+          py={7}
+        >
+          <Group gap="xl">
             <Box>
               <Text size="xs" fw={600} c="dimmed" mb={2}>
-                APPLIED ON
+                Applied On
               </Text>
               <Group gap={4}>
                 <IconCalendarCheck size={16} color="#1c7ed6" />
@@ -325,7 +359,7 @@ const CandidateDetailPage: React.FC = () => {
 
             <Box>
               <Text size="xs" fw={600} c="dimmed" mb={2}>
-                POST DEADLINE
+                Post Deadline
               </Text>
               <Group gap={4}>
                 <IconCalendar size={16} color="#e03131" />
@@ -337,7 +371,7 @@ const CandidateDetailPage: React.FC = () => {
 
             <Box>
               <Text size="xs" fw={600} c="dimmed" mb={2}>
-                POSITIONS
+                Positions
               </Text>
               <Text size="sm" fw={500}>
                 {job.noOfPositions} open
@@ -345,9 +379,17 @@ const CandidateDetailPage: React.FC = () => {
             </Box>
           </Group>
 
-          <Badge color="blue" variant="light" size="md" radius="md">
-            ✓ Applied
-          </Badge>
+          <Box mr="md">
+            <Badge
+              color="blue"
+              variant="light"
+              size="md"
+              radius="md"
+              style={{ marginLeft: isMobile ? 0 : 'auto' }}
+            >
+              ✓ Applied
+            </Badge>
+          </Box>
         </Group>
       </Box>
     );
