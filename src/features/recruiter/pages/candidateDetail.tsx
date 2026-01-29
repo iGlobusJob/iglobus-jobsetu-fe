@@ -86,9 +86,7 @@ const CandidateDetailPage: React.FC = () => {
 
       try {
         const data = await getCandidatesDetailsById(candidateId);
-        console.log('getCandidatesDetailsById data is:', data);
         setDetails(data);
-        console.log('Going to fetch Jobs details applied by candidate !!');
         await fetchAppliedJobsData(candidateId);
       } catch {
         toast.error('Failed to fetch candidate details');
@@ -103,11 +101,9 @@ const CandidateDetailPage: React.FC = () => {
   const fetchAppliedJobsData = async (id: string) => {
     try {
       const data = await getcandidatejobs(id);
-      console.log('fetchAppliedJobsData is:', data);
       const appliedOnly = data.filter(
         (job) => job.isJobApplied && job.appliedAt
       );
-      console.log('appliedOnly is:', appliedOnly);
       setAppliedJobs(appliedOnly);
       setAppliedJobsFetched(true);
     } catch {
@@ -155,11 +151,8 @@ const CandidateDetailPage: React.FC = () => {
   const JobCard: React.FC<{ application: CandidateJobApplication }> = ({
     application,
   }) => {
-    console.log('--------> Application is:', application);
     const job = application.jobId;
-    console.log('------------> Job is:', job);
     const company = job.clientId;
-    console.log('-----------> company is:', company);
     const { userRole } = useAuthStore();
     const handleJobCardClick = (jobId: string) => {
       console.log(jobId);
@@ -227,7 +220,6 @@ const CandidateDetailPage: React.FC = () => {
                     display: 'block',
                   }}
                   onError={(e) => {
-                    console.log('Error is:', e);
                     e.currentTarget.style.display = 'none';
                   }}
                 />
