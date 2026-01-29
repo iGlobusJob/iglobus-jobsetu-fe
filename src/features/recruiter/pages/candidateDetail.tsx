@@ -155,8 +155,11 @@ const CandidateDetailPage: React.FC = () => {
   const JobCard: React.FC<{ application: CandidateJobApplication }> = ({
     application,
   }) => {
+    console.log('--------> Application is:', application);
     const job = application.jobId;
+    console.log('------------> Job is:', job);
     const company = job.clientId;
+    console.log('-----------> company is:', company);
     const { userRole } = useAuthStore();
     const handleJobCardClick = (jobId: string) => {
       console.log(jobId);
