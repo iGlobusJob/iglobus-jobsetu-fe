@@ -86,7 +86,9 @@ const CandidateDetailPage: React.FC = () => {
 
       try {
         const data = await getCandidatesDetailsById(candidateId);
+        console.log('getCandidatesDetailsById data is:', data);
         setDetails(data);
+        console.log('Going to fetch Jobs details applied by candidate !!');
         await fetchAppliedJobsData(candidateId);
       } catch {
         toast.error('Failed to fetch candidate details');
