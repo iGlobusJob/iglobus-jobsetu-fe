@@ -110,7 +110,7 @@ const Register: React.FC = () => {
         }
         toast.error(data?.message || 'Something went wrong');
       } else {
-        toast.error('Unexpected error occurred');
+        toast.error('Something went wrong. Please try again.');
       }
     } finally {
       setLoading(false);
