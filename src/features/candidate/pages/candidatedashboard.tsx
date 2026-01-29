@@ -36,7 +36,7 @@ import type { CandidateJobs } from '@/features/dashboard/types/candidate';
 import type { ApiJob } from '@/features/dashboard/types/job';
 import { CANDIDATE_PATHS } from '@/routes/config/userPath';
 import {
-  getAllJobsByCandidate,
+  getAllJobs,
   getMyJobs,
   saveToJob,
   unSaveToJob,
@@ -83,7 +83,7 @@ export default function JobPortalDashboard() {
         setError(null);
 
         const [jobs, myJobsResponse] = await Promise.all([
-          getAllJobsByCandidate(),
+          getAllJobs(),
           getMyJobs(),
         ]);
 
