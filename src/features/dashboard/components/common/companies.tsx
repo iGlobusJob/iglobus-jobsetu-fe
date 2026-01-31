@@ -37,7 +37,8 @@ const initialCompanies = [
 ];
 
 export function LogoShowcase() {
-  const [companies, setCompanies] = useState(initialCompanies);
+  const [companies] = useState([...initialCompanies, ...initialCompanies]);
+
   const [isMobile, setIsMobile] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
   const isPaused = useRef(false);
@@ -55,32 +56,46 @@ export function LogoShowcase() {
 
     let position = 0;
 
+    const speed = 1.0;
+
+    const cardWidth = isMobile ? 150 + 12 + 10 : 180 + 12 + 40;
+
+    const totalWidth = cardWidth * initialCompanies.length;
+
     const tick = () => {
       if (!isPaused.current) {
-        position -= 1;
-        slider.style.transform = `translateX(${position}px)`;
+        position -= speed;
 
-        const cardWidth = 180;
-
-        if (Math.abs(position) >= cardWidth) {
-          setCompanies((prev) => {
-            const updated = [...prev];
-            const first = updated.shift()!;
-            updated.push(first);
-            return updated;
-          });
+        if (Math.abs(position) >= totalWidth) {
           position = 0;
         }
+
+        slider.style.transform = `translateX(${position}px)`;
       }
 
       requestAnimationFrame(tick);
     };
 
     tick();
-  }, []);
+  }, [isMobile]);
 
   return (
     <Box py={50}>
+      <style>{`
+        @keyframes zoomIn {
+          from {
+            transform: scale(1);
+          }
+          to { 
+            transform: scale(1.15);
+          }
+        }
+
+        .logo-card:hover .logo-image {
+          cursor: pointer;
+          animation: zoomIn 0.3s ease-in-out forwards;
+        }
+      `}</style>
       <Container size="lg">
         <Center mb={40}>
           <h2 style={{ fontSize: 32, fontWeight: 600 }}>
@@ -99,28 +114,45 @@ export function LogoShowcase() {
               gap: isMobile ? 10 : 40,
               whiteSpace: 'nowrap',
               willChange: 'transform',
+              flexWrap: 'nowrap',
             }}
             onMouseEnter={() => (isPaused.current = true)}
             onMouseLeave={() => (isPaused.current = false)}
           >
             {companies.map((company, index) => (
               <Box
+                className="logo-card"
                 key={company.name + index}
                 style={{
-                  width: isMobile ? 160 : 140,
-                  height: isMobile ? 70 : 80,
-                  borderRadius: 14,
+                  width: isMobile ? 150 : 180,
+                  height: isMobile ? 80 : 90,
+                  minHeight: isMobile ? 80 : 90,
+                  borderRadius: 12,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   background: '#ffffff',
+                  padding: 6,
+                  overflow: 'hidden',
+                  flexShrink: 0,
                 }}
               >
                 <Image
+                  className="logo-image"
                   src={company.logo}
                   alt={company.name}
-                  h={isMobile ? 90 : 80}
                   fit="contain"
+                  styles={{
+                    root: {
+                      width: '100%',
+                      height: '100%',
+                      overflow: 'hidden',
+                      maxWidth: isMobile ? '120px' : '160px',
+                      maxHeight: isMobile ? '60px' : '70px',
+                      objectFit: 'contain',
+                      transition: 'transform 0.3s ease-in-out',
+                    },
+                  }}
                 />
               </Box>
             ))}
