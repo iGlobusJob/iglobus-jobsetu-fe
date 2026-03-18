@@ -38,12 +38,14 @@ export const clientRegisterSchema = z.object({
   gstin: z
     .string()
     .regex(/^[0-9A-Z]{15}$/, 'Invalid GSTIN format')
-    .min(1, 'GSTIN is required'),
+    .optional()
+    .or(z.literal('')),
 
   panCard: z
     .string()
     .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Invalid PAN format')
-    .min(1, 'PAN Card is required'),
+    .optional()
+    .or(z.literal('')),
 
   category: z.enum(['IT', 'Non-IT'], {
     errorMap: () => ({ message: 'Category is required' }),
