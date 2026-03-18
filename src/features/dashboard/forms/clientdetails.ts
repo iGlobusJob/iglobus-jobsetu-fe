@@ -24,7 +24,7 @@ export const clientDetailsSchema = z.object({
 
   panCard: z
     .string()
-    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Invalid PAN card Details')
+    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Invalid PAN Card Details')
     .optional()
     .nullable()
     .or(z.literal('')),
