@@ -43,7 +43,7 @@ export const clientRegisterSchema = z.object({
 
   panCard: z
     .string()
-    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Invalid PAN format')
+    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Invalid PAN card format')
     .optional()
     .or(z.literal('')),
 
