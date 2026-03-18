@@ -752,7 +752,6 @@ const Register: React.FC = () => {
                   <Group grow={!isMobile}>
                     <TextInput
                       label={'GSTIN'}
-                      required
                       placeholder="22AAAAA0000A1Z5"
                       size={isMobile ? 'sm' : 'md'}
                       {...form.getInputProps('gstin')}
@@ -766,7 +765,6 @@ const Register: React.FC = () => {
 
                     <TextInput
                       label={'PAN Card'}
-                      required
                       placeholder="ABCDE1234F"
                       size={isMobile ? 'sm' : 'md'}
                       {...form.getInputProps('panCard')}

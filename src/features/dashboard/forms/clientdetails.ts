@@ -17,14 +17,14 @@ export const clientDetailsSchema = z.object({
 
   gstin: z
     .string()
-    .regex(/^[0-9A-Z]{15}$/, 'Invalid GSTIN format')
+    .regex(/^[0-9A-Z]{15}$/, 'Invalid GSTIN Details')
     .optional()
     .nullable()
     .or(z.literal('')),
 
   panCard: z
     .string()
-    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Invalid PAN format')
+    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Invalid PAN Card Details')
     .optional()
     .nullable()
     .or(z.literal('')),
