@@ -28,6 +28,7 @@ export interface ApiJob {
   jobType: string;
   status: string;
   logo: string | null;
+  createdAt?: string;
 }
 export interface JobPostResponse {
   success: true;

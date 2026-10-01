@@ -28,7 +28,10 @@ export interface CandidateJobs {
   experienceLevel: string;
   jobType: string;
   bookmarked: boolean;
+  applied?: boolean;
   category: string;
   logo: string | null;
   status: string;
+  createdAt?: string;
+  postedTime?: string;
 }
