@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, Text, UnstyledButton } from '@mantine/core';
+import { Box, Flex, Stack, Text } from '@mantine/core';
 import React from 'react';
 
 import {
@@ -124,39 +124,6 @@ export const TestimonialCarousel: React.FC = () => {
             Words of Happy Clients
           </Text>
         </Stack>
-
-        <UnstyledButton
-          style={{
-            width: '200px',
-            height: '48px',
-            padding: '10px',
-            backgroundColor: '#3BA3D3',
-            borderRadius: '11px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'opacity 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.opacity = '0.9';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.opacity = '1';
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 500,
-              fontSize: '20px',
-              lineHeight: '26px',
-              color: '#FFFFFF',
-            }}
-          >
-            More testimonials
-          </Text>
-        </UnstyledButton>
       </Flex>
 
       {/* Frame 37: Continuous Marquee Loop Animation */}
