@@ -15,7 +15,6 @@ import { IconChevronDown } from '@tabler/icons-react';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import ClickSpark from '@/components/ui/ClickSpark';
 import { logoutClient } from '@/services/client-services';
 import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
@@ -77,13 +76,16 @@ export const Header: React.FC = () => {
           }}
         >
           <Image
-            src="/udyogsethu-logo.png"
-            alt="UdyogSethu"
+            src="/udyogsetu-logo.png"
+            alt="UdyogSetu"
             style={{
               width: '178px',
               height: '32px',
               objectFit: 'contain',
               display: 'block',
+              opacity: 1,
+              transform: 'rotate(0deg)',
+              mixBlendMode: 'darken',
             }}
           />
         </Anchor>
@@ -178,35 +180,33 @@ export const Header: React.FC = () => {
               </Menu.Dropdown>
             </Menu>
           ) : (
-            <ClickSpark sparkColor="#5ECAFD">
-              <UnstyledButton
-                onClick={() => openModal()}
+            <UnstyledButton
+              onClick={() => openModal()}
+              style={{
+                boxSizing: 'border-box',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '10px 16px',
+                width: '199px',
+                height: '39px',
+                borderRadius: '32px',
+                border: '1px solid #000000',
+                backgroundColor: 'transparent',
+                cursor: 'pointer',
+              }}
+            >
+              <Text
                 style={{
-                  boxSizing: 'border-box',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: '10px 16px',
-                  width: '199px',
-                  height: '39px',
-                  borderRadius: '32px',
-                  border: '1px solid #000000',
-                  backgroundColor: 'transparent',
-                  cursor: 'pointer',
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '16px',
+                  color: '#000000',
+                  userSelect: 'none',
                 }}
               >
-                <Text
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: '16px',
-                    color: '#000000',
-                    userSelect: 'none',
-                  }}
-                >
-                  Register as Candidate
-                </Text>
-              </UnstyledButton>
-            </ClickSpark>
+                Register as Candidate
+              </Text>
+            </UnstyledButton>
           )}
         </Box>
 

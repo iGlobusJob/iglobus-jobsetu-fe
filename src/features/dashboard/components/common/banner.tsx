@@ -77,7 +77,7 @@ export const BannerSection: React.FC<BannerSectionProps> = ({ onSearch }) => {
               </span>
             </span>
             <span style={{ display: 'block', marginTop: '4px' }}>
-              Build Your Future with UdyogSethu.
+              Build Your Future with UdyogSetu.
             </span>
           </Title>
 

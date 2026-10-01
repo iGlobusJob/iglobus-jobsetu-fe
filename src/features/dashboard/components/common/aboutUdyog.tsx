@@ -33,7 +33,7 @@ export const AboutUdyog: React.FC = () => {
             margin: 0,
           }}
         >
-          About UdyogSethu
+          About UdyogSetu
         </Title>
 
         <Text

@@ -2,8 +2,6 @@ import { Box, Flex, Select, TextInput, UnstyledButton } from '@mantine/core';
 import { IconMapPin, IconSearch } from '@tabler/icons-react';
 import React, { useState } from 'react';
 
-import ClickSpark from '@/components/ui/ClickSpark';
-
 export interface HeroSearchBarProps {
   onSearch?: (searchData: { keyword: string; location: string }) => void;
   locations?: { value: string; label: string }[];
@@ -127,40 +125,36 @@ export const HeroSearchBar: React.FC<HeroSearchBarProps> = ({
         </Flex>
 
         {/* Right: Find Jobs button */}
-        <ClickSpark sparkColor="#5ECAFD" sparkCount={10}>
-          <UnstyledButton
-            type="submit"
+        <UnstyledButton
+          type="submit"
+          style={{
+            width: '141px',
+            height: '52px',
+            background: '#3BA3D3',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            flexShrink: 0,
+            transition: 'background 0.2s ease, transform 0.1s ease',
+          }}
+          onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.98)')}
+          onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        >
+          <span
             style={{
-              width: '141px',
-              height: '52px',
-              background: '#3BA3D3',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              flexShrink: 0,
-              transition: 'background 0.2s ease, transform 0.1s ease',
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 500,
+              fontSize: '21px',
+              lineHeight: '26px',
+              color: '#FFFFFF',
+              userSelect: 'none',
             }}
-            onMouseDown={(e) =>
-              (e.currentTarget.style.transform = 'scale(0.98)')
-            }
-            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
           >
-            <span
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 500,
-                fontSize: '21px',
-                lineHeight: '26px',
-                color: '#FFFFFF',
-                userSelect: 'none',
-              }}
-            >
-              Find Jobs
-            </span>
-          </UnstyledButton>
-        </ClickSpark>
+            Find Jobs
+          </span>
+        </UnstyledButton>
       </Box>
     </form>
   );

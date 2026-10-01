@@ -11,7 +11,6 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import React, { useState } from 'react';
 
-import ClickSpark from '@/components/ui/ClickSpark';
 import { sendContactUsMail } from '@/services/common-services';
 
 import { contactFigmaSchema, type FormValues } from '../../forms/contactSchema';
@@ -233,30 +232,28 @@ export const ContactUsSection: React.FC = () => {
               )}
 
               <Flex justify="flex-start" mt="8px">
-                <ClickSpark sparkColor="#5ECAFD">
-                  <UnstyledButton
-                    type="submit"
-                    disabled={submitting}
+                <UnstyledButton
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    padding: '14px 44px',
+                    backgroundColor: '#3BA3D3',
+                    borderRadius: '10px',
+                    cursor: submitting ? 'not-allowed' : 'pointer',
+                    transition: 'background-color 0.2s ease',
+                  }}
+                >
+                  <Text
                     style={{
-                      padding: '14px 44px',
-                      backgroundColor: '#3BA3D3',
-                      borderRadius: '10px',
-                      cursor: submitting ? 'not-allowed' : 'pointer',
-                      transition: 'background-color 0.2s ease',
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 500,
+                      fontSize: '18px',
+                      color: '#FFFFFF',
                     }}
                   >
-                    <Text
-                      style={{
-                        fontFamily: "'Inter', sans-serif",
-                        fontWeight: 500,
-                        fontSize: '18px',
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      {submitting ? 'Sending...' : 'Send Message'}
-                    </Text>
-                  </UnstyledButton>
-                </ClickSpark>
+                    {submitting ? 'Sending...' : 'Send Message'}
+                  </Text>
+                </UnstyledButton>
               </Flex>
             </Stack>
           </form>
