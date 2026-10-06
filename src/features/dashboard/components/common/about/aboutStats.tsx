@@ -40,11 +40,11 @@ const STATS = [
 
 export function AboutStats() {
   return (
-    <Box style={{ maxWidth: '1419px', margin: '158px auto 0 auto' }}>
+    <Box style={{ maxWidth: '1419px', margin: '180px auto 0 auto' }}>
       <Title
         order={2}
         ta="center"
-        mb={48}
+        mb={60}
         style={{
           fontFamily: "'Inter', sans-serif",
           fontWeight: 500,
@@ -83,10 +83,10 @@ export function AboutStats() {
         justify="center"
         wrap="wrap"
         gap={{ base: 24, md: 42 }}
-        mt={75}
+        mt={110}
         style={{
           maxWidth: '966px',
-          margin: '75px auto 0 auto',
+          margin: '110px auto 0 auto',
           width: '100%',
         }}
       >

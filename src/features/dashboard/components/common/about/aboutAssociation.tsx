@@ -3,27 +3,28 @@ import { Box, Image, Text } from '@mantine/core';
 export function AboutAssociation() {
   return (
     <Box
-      py={{ base: 36, md: 44 }}
+      py={{ base: 32, md: 40 }}
       px={24}
       style={{
         width: '100%',
         maxWidth: '1312px',
-        margin: '142px auto 60px auto',
+        margin: '140px auto 60px auto',
         backgroundColor: '#F0F8FF',
         borderRadius: 24,
         textAlign: 'center',
       }}
     >
-      <Box style={{ maxWidth: '640px', margin: '0 auto' }}>
+      <Box style={{ maxWidth: '650px', margin: '0 auto' }}>
         <Image
           src="/about/association.png"
           alt="Government of Telangana & TASK"
           style={{
             width: '100%',
-            maxHeight: '130px',
+            maxHeight: '200px',
             objectFit: 'contain',
             display: 'block',
             margin: '0 auto',
+            mixBlendMode: 'multiply',
           }}
         />
       </Box>
@@ -31,7 +32,7 @@ export function AboutAssociation() {
         mt={16}
         style={{
           fontFamily: "'Inter', sans-serif",
-          fontWeight: 500,
+          fontWeight: 700,
           fontSize: '18px',
           color: '#003D8F',
         }}
