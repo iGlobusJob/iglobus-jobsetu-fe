@@ -14,6 +14,7 @@ import { JobListingsSection } from '../components/common/jobs';
 import { TestimonialCarousel } from '../components/common/review';
 import { ScrollToTop } from '../components/common/scrolltotop';
 import { HowItWorks } from '../components/common/steps';
+import { TelanganaNetworkSection } from '../components/common/telanganaNetwork';
 import { WorkflowsSection } from '../components/common/workflows';
 
 import { ScrollToHash } from './scroll';
@@ -30,6 +31,7 @@ export const UserDashboard: React.FC = () => {
       <BrochureSection />
       <Categories />
       <JobListingsSection />
+      <TelanganaNetworkSection />
       <HowItWorks />
       <WorkflowsSection />
       <TestimonialCarousel />
