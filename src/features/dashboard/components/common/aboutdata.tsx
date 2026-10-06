@@ -25,11 +25,11 @@ const cardData = [
 
       Over the years, we have worked with startups, mid-sized organizations, and enterprise clients, adapting to changing hiring models, market conditions, and workforce expectations.
 
-      JobSetu represents the natural evolution of this journey—transforming years of recruitment expertise into a structured, transparent, and scalable digital platform.`,
+      udyogsethu represents the natural evolution of this journey—transforming years of recruitment expertise into a structured, transparent, and scalable digital platform.`,
   },
   {
     title: 'For Clients',
-    text: `JobSetu allows organizations to:
+    text: `udyogsethu allows organizations to:
         • Easily share hiring requirements through a centralized platform
         • Define role expectations, skills, experience, and timelines clearly
         • Rely on a dedicated recruitment team to manage sourcing, screening, coordination, and follow-ups
@@ -38,7 +38,7 @@ const cardData = [
   },
   {
     title: 'For Candidates',
-    text: `JobSetu provides job seekers with:
+    text: `udyogsethu provides job seekers with:
         • Access to verified job opportunities across IT and Non-IT domains
         • A simple and transparent resume submission process
         • Direct engagement with real recruiters who actively manage their profiles
@@ -52,7 +52,7 @@ const cardData = [
         • Candidates find clarity, opportunity, and growth
         • Recruitment teams operate with efficiency, transparency, and purpose
 
-      With strong roots in traditional recruitment practices and a forward-looking platform mindset, iGlobus JobSetu stands at the intersection of experience and innovation.`,
+      With strong roots in traditional recruitment practices and a forward-looking platform mindset, iGlobus udyogsethu stands at the intersection of experience and innovation.`,
   },
 ];
 

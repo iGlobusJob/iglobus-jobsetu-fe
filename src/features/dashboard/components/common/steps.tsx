@@ -1,202 +1,219 @@
-import {
-  Box,
-  Container,
-  Grid,
-  Group,
-  Image,
-  Paper,
-  Stack,
-  Text,
-  ThemeIcon,
-  Title,
-  Transition,
-} from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { useState } from 'react';
+import { Box, Flex, Text } from '@mantine/core';
+import React from 'react';
 
-const steps = [
+import { Step1Icon, Step2Icon, Step3Icon } from './steps/stepIcons';
+
+interface StepItem {
+  step: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+const stepsData: StepItem[] = [
   {
-    id: 'register',
-    number: 1,
-    title: 'Create your account',
+    step: 'Step 1',
+    title: 'Create Account',
     description:
       'Sign up using your email and complete your profile with your skills, experience, and career preferences. This helps us match you with the right job opportunities.',
-    image: '/process-01.png',
+    icon: <Step1Icon />,
   },
   {
-    id: 'find-job',
-    number: 2,
-    title: 'Search for your dream job',
+    step: 'Step 2',
+    title: 'Explore Jobs',
     description:
       'Browse thousands of verified job listings across industries, filter by location, salary, or role, and save the ones that fit your goals.',
-    image: '/process-02.png',
+    icon: <Step2Icon />,
   },
   {
-    id: 'apply',
-    number: 3,
-    title: 'Apply and get hired',
+    step: 'Step 3',
+    title: 'Apply & get hired',
     description:
       'Submit your application directly through the platform. Track your application status, connect with employers, and get hired faster.',
-    image: '/process-03.png',
+    icon: <Step3Icon />,
   },
 ];
 
-export function HowItWorks() {
-  const [activeTab, setActiveTab] = useState('register');
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  const isTablet = useMediaQuery('(max-width: 1024px)');
+export const HowItWorks: React.FC = () => {
   return (
-    <Box py={30}>
-      <Container size="lg">
-        <Grid gutter="xl" align="center">
-          {/* Left Side - Stepper-like layout */}
-          <Grid.Col span={{ base: 12, lg: 6 }}>
-            <Title
-              order={2}
-              size="h2"
-              fw={700}
-              mb="md"
+    <Box
+      component="section"
+      id="how-it-works"
+      style={{
+        width: '100%',
+        maxWidth: '1440px',
+        minHeight: '599px',
+        margin: '0 auto',
+        padding: '24px 0px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '33px',
+        boxSizing: 'border-box',
+        backgroundColor: '#FFFFFF',
+      }}
+    >
+      {/* Frame 19: Header */}
+      <Box
+        style={{
+          width: '100%',
+          maxWidth: '966px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '0px 16px',
+          gap: '12px',
+          boxSizing: 'border-box',
+        }}
+      >
+        <Text
+          component="h2"
+          style={{
+            fontFamily: "'Sora', sans-serif",
+            fontWeight: 600,
+            fontSize: '27px',
+            lineHeight: '37px',
+            color: '#000000',
+            textAlign: 'center',
+            margin: 0,
+            width: '100%',
+          }}
+        >
+          How It Works
+        </Text>
+
+        <Text
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 400,
+            fontSize: '19px',
+            lineHeight: '23px',
+            color: '#5F5F5F',
+            textAlign: 'center',
+            margin: 0,
+            width: '100%',
+            maxWidth: '966px',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Find your next opportunity in just a few simple steps — from creating
+          your profile to landing your dream job.
+        </Text>
+      </Box>
+
+      {/* Frame 26: 3 Step Cards Row */}
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        justify="center"
+        align="center"
+        style={{
+          width: '100%',
+          maxWidth: '1440px',
+          minHeight: '445px',
+          padding: '24px 0px',
+          boxSizing: 'border-box',
+        }}
+      >
+        {stepsData.map((item, index) => (
+          <Box
+            key={item.step}
+            style={{
+              width: '100%',
+              maxWidth: '400px',
+              height: '397px',
+              padding: '24px 32px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              gap: '24px',
+              borderLeft: index > 0 ? '1px solid #3BA3D3' : 'none',
+              boxSizing: 'border-box',
+              flexShrink: 0,
+            }}
+          >
+            {/* Rectangle 2706 / 2708 / 2709: Cyan Icon Box */}
+            <Box
               style={{
-                fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+                width: '115px',
+                height: '115px',
+                backgroundColor: '#3BA3D3',
+                borderRadius: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxSizing: 'border-box',
               }}
             >
-              How It Works
-            </Title>
-            <Text c="dimmed" size="sm" lh={1.6} mb="xl">
-              Find your next opportunity in just a few simple steps — from
-              creating your profile to landing your dream job.
-            </Text>
-
-            <Box style={{ position: 'relative' }}>
-              <Stack gap="lg" ml={0}>
-                {steps.map((step, index) => (
-                  <Group
-                    key={step.id}
-                    align="flex-start"
-                    wrap="nowrap"
-                    style={{ position: 'relative' }}
-                  >
-                    {/* Vertical dotted line */}
-                    {index !== steps.length - 1 && (
-                      <Box
-                        style={{
-                          position: 'absolute',
-                          left: 22,
-                          top: 46,
-                          height: 'calc(100% - 10px)',
-                          width: 2,
-                          borderLeft: '2px dotted #ccc',
-                          zIndex: 1,
-                        }}
-                      />
-                    )}
-
-                    {/* Circle Icon */}
-                    <ThemeIcon
-                      size={38}
-                      radius="xl"
-                      variant="filled"
-                      style={{
-                        zIndex: 2,
-                        backgroundColor:
-                          activeTab === step.id ? '#5b63f6' : '#e9ecef',
-                        color: activeTab === step.id ? '#fff' : '#333',
-                        border:
-                          activeTab === step.id
-                            ? '2px solid #5b63f6'
-                            : '2px solid #e9ecef',
-                        transition: 'all 0.3s ease',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => setActiveTab(step.id)}
-                    >
-                      <Text fw={600} size="sm">
-                        {step.number}
-                      </Text>
-                    </ThemeIcon>
-
-                    {/* Step Content */}
-                    <Paper
-                      withBorder
-                      p="md"
-                      radius="md"
-                      style={{
-                        flex: 1,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease',
-                        borderColor:
-                          activeTab === step.id ? '#b3b7ff' : '#e9ecef',
-                        boxShadow:
-                          activeTab === step.id ? '0 0 0 1px #d5d8ff' : 'none',
-                      }}
-                      onClick={() => setActiveTab(step.id)}
-                    >
-                      <Text
-                        fw={600}
-                        size="lg"
-                        mb={4}
-                        style={{
-                          color: activeTab === step.id ? '#5b63f6' : '',
-                        }}
-                      >
-                        {step.title}
-                      </Text>
-                      <Text size="sm" c="dimmed" lh={1.6}>
-                        {step.description}
-                      </Text>
-                    </Paper>
-                  </Group>
-                ))}
-              </Stack>
+              {item.icon}
             </Box>
-          </Grid.Col>
 
-          {/* Right Side - Image Transition */}
-          <Grid.Col span={{ base: 12, lg: 6 }}>
+            {/* Frame 22 / 20 / 21: Content */}
             <Box
-              pos="relative"
-              style={{ minHeight: isMobile ? 240 : isTablet ? 320 : 360 }}
+              style={{
+                width: '100%',
+                maxWidth: '336px',
+                height: '210px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: '16px',
+              }}
             >
-              {steps.map((step) => (
-                <Transition
-                  key={step.id}
-                  mounted={activeTab === step.id}
-                  transition="fade"
-                  duration={400}
-                  timingFunction="ease"
-                >
-                  {(styles) => (
-                    <Box
-                      style={{
-                        ...styles,
-                        position:
-                          activeTab === step.id ? 'relative' : 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                      }}
-                    >
-                      <Paper radius="md" shadow="md" withBorder>
-                        <Image
-                          src={step.image}
-                          alt={step.title}
-                          radius="md"
-                          fit={isMobile ? 'contain' : 'cover'}
-                          style={{
-                            width: '100%',
-                            height: isMobile ? 200 : isTablet ? 300 : 530,
-                            display: 'block',
-                          }}
-                        />
-                      </Paper>
-                    </Box>
-                  )}
-                </Transition>
-              ))}
+              <Text
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  lineHeight: '20px',
+                  color: index === 0 ? '#777E90' : '#777E91',
+                  textAlign: 'center',
+                  margin: 0,
+                  width: '100%',
+                }}
+              >
+                {item.step}
+              </Text>
+
+              <Text
+                component="h3"
+                style={{
+                  fontFamily: "'Sora', sans-serif",
+                  fontWeight: 600,
+                  fontSize: '22px',
+                  lineHeight: '24px',
+                  color: '#204945',
+                  textAlign: 'center',
+                  margin: 0,
+                  width: '100%',
+                }}
+              >
+                {item.title}
+              </Text>
+
+              <Text
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 400,
+                  fontSize: '16px',
+                  lineHeight: '26px',
+                  color: '#778984',
+                  textAlign: 'center',
+                  margin: 0,
+                  width: '100%',
+                  maxWidth: '336px',
+                }}
+              >
+                {item.description}
+              </Text>
             </Box>
-          </Grid.Col>
-        </Grid>
-      </Container>
+          </Box>
+        ))}
+      </Flex>
     </Box>
   );
-}
+};
+
+export default HowItWorks;

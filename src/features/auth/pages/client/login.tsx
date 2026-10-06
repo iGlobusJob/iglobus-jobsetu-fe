@@ -195,9 +195,9 @@ export const Login: React.FC = () => {
                 )}
 
               <Stack align="center" mb="lg">
-                <Title order={isMobile ? 4 : 3}>Welcome to JobSetu</Title>
+                <Title order={isMobile ? 4 : 3}>Welcome to udyogsethu</Title>
                 <Text size={isMobile ? 'sm' : 'md'} ta="center">
-                  Login to continue to JobSetu.
+                  Login to continue to udyogsethu.
                 </Text>
               </Stack>
 
