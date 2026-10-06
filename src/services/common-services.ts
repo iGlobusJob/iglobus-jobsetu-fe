@@ -2,9 +2,10 @@ import axios from 'axios';
 
 import type { ContactFormData } from '@/features/dashboard/forms/contactSchema';
 import { useAuthStore } from '@/store/userDetails';
+import { API_BASE_URL } from './api-config';
 
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 

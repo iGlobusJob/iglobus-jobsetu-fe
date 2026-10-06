@@ -14,16 +14,15 @@ import type {
 import { useAuthStore } from '@/store/userDetails';
 
 import { removeEmptyValues } from './helper';
-
-const BASE_URL = import.meta.env.VITE_SERVER_URL;
+import { API_BASE_URL } from './api-config';
 
 export const apiClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
 export const apiClientPublic = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 

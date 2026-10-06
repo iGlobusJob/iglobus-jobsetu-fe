@@ -7,10 +7,10 @@ import type { ApiJob } from '@/features/dashboard/types/job';
 import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
 
-const BASE_URL = import.meta.env.VITE_SERVER_URL;
+import { API_BASE_URL } from './api-config';
 
 export const apiClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
