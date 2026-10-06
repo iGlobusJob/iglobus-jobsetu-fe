@@ -53,14 +53,13 @@ export const AboutUdyog: React.FC = () => {
             MozOsxFontSmoothing: 'grayscale',
           }}
         >
-          UdyogSethu is a staffing and recruitment platform built to simplify
-          hiring and connect organizations with the right talent across IT and
-          Non-IT domains. Developed to create a seamless, technology-driven
-          hiring experience, UdyogSethu brings together recruitment expertise
-          and modern hiring solutions to help organizations find, engage, and
-          onboard the right candidates. The platform focuses on scalable,
-          process-driven recruitment, strong candidate connections, and
-          long-term partnerships with organizations.
+          UdyogSethu is a Job Mela initiative powered by iGLOBUS JobSetu,
+          organized in association with the Government of Telangana and TASK
+          (Telangana Academy for Skill and Knowledge). The initiative aims to
+          bridge the gap between job seekers and employers by bringing multiple
+          career opportunities onto one platform. UdyogSethu connects candidates
+          with participating companies across IT and Non-IT sectors, enabling
+          direct interaction, interviews, and employment opportunities.
         </Text>
       </Stack>
     </Box>
