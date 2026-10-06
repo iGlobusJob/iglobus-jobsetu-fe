@@ -76,16 +76,15 @@ export const Header: React.FC = () => {
           }}
         >
           <Image
-            src="/udyogsetu-logo.png"
-            alt="UdyogSetu"
+            src="/Udyog%20Sethu%20Logo.png"
+            alt="Udyog Sethu"
             style={{
-              width: '178px',
+              width: '215px',
               height: '32px',
               objectFit: 'contain',
               display: 'block',
               opacity: 1,
               transform: 'rotate(0deg)',
-              mixBlendMode: 'darken',
             }}
           />
         </Anchor>

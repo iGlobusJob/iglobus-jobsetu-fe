@@ -55,7 +55,7 @@ export const FooterSubscribe: React.FC = () => {
         <Stack gap="24px" style={{ maxWidth: '453px', width: '100%' }}>
           <Image
             src="/udyog-u-logo.png"
-            alt="UdyogSetu"
+            alt="Udyog Sethu"
             style={{ width: '54px', height: '54px', objectFit: 'contain' }}
           />
 
