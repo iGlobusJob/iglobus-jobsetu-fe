@@ -152,6 +152,7 @@ const Register: React.FC = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
+        backgroundColor: '#F8FAFC',
       }}
     >
       <Header />
@@ -558,15 +559,23 @@ const Register: React.FC = () => {
         </Group>
       </Modal>
       <Box
+        component="main"
         style={{
+          flex: 1,
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'center',
           transition: 'background-color 0.2s ease',
-          padding: isMobile ? '1rem' : '2rem',
+          padding: isMobile ? '120px 1rem 3rem 1rem' : '150px 2rem 5rem 2rem',
+          boxSizing: 'border-box',
         }}
       >
         {loading && <AppLoader />}
-        <Container size="lg" px={0} style={{ width: '100%' }}>
+        <Container
+          size="lg"
+          px={0}
+          style={{ width: '100%', maxWidth: '1100px' }}
+        >
           <Card
             radius="lg"
             shadow="xl"

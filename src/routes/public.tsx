@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 // Public Pages
-import { UserDashboard } from '@/features/dashboard';
+import { BrochurePage, UserDashboard } from '@/features/dashboard';
 import { AboutData } from '@/features/dashboard/components/common/aboutdata';
 import { ServicesData } from '@/features/dashboard/components/common/services';
 import { useAuthStore } from '@/store/userDetails';
@@ -17,6 +17,7 @@ export const PublicRoutes = () => {
       <Route path="/" element={<UserDashboard />} />
       <Route path="/aboutus" element={<AboutData />} />
       <Route path="/services" element={<ServicesData />} />
+      <Route path="/brochure" element={<BrochurePage />} />
     </Routes>
   );
 };

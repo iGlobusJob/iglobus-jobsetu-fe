@@ -233,22 +233,40 @@ export const Header: React.FC = () => {
         {/* Mobile Drawer */}
         <Drawer opened={opened} onClose={close} size="xs" title="Menu">
           <Stack gap="md" mt="md">
-            {navItems.map((item) => (
-              <Anchor
-                key={item.label}
-                href={item.href || '/'}
-                onClick={close}
-                underline="never"
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 500,
-                  fontSize: '18px',
-                  color: '#333333',
-                }}
-              >
-                {item.label}
-              </Anchor>
-            ))}
+            {navItems.map((item) =>
+              item.href?.startsWith('/') ? (
+                <Anchor
+                  key={item.label}
+                  component={Link}
+                  to={item.href}
+                  onClick={close}
+                  underline="never"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    fontSize: '18px',
+                    color: '#333333',
+                  }}
+                >
+                  {item.label}
+                </Anchor>
+              ) : (
+                <Anchor
+                  key={item.label}
+                  href={item.href || '/'}
+                  onClick={close}
+                  underline="never"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    fontSize: '18px',
+                    color: '#333333',
+                  }}
+                >
+                  {item.label}
+                </Anchor>
+              )
+            )}
             <Box pt="md">
               <UnstyledButton
                 onClick={() => {

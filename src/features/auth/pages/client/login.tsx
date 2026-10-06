@@ -96,29 +96,40 @@ export const Login: React.FC = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
+        backgroundColor: '#F8FAFC',
       }}
     >
       <Header />
       <Box
+        component="main"
         style={{
+          flex: 1,
           display: 'flex',
           alignItems: 'center',
-          transition: 'background-color 0.2s ease',
-          padding: isMobile ? '1rem' : '2rem',
+          justifyContent: 'center',
+          padding: isMobile ? '120px 1rem 3rem 1rem' : '150px 2rem 5rem 2rem',
+          boxSizing: 'border-box',
         }}
       >
-        <Container size="lg" px={0} style={{ width: '100%' }}>
+        <Container
+          size="md"
+          px={0}
+          style={{ width: '100%', maxWidth: '960px' }}
+        >
           {loading && <AppLoader />}
 
           <Card
-            radius="lg"
-            shadow="xl"
+            radius="20px"
+            shadow="lg"
             withBorder
             style={{
               overflow: 'hidden',
               display: 'flex',
               flexDirection: isMobile ? 'column' : 'row',
               padding: 0,
+              backgroundColor: '#FFFFFF',
+              borderColor: '#E2E8F0',
+              boxShadow: '0 20px 45px -15px rgba(15, 23, 42, 0.1)',
             }}
           >
             {/* LEFT SECTION */}
@@ -130,18 +141,9 @@ export const Login: React.FC = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: isTablet ? '1.5rem' : '2rem',
+                  padding: isTablet ? '2rem 1.5rem' : '3rem 2.5rem',
                 }}
               >
-                <Box
-                  onClick={() => navigate('/')}
-                  style={{
-                    cursor: 'pointer',
-                    marginBottom: '1rem',
-                    transition: 'transform 150ms ease',
-                  }}
-                ></Box>
-
                 <Image
                   src="/auth/sign-in.png"
                   alt="Sign In Illustration"
@@ -159,8 +161,11 @@ export const Login: React.FC = () => {
                 padding: isMobile
                   ? '2rem 1.5rem'
                   : isTablet
-                    ? '2.5rem 1.5rem'
-                    : '3rem 2rem',
+                    ? '2.5rem 2rem'
+                    : '3.5rem 2.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
               }}
             >
               {/* ERROR BOX (ZOD + API ERRORS) */}
@@ -194,10 +199,24 @@ export const Login: React.FC = () => {
                   </Box>
                 )}
 
-              <Stack align="center" mb="lg">
-                <Title order={isMobile ? 4 : 3}>Welcome to udyogsethu</Title>
-                <Text size={isMobile ? 'sm' : 'md'} ta="center">
-                  Login to continue to udyogsethu.
+              <Stack align="center" mb="xl" gap="xs">
+                <Title
+                  order={isMobile ? 4 : 2}
+                  style={{
+                    fontFamily: "'Sora', sans-serif",
+                    fontWeight: 700,
+                    color: '#0F172A',
+                  }}
+                >
+                  Welcome to UdyogSethu
+                </Title>
+                <Text
+                  size={isMobile ? 'sm' : 'md'}
+                  ta="center"
+                  c="#64748B"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  Login to continue to UdyogSethu.
                 </Text>
               </Stack>
 

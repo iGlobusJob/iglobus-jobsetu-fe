@@ -38,6 +38,10 @@ export const navItems: NavItem[] = [
     ],
   },
   {
+    label: 'Brochure',
+    href: '/brochure',
+  },
+  {
     label: 'Contact',
     href: '#contact',
   },

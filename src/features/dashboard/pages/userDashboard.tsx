@@ -4,6 +4,7 @@ import { OTPmodal } from '@/features/auth/components/modal/otpModal';
 
 import { AboutUdyog } from '../components/common/aboutUdyog';
 import { BannerSection } from '../components/common/banner';
+import { BrochureSection } from '../components/common/brochure/BrochureSection';
 import { Categories } from '../components/common/categories';
 import { LogoShowcase } from '../components/common/companies';
 import ContactUsSection from '../components/common/contact';
@@ -26,6 +27,7 @@ export const UserDashboard: React.FC = () => {
       <BannerSection />
       <LogoShowcase />
       <AboutUdyog />
+      <BrochureSection />
       <Categories />
       <JobListingsSection />
       <HowItWorks />
