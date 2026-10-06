@@ -7,6 +7,7 @@ import {
 
 import { DashboardLayout } from './components/layout/dashboard';
 import { AdminLoginPage } from './features/admin/pages/login';
+import { CandidateLoginPage } from './features/auth/pages/candidate/login';
 import { Login } from './features/auth/pages/client/login';
 import Register from './features/auth/pages/client/register';
 import RecruiterLoginPage from './features/recruiter/pages/login';
@@ -26,6 +27,7 @@ function App() {
         <Route path="/*" element={<PublicRoutes />} />
 
         <Route element={<GuestRoute />}>
+          <Route path="/candidate/login" element={<CandidateLoginPage />} />
           <Route path="/client/login" element={<Login />} />
           <Route path="/client/register" element={<Register />} />
           <Route path="/admin" element={<AdminLoginPage />} />

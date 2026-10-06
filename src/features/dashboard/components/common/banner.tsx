@@ -2,6 +2,7 @@ import { Box, Stack, Text, Title } from '@mantine/core';
 import React from 'react';
 
 import { HeroSearchBar } from './banner/HeroSearchBar';
+import { PartnerLogosBanner } from './banner/PartnerLogosBanner';
 
 export interface BannerSectionProps {
   onSearch?: (searchData: { keyword: string; location: string }) => void;
@@ -19,17 +20,17 @@ export const BannerSection: React.FC<BannerSectionProps> = ({ onSearch }) => {
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center top',
         backgroundSize: 'cover',
-        padding: '160px 20px 100px 20px',
+        padding: '116px 20px 80px 20px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         boxSizing: 'border-box',
       }}
     >
       <style>
         {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap');
         `}
       </style>
 
@@ -41,6 +42,8 @@ export const BannerSection: React.FC<BannerSectionProps> = ({ onSearch }) => {
           margin: '0 auto',
         }}
       >
+        <PartnerLogosBanner />
+
         <Stack gap="md" align="center">
           <Title
             order={1}
@@ -77,7 +80,7 @@ export const BannerSection: React.FC<BannerSectionProps> = ({ onSearch }) => {
               </span>
             </span>
             <span style={{ display: 'block', marginTop: '4px' }}>
-              Build Your Future with UdyogSetu.
+              Build Your Future with UdyogSethu.
             </span>
           </Title>
 
