@@ -8,17 +8,15 @@ export const navItems: NavItem[] = [
   {
     label: 'Home',
     href: '/',
-    items: [
-      { label: 'Home Page', href: '/' },
-      { label: 'Browse Jobs', href: '#browse-jobs' },
-      { label: 'About Us', href: '/aboutus' },
-    ],
+  },
+  {
+    label: 'About Us',
+    href: '/aboutus',
   },
   {
     label: 'Company',
     href: '/aboutus',
     items: [
-      { label: 'About Us', href: '/aboutus' },
       { label: 'Services', href: '/services' },
       { label: 'Contact Us', href: '#contact' },
     ],

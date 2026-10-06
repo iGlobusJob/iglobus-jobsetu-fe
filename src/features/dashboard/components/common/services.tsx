@@ -127,36 +127,44 @@ export function ServicesData() {
       <Header />
 
       <Box
-        py={60}
         style={{
           minHeight: '100vh',
           backgroundColor: isDark ? theme.colors.dark[7] : theme.colors.gray[0],
           color: isDark ? theme.white : theme.black,
+          paddingTop: '150px',
+          paddingBottom: '80px',
         }}
       >
         <Container size="lg">
           <Title
-            order={2}
+            order={1}
             ta="center"
-            fw={700}
-            mb={40}
-            c={isDark ? theme.white : theme.black}
+            style={{
+              fontFamily: "'Sora', sans-serif",
+              fontWeight: 600,
+              fontSize: 'clamp(32px, 3.5vw, 44px)',
+              lineHeight: 1.25,
+              color: isDark ? theme.white : '#000000',
+              marginBottom: '16px',
+            }}
           >
             Our Services
           </Title>
           <Text
-            size="sm"
-            lh={1.7}
             ta="center"
-            mb={40}
-            mx="auto"
-            maw={720}
-            c={isDark ? theme.colors.gray[4] : theme.colors.gray[7]}
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '17px',
+              lineHeight: '28px',
+              maxWidth: '820px',
+              margin: '0 auto 48px auto',
+              color: isDark ? theme.colors.gray[4] : '#4B5563',
+            }}
           >
-            At iGlobus udyogsethu, we bridge talent and opportunity with
-            precision, speed, and old-school recruitment discipline backed by
-            modern AI workflows. Whether you’re scaling fast or hiring for niche
-            skill sets, we’ve got you covered end-to-end.
+            At UdyogSethu, we bridge talent and opportunity with precision,
+            speed, and old-school recruitment discipline backed by modern AI
+            workflows. Whether you’re scaling fast or hiring for niche skill
+            sets, we’ve got you covered end-to-end.
           </Text>
 
           <Grid gutter="xl">
