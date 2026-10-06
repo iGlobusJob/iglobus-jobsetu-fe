@@ -1,4 +1,6 @@
-import { Box, Flex, Image, Text, Title } from '@mantine/core';
+import { Box, Flex, Text, Title } from '@mantine/core';
+
+import { TelanganaMap } from '@/components/common/map';
 
 import {
   BriefcaseCardIcon,
@@ -53,7 +55,7 @@ export function AboutStats() {
           color: '#000000',
         }}
       >
-        Growing Beyond Boundaries
+        Growing Beyond Boundaries - Telangana Network
       </Title>
 
       <Box
@@ -61,19 +63,9 @@ export function AboutStats() {
           width: '100%',
           maxWidth: '1419px',
           margin: '0 auto',
-          textAlign: 'center',
         }}
       >
-        <Image
-          src="/about/world-map.png"
-          alt="Global Reach Map"
-          style={{
-            width: '100%',
-            height: 'auto',
-            display: 'block',
-            margin: '0 auto',
-          }}
-        />
+        <TelanganaMap height="580px" />
       </Box>
 
       {/* STATS CARDS */}
