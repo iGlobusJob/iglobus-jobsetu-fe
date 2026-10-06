@@ -8,9 +8,10 @@ import type {
 } from '@/features/dashboard/types/admin';
 import type { Recruiter } from '@/features/dashboard/types/recruiter';
 import { useAuthStore } from '@/store/userDetails';
+import { API_BASE_URL } from './api-config';
 
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
