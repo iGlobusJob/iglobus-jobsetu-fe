@@ -40,6 +40,12 @@ const CORE_VALUES = [
 
 const TEAM_MEMBERS = [
   {
+    name: 'Pavan Chandra Duddilla',
+    role: 'Director',
+    company: 'iGLOBUS Corporate Consulting',
+    image: '/about/team-pavan.png',
+  },
+  {
     name: 'Uttam Singh',
     role: 'Founder, CEO',
     company: 'Shashwa Dimensions',
@@ -56,12 +62,6 @@ const TEAM_MEMBERS = [
     role: 'Director',
     company: 'Mira IMS',
     image: '/about/team-anand.png',
-  },
-  {
-    name: 'Pavan Chandra Duddilla',
-    role: 'Director',
-    company: 'iGLOBUS Corporate Consulting',
-    image: '/about/team-pavan.png',
   },
 ];
 
@@ -484,7 +484,7 @@ export function AboutData() {
                 style={{
                   borderRadius: '16px',
                   overflow: 'hidden',
-                  backgroundColor: '#FAFAFA',
+                  backgroundColor: '#FFFFFF',
                   boxShadow: '0px 0px 2px rgba(0, 0, 0, 0.25)',
                   border: '1px solid #ECECEC',
                 }}
@@ -492,7 +492,12 @@ export function AboutData() {
                 <Image
                   src={member.image}
                   alt={`${member.name} - ${member.role}, ${member.company}`}
-                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block',
+                    backgroundColor: '#FFFFFF',
+                  }}
                 />
               </Box>
             ))}
