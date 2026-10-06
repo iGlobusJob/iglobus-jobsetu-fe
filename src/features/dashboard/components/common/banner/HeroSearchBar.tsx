@@ -2,6 +2,9 @@ import { Box, Flex, Select, TextInput, UnstyledButton } from '@mantine/core';
 import { IconMapPin, IconSearch } from '@tabler/icons-react';
 import React, { useState } from 'react';
 
+import { useOtpModalStore } from '@/store/otpModalStore';
+import { useAuthStore } from '@/store/userDetails';
+
 export interface HeroSearchBarProps {
   onSearch?: (searchData: { keyword: string; location: string }) => void;
   locations?: { value: string; label: string }[];
@@ -22,9 +25,15 @@ export const HeroSearchBar: React.FC<HeroSearchBarProps> = ({
 }) => {
   const [keyword, setKeyword] = useState('');
   const [location, setLocation] = useState<string | null>(null);
+  const token = useAuthStore((state) => state.token);
+  const openModal = useOtpModalStore((state) => state.openModal);
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    if (!token) {
+      openModal();
+      return;
+    }
     if (onSearch) {
       onSearch({ keyword, location: location || 'all' });
     } else {

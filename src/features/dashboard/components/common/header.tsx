@@ -12,8 +12,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { logoutClient } from '@/services/client-services';
 import { useOtpModalStore } from '@/store/otpModalStore';
@@ -27,6 +26,7 @@ export const Header: React.FC = () => {
   const { token, userRole, firstName } = useAuthStore();
   const isLoggedIn = Boolean(token);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAuthAction = () => {
     if (isLoggedIn) {
@@ -133,6 +133,23 @@ export const Header: React.FC = () => {
                   ))}
                 </Menu.Dropdown>
               </Menu>
+            ) : item.href?.startsWith('/') ? (
+              <Anchor
+                key={item.label}
+                component={Link}
+                to={item.href}
+                underline="never"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 500,
+                  fontSize: '18px',
+                  lineHeight: '22px',
+                  color:
+                    location.pathname === item.href ? '#000000' : '#525252',
+                }}
+              >
+                {item.label}
+              </Anchor>
             ) : (
               <Anchor
                 key={item.label}
@@ -143,7 +160,8 @@ export const Header: React.FC = () => {
                   fontWeight: 500,
                   fontSize: '18px',
                   lineHeight: '22px',
-                  color: '#000000',
+                  color:
+                    location.pathname === item.href ? '#000000' : '#525252',
                 }}
               >
                 {item.label}

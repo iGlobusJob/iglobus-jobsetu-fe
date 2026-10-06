@@ -13,6 +13,7 @@ import { JobListingsSection } from '../components/common/jobs';
 import { TestimonialCarousel } from '../components/common/review';
 import { ScrollToTop } from '../components/common/scrolltotop';
 import { HowItWorks } from '../components/common/steps';
+import { WorkflowsSection } from '../components/common/workflows';
 
 import { ScrollToHash } from './scroll';
 
@@ -25,9 +26,10 @@ export const UserDashboard: React.FC = () => {
       <BannerSection />
       <LogoShowcase />
       <AboutUdyog />
-      <HowItWorks />
       <Categories />
       <JobListingsSection />
+      <HowItWorks />
+      <WorkflowsSection />
       <TestimonialCarousel />
       <ContactUsSection />
       <FooterSubscribe />
