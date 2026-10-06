@@ -1,52 +1,42 @@
-import { Container } from '@mantine/core';
+import React from 'react';
 
 import { OTPmodal } from '@/features/auth/components/modal/otpModal';
 
-import About from '../components/common/about';
+import { AboutUdyog } from '../components/common/aboutUdyog';
 import { BannerSection } from '../components/common/banner';
 import { Categories } from '../components/common/categories';
 import { LogoShowcase } from '../components/common/companies';
 import ContactUsSection from '../components/common/contact';
 import { FooterSubscribe } from '../components/common/footer';
 import { Header } from '../components/common/header';
-import Icons from '../components/common/icons';
 import { JobListingsSection } from '../components/common/jobs';
 import { TestimonialCarousel } from '../components/common/review';
 import { ScrollToTop } from '../components/common/scrolltotop';
 import { HowItWorks } from '../components/common/steps';
 
 import { ScrollToHash } from './scroll';
-export const UserDashboard = () => {
+
+export const UserDashboard: React.FC = () => {
   return (
-    <>
-      <Container size="xl">
-        <Header />
-
-        <BannerSection />
-        <ScrollToHash />
-
-        <About />
-
-        <Icons />
-
-        <Categories />
-
-        <div id="browse-jobs">
-          <JobListingsSection />
-        </div>
-
-        <HowItWorks />
-
-        <TestimonialCarousel />
-
-        <LogoShowcase />
-
-        <OTPmodal />
-
-        <ScrollToTop />
-      </Container>
+    <div
+      style={{ backgroundColor: '#FFFFFF', width: '100%', overflowX: 'hidden' }}
+    >
+      <Header />
+      <BannerSection />
+      <LogoShowcase />
+      <AboutUdyog />
+      <HowItWorks />
+      <Categories />
+      <JobListingsSection />
+      <TestimonialCarousel />
       <ContactUsSection />
       <FooterSubscribe />
-    </>
+
+      <ScrollToHash />
+      <OTPmodal />
+      <ScrollToTop />
+    </div>
   );
 };
+
+export default UserDashboard;

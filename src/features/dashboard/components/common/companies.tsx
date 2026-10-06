@@ -1,164 +1,160 @@
-import { Box, Center, Container, Image } from '@mantine/core';
-import { useEffect, useRef, useState } from 'react';
+import { Box, Image, Text } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
 
-const initialCompanies = [
-  {
-    name: 'Starcare',
-    logo: '/companies/comp1.jpeg',
-  },
-  {
-    name: 'Care tech',
-    logo: '/companies/comp2.jpeg',
-  },
-  {
-    name: 'Reliance Builders',
-    logo: '/companies/comp2.webp',
-  },
-  {
-    name: 'The lime',
-    logo: '/companies/comp4.jpeg',
-  },
-  {
-    name: 'JR lifts',
-    logo: '/companies/comp5.jpeg',
-  },
-  {
-    name: 'Snapmoney',
-    logo: '/companies/comp6.jpeg',
-  },
-  {
-    name: 'Spoc Interiors',
-    logo: '/companies/comp7.jpeg',
-  },
-  {
-    name: 'Design lattice',
-    logo: '/companies/comp8.png',
-  },
+interface PartnerCompany {
+  name: string;
+  logo: string;
+  width?: number;
+}
+
+const partnerCompanies: PartnerCompany[] = [
+  { name: 'SnapMoney', logo: '/companies/comp6.jpeg', width: 339 },
+  { name: 'Starcare', logo: '/companies/comp1.jpeg', width: 275 },
+  { name: 'Care tech', logo: '/companies/comp2.jpeg', width: 329 },
+  { name: 'Reliance Builders', logo: '/companies/comp2.webp', width: 222 },
+  { name: 'The lime', logo: '/companies/comp4.jpeg', width: 140 },
+  { name: 'JR lifts', logo: '/companies/comp5.jpeg', width: 120 },
+  { name: 'Spoc Interiors', logo: '/companies/comp7.jpeg', width: 160 },
+  { name: 'Design lattice', logo: '/companies/comp8.png', width: 160 },
 ];
 
-export function LogoShowcase() {
-  const [companies] = useState([...initialCompanies, ...initialCompanies]);
-
+export const LogoShowcase: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const isPaused = useRef(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 480);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  useEffect(() => {
-    const slider = sliderRef.current;
-    if (!slider) return;
+  const fullList = [...partnerCompanies, ...partnerCompanies];
 
-    let position = 0;
-
-    const speed = 1.0;
-
-    const cardWidth = isMobile ? 150 + 12 + 10 : 180 + 12 + 40;
-
-    const totalWidth = cardWidth * initialCompanies.length;
-
-    const tick = () => {
-      if (!isPaused.current) {
-        position -= speed;
-
-        if (Math.abs(position) >= totalWidth) {
-          position = 0;
-        }
-
-        slider.style.transform = `translateX(${position}px)`;
-      }
-
-      requestAnimationFrame(tick);
-    };
-
-    tick();
-  }, [isMobile]);
-
-  return (
-    <Box py={50}>
-      <style>{`
-        @keyframes zoomIn {
-          from {
-            transform: scale(1);
-          }
-          to { 
-            transform: scale(1.15);
-          }
-        }
-
-        .logo-card:hover .logo-image {
-          cursor: pointer;
-          animation: zoomIn 0.3s ease-in-out forwards;
-        }
-      `}</style>
-      <Container size="lg">
-        <Center mb={40}>
-          <h2 style={{ fontSize: 32, fontWeight: 600 }}>
-            Our Trusted Leading Partners
-          </h2>
-        </Center>
-
-        <Box
-          style={{ overflow: 'hidden', width: '100%', position: 'relative' }}
-        >
+  const renderTrack = (trackKey: string) => (
+    <Box
+      key={trackKey}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: isMobile ? '28px' : '56px',
+        paddingRight: isMobile ? '28px' : '56px',
+        flexShrink: 0,
+      }}
+    >
+      {fullList.map((company, index) => {
+        const cardW = isMobile
+          ? company.width
+            ? company.width * 0.6
+            : 140
+          : company.width || 200;
+        return (
           <Box
-            ref={sliderRef}
+            key={`${trackKey}-${company.name}-${index}`}
             style={{
+              width: `${cardW}px`,
+              height: '80px',
               display: 'flex',
               alignItems: 'center',
-              gap: isMobile ? 10 : 40,
-              whiteSpace: 'nowrap',
-              willChange: 'transform',
-              flexWrap: 'nowrap',
+              justifyContent: 'center',
+              flexShrink: 0,
+              boxSizing: 'border-box',
             }}
-            onMouseEnter={() => (isPaused.current = true)}
-            onMouseLeave={() => (isPaused.current = false)}
           >
-            {companies.map((company, index) => (
-              <Box
-                className="logo-card"
-                key={company.name + index}
-                style={{
-                  width: isMobile ? 150 : 180,
-                  height: isMobile ? 80 : 90,
-                  minHeight: isMobile ? 80 : 90,
-                  borderRadius: 12,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: '#ffffff',
-                  padding: 6,
-                  overflow: 'hidden',
-                  flexShrink: 0,
-                }}
-              >
-                <Image
-                  className="logo-image"
-                  src={company.logo}
-                  alt={company.name}
-                  fit="contain"
-                  styles={{
-                    root: {
-                      width: '100%',
-                      height: '100%',
-                      overflow: 'hidden',
-                      maxWidth: isMobile ? '120px' : '160px',
-                      maxHeight: isMobile ? '60px' : '70px',
-                      objectFit: 'contain',
-                      transition: 'transform 0.3s ease-in-out',
-                    },
-                  }}
-                />
-              </Box>
-            ))}
+            <Image
+              src={company.logo}
+              alt={company.name}
+              fit="contain"
+              style={{
+                maxHeight: '80px',
+                maxWidth: `${cardW}px`,
+                height: '80px',
+                objectFit: 'contain',
+              }}
+            />
           </Box>
-        </Box>
-      </Container>
+        );
+      })}
     </Box>
   );
-}
+
+  return (
+    <Box
+      component="section"
+      style={{
+        width: '100%',
+        minHeight: '206px',
+        margin: '32px 0',
+        padding: '24px 0',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '32px',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+        backgroundColor: '#FFFFFF',
+      }}
+    >
+      <style>
+        {`
+          @keyframes marqueeScroll {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+        `}
+      </style>
+
+      {/* Title */}
+      <Text
+        component="h2"
+        style={{
+          fontFamily: "'Sora', sans-serif",
+          fontWeight: 600,
+          fontSize: '27px',
+          lineHeight: '26px',
+          color: '#000000',
+          textAlign: 'center',
+          margin: 0,
+          width: '100%',
+          maxWidth: '1440px',
+          padding: '0 16px',
+        }}
+      >
+        Our Trusted Leading Partners
+      </Text>
+
+      {/* Frame 15: 100% full-width logo loop */}
+      <Box
+        style={{
+          width: '100%',
+          height: '100px',
+          overflow: 'hidden',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <Box
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: 'max-content',
+            animation: 'marqueeScroll 35s linear infinite',
+            willChange: 'transform',
+          }}
+        >
+          {renderTrack('track-1')}
+          {renderTrack('track-2')}
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default LogoShowcase;

@@ -1,72 +1,66 @@
 import {
   Box,
-  Button,
-  Container,
-  Grid,
-  rem,
-  Tabs,
+  Flex,
+  Loader,
+  Stack,
   Text,
   Title,
-  Loader,
-  Center,
-  Paper,
+  UnstyledButton,
 } from '@mantine/core';
-import { IconArrowRight } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { JobCard } from '@/common/pages/jobCard';
 import {
   getAllJobs,
   getMyJobs,
   saveToJob,
   unSaveToJob,
 } from '@/services/candidate-services';
+import { useOtpModalStore } from '@/store/otpModalStore';
 import { useAuthStore } from '@/store/userDetails';
 
 import type { CandidateJobs } from '../../types/candidate';
 
-export const JobListingsSection = () => {
-  const [visibleCount, setVisibleCount] = useState(6);
-  const [activeTab, setActiveTab] = useState<
-    'recent' | 'freelance' | 'partTime' | 'fullTime'
-  >('recent');
+import { FigmaJobCard } from './jobs/FigmaJobCard';
+
+type TabType = 'recent' | 'freelance' | 'fullTime' | 'partTime';
+
+const filterTabs: { id: TabType; label: string }[] = [
+  { id: 'recent', label: 'Recent Jobs' },
+  { id: 'freelance', label: 'Freelance' },
+  { id: 'fullTime', label: 'Full Time' },
+  { id: 'partTime', label: 'Part Time' },
+];
+
+export const JobListingsSection: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabType>('recent');
   const [jobs, setJobs] = useState<CandidateJobs[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [bookmarkedJobs, setBookmarkedJobs] = useState<Set<string>>(new Set());
-  const [appliedJobs, setAppliedJobs] = useState<Set<string>>(new Set());
   const token = useAuthStore((s) => s.token);
   const userRole = useAuthStore((s) => s.userRole);
-  const isLoggedIn = Boolean(token);
-  const isCandidate = isLoggedIn && userRole === 'candidate';
-  const showRecommended = !isLoggedIn || isCandidate;
+  const openModal = useOtpModalStore((s) => s.openModal);
+  const isCandidate = Boolean(token) && userRole === 'candidate';
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadJobs = async () => {
       try {
         setLoading(true);
-        setError(null);
-
         const allJobs = await getAllJobs();
-
         const bookmarkedSet = new Set<string>();
         const appliedSet = new Set<string>();
 
         if (isCandidate) {
-          const myJobsResponse = await getMyJobs();
-          myJobsResponse?.forEach((item) => {
+          const myJobs = await getMyJobs();
+          myJobs?.forEach((item) => {
             const jobId = item.jobId?.id;
             if (!jobId) return;
-
             if (item.isJobSaved) bookmarkedSet.add(jobId);
             if (item.isJobApplied) appliedSet.add(jobId);
           });
         }
 
-        setBookmarkedJobs(bookmarkedSet);
-        setAppliedJobs(appliedSet);
-
-        const enrichedJobs: CandidateJobs[] = allJobs.map((apiJob) => ({
+        const enriched: CandidateJobs[] = allJobs.map((apiJob) => ({
           id: apiJob.id,
           jobTitle: apiJob.jobTitle,
           organizationName: apiJob.organizationName,
@@ -82,180 +76,190 @@ export const JobListingsSection = () => {
           category: apiJob.jobType || 'general',
           logo: apiJob.logo,
           status: apiJob.status,
+          createdAt: apiJob.createdAt,
         }));
-
-        setJobs(enrichedJobs);
-      } catch (error) {
-        console.error('Failed to load jobs', error);
-        setError('Failed to load jobs. Please try again later.');
+        setJobs(enriched);
+      } catch (err) {
+        console.error('Failed to load jobs', err);
       } finally {
         setLoading(false);
       }
     };
-
     loadJobs();
   }, [isCandidate]);
 
-  const handleBookmark = async (
-    jobId: string,
-    isCurrentlyBookmarked: boolean
-  ) => {
+  const handleBookmark = async (jobId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!token) {
+      openModal(jobId);
+      return;
+    }
+    const current = jobs.find((j) => j.id === jobId);
+    const willBookmark = !current?.bookmarked;
+    setJobs((prev) =>
+      prev.map((j) => (j.id === jobId ? { ...j, bookmarked: willBookmark } : j))
+    );
     try {
-      if (isCurrentlyBookmarked) {
-        await unSaveToJob({ jobId });
-        setBookmarkedJobs((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(jobId);
-          return newSet;
-        });
-      } else {
-        await saveToJob({ jobId });
-        setBookmarkedJobs((prev) => new Set(prev).add(jobId));
-      }
-
-      // Update jobs array to reflect the change
+      if (willBookmark) await saveToJob({ jobId });
+      else await unSaveToJob({ jobId });
+    } catch {
       setJobs((prev) =>
-        prev.map((job) =>
-          job.id === jobId
-            ? { ...job, bookmarked: !isCurrentlyBookmarked }
-            : job
+        prev.map((j) =>
+          j.id === jobId ? { ...j, bookmarked: !willBookmark } : j
         )
       );
-    } catch (err) {
-      console.error('Failed to bookmark job:', err);
     }
   };
 
+  const handleApply = (jobId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!token) openModal(jobId);
+    else navigate(`/jobs/${jobId}`);
+  };
+
   const filteredJobs = jobs.filter((job) => {
-    switch (activeTab) {
-      case 'freelance':
-        return job.jobType === 'freelance';
-      case 'partTime':
-        return job.jobType === 'part-time';
-      case 'fullTime':
-        return job.jobType === 'full-time';
-      case 'recent':
-      default:
-        return true;
-    }
+    if (activeTab === 'recent') return true;
+    const type = (job.jobType || '').toLowerCase();
+    if (activeTab === 'freelance') return type.includes('freelance');
+    if (activeTab === 'fullTime') return type.includes('full');
+    if (activeTab === 'partTime') return type.includes('part');
+    return true;
   });
 
-  // Merge current bookmark state
-  const currentJobs = filteredJobs.map((job) => ({
-    ...job,
-    bookmarked: bookmarkedJobs.has(job.id),
-    applied: appliedJobs.has(job.id),
-  }));
-
-  const visibleJobs = currentJobs.slice(0, visibleCount);
-
   return (
-    <div id="browse-jobs">
-      {showRecommended && (
-        <Box component="section" py={rem(80)}>
-          <Container size="xl">
-            {/* Section Header */}
-            <Box
-              mb={rem(40)}
-              style={{
-                textAlign: 'center',
-                maxWidth: rem(700),
-                margin: '0 auto',
-              }}
-            >
-              <Title
-                order={2}
-                size="h1"
-                mb="md"
-                style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
+    <Box
+      component="section"
+      id="browse-jobs"
+      style={{
+        width: '100%',
+        maxWidth: '1440px',
+        margin: '0 auto 24px auto',
+        padding: '56px 24px',
+        boxSizing: 'border-box',
+        backgroundColor: '#ECF6FB',
+      }}
+    >
+      <Stack align="center" gap="12px" mb="32px">
+        <Title
+          order={2}
+          style={{
+            fontFamily: "'Sora', sans-serif",
+            fontWeight: 600,
+            fontSize: 'clamp(22px, 2.5vw, 27px)',
+            lineHeight: '37px',
+            color: '#000000',
+            textAlign: 'center',
+          }}
+        >
+          Explore Feature Jobs
+        </Title>
+        <Text
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 400,
+            fontSize: '19px',
+            lineHeight: '23px',
+            color: '#5F5F5F',
+            textAlign: 'center',
+            maxWidth: '966px',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Find your next opportunity in just a few simple steps — from creating
+          your profile to landing your dream job.
+        </Text>
+
+        {/* 4 Filter Pills */}
+        <Flex gap="16px" justify="center" wrap="wrap" mt="16px">
+          {filterTabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <UnstyledButton
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  width: '160px',
+                  height: '39px',
+                  borderRadius: '100px',
+                  backgroundColor: isActive ? '#3BA3D3' : '#FFFFFF',
+                  border: isActive ? 'none' : '0.75px solid #383838',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
               >
-                Recommended Jobs
-              </Title>
-            </Box>
-
-            {/* Error Message */}
-            {error && (
-              <Paper
-                p="md"
-                radius="md"
-                mb={40}
-                style={{ backgroundColor: '#ffe0e0', borderColor: '#ff6b6b' }}
-                withBorder
-              >
-                <Text c="#cc0000" size="sm">
-                  {error}
-                </Text>
-              </Paper>
-            )}
-
-            {/* Tabs */}
-            <Tabs
-              value={activeTab}
-              onChange={(v) => {
-                setActiveTab(
-                  v as 'recent' | 'freelance' | 'partTime' | 'fullTime'
-                );
-                setVisibleCount(6);
-              }}
-              variant="pills"
-              radius="md"
-              mb="xl"
-            >
-              <Tabs.List grow style={{ maxWidth: rem(900), margin: '0 auto' }}>
-                <Tabs.Tab value="recent">Recent Jobs</Tabs.Tab>
-                <Tabs.Tab value="freelance">Freelancer</Tabs.Tab>
-                <Tabs.Tab value="partTime">Part Time</Tabs.Tab>
-                <Tabs.Tab value="fullTime">Full Time</Tabs.Tab>
-              </Tabs.List>
-            </Tabs>
-
-            {/* Job Cards */}
-            {loading ? (
-              <Center py={80}>
-                <Loader size="lg" />
-              </Center>
-            ) : currentJobs.length === 0 ? (
-              <Paper p={60} radius="md" withBorder>
-                <Center>
-                  <Text c="dimmed">No jobs found.</Text>
-                </Center>
-              </Paper>
-            ) : (
-              <Grid gutter="xl" mb={40}>
-                {visibleJobs.map((job) => (
-                  <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                    <JobCard
-                      job={job}
-                      onBookmark={
-                        isCandidate
-                          ? (jobId) =>
-                              handleBookmark(jobId, bookmarkedJobs.has(jobId))
-                          : undefined
-                      }
-                      hideBookmark={!isCandidate}
-                    />
-                  </Grid.Col>
-                ))}
-              </Grid>
-            )}
-
-            {/* View More */}
-            {visibleCount < currentJobs.length && (
-              <Box mt={rem(50)} style={{ textAlign: 'center' }}>
-                <Button
-                  onClick={() => setVisibleCount((prev) => prev + 3)}
-                  size="lg"
-                  rightSection={<IconArrowRight size={18} />}
-                  variant="gradient"
-                  gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+                <Text
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    fontSize: '14px',
+                    color: isActive ? '#FFFFFF' : '#1A1A1A',
+                  }}
                 >
-                  View More
-                </Button>
-              </Box>
-            )}
-          </Container>
-        </Box>
+                  {tab.label}
+                </Text>
+              </UnstyledButton>
+            );
+          })}
+        </Flex>
+      </Stack>
+
+      <style>
+        {`
+          .job-scroller {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .job-scroller::-webkit-scrollbar {
+            display: none;
+          }
+        `}
+      </style>
+
+      {/* Jobs Grid / Horizontal Invisible Scroller */}
+      {loading ? (
+        <Flex justify="center" py="50px">
+          <Loader color="#3BA3D3" size="lg" />
+        </Flex>
+      ) : filteredJobs.length === 0 ? (
+        <Text ta="center" py="40px" c="#778984" fz="lg">
+          No jobs found for this category.
+        </Text>
+      ) : (
+        <Flex
+          className="job-scroller"
+          align="center"
+          justify={filteredJobs.length < 3 ? 'center' : 'flex-start'}
+          gap="24px"
+          style={{
+            width: '100%',
+            maxWidth: '1380px',
+            margin: '0 auto',
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            padding: '12px 4px',
+            boxSizing: 'border-box',
+            scrollBehavior: 'smooth',
+          }}
+        >
+          {filteredJobs.map((job) => (
+            <Box
+              key={job.id}
+              style={{ flex: '0 0 auto', width: '100%', maxWidth: '510px' }}
+            >
+              <FigmaJobCard
+                job={job}
+                onBookmark={handleBookmark}
+                onApply={handleApply}
+              />
+            </Box>
+          ))}
+        </Flex>
       )}
-    </div>
+    </Box>
   );
 };
+
+export default JobListingsSection;

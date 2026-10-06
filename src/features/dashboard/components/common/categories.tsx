@@ -1,214 +1,184 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Paper,
-  rem,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
-import {
-  IconArrowRight,
-  IconBuildingSkyscraper,
-  IconChartBar,
-  IconDeviceDesktop,
-  IconHeadset,
-  IconLayersOff,
-  IconPhoto,
-  IconSend,
-  IconUsers,
-} from '@tabler/icons-react';
+import { Box, Flex, Text, UnstyledButton } from '@mantine/core';
+import React from 'react';
 
-import type { categoryInterface } from '../../types/categories';
+export interface CategoryItem {
+  id: string;
+  name: string;
+  count: string;
+}
 
-// Job categories data
-const categories = [
-  {
-    id: 1,
-    title: 'IT & Software Development',
-    jobs: '3,200',
-    icon: IconDeviceDesktop,
-    color: 'blue',
-    href: '/jobs/it-software',
-  },
-  {
-    id: 2,
-    title: 'Data, AI & Analytics',
-    jobs: '980',
-    icon: IconChartBar,
-    color: 'violet',
-    href: '/jobs/data-ai',
-  },
-  {
-    id: 3,
-    title: 'Sales & Business Development',
-    jobs: '1,850',
-    icon: IconSend,
-    color: 'cyan',
-    href: '/jobs/sales',
-  },
-  {
-    id: 4,
-    title: 'HR & Talent Acquisition',
-    jobs: '920',
-    icon: IconUsers,
-    color: 'teal',
-    href: '/jobs/hr',
-  },
-  {
-    id: 5,
-    title: 'Business Operations & Admin',
-    jobs: '1,300',
-    icon: IconBuildingSkyscraper,
-    color: 'orange',
-    href: '/jobs/business-operations',
-  },
-  {
-    id: 6,
-    title: 'Design, UI & Creative',
-    jobs: '640',
-    icon: IconPhoto,
-    color: 'grape',
-    href: '/jobs/design',
-  },
-  {
-    id: 7,
-    title: 'Customer Support',
-    jobs: '1,430',
-    icon: IconHeadset,
-    color: 'orange',
-    href: '/jobs/support-ops',
-  },
-  {
-    id: 8,
-    title: 'Freshers & Entry-Level Roles',
-    jobs: '2,100',
-    icon: IconLayersOff,
-    color: 'lime',
-    href: '/jobs/freshers',
-  },
+const figmaCategories: CategoryItem[] = [
+  { id: 'it', name: 'IT', count: '1.2k+ Jobs' },
+  { id: 'non-it', name: 'Non-IT', count: '1.1k+ Jobs' },
+  { id: 'accounting', name: 'Accounting', count: '12 Jobs' },
+  { id: 'creative', name: 'Creative', count: '30 Jobs' },
+  { id: 'development', name: 'Development', count: '22 Jobs' },
+  { id: 'marketing', name: 'Marketing', count: '39 Jobs' },
+  { id: 'legal', name: 'Legal', count: '100 Jobs' },
+  { id: 'commercial', name: 'Commercial', count: '39 Jobs' },
+  { id: 'medicine', name: 'Medicine', count: '12 Jobs' },
+  { id: 'fitness', name: 'Fitness', count: '30 Jobs' },
 ];
 
-const CategoryCard = ({ category }: { category: categoryInterface }) => {
-  const Icon = category.icon;
+export interface CategoriesProps {
+  onSelectCategory?: (categoryId: string) => void;
+}
+
+export const Categories: React.FC<CategoriesProps> = ({ onSelectCategory }) => {
+  const handleClick = (catId: string) => {
+    if (onSelectCategory) {
+      onSelectCategory(catId);
+    }
+    const browseEl = document.getElementById('browse-jobs');
+    if (browseEl) {
+      browseEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <Paper
-      p="xl"
-      radius="md"
-      withBorder
+    <Box
+      component="section"
+      id="categories"
       style={{
-        textDecoration: 'none',
-        transition: 'all 0.3s ease',
-        cursor: 'pointer',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-8px)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        width: '100%',
+        maxWidth: '1440px',
+        minHeight: '536px',
+        margin: '0 auto',
+        padding: '48px 16px',
+        boxSizing: 'border-box',
+        backgroundColor: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '24px',
       }}
     >
-      <Stack align="center" gap="lg">
-        {/* Icon */}
-        <Box
+      {/* Frame 32: Header Group */}
+      <Box
+        style={{
+          width: '100%',
+          maxWidth: '948px',
+          minHeight: '106px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '12px',
+          textAlign: 'center',
+          boxSizing: 'border-box',
+        }}
+      >
+        <Text
+          component="h2"
           style={{
-            width: rem(80),
-            height: rem(80),
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'all 0.3s ease',
+            fontFamily: "'Sora', sans-serif",
+            fontWeight: 700,
+            fontSize: '27px',
+            lineHeight: '34px',
+            color: '#204945',
+            textAlign: 'center',
+            margin: 0,
+            width: '100%',
           }}
         >
-          <Icon size={40} stroke={1.5} color="#066fd1" />
-        </Box>
-
-        {/* Content */}
-        <Box style={{ textAlign: 'center' }}>
-          <Title
-            order={5}
-            size="h5"
-            mb="xs"
-            style={{
-              transition: 'color 0.3s ease',
-            }}
-          >
-            {category.title}
-          </Title>
-          <Text size="sm" c="dimmed">
-            {category.jobs} Jobs
-          </Text>
-        </Box>
-      </Stack>
-    </Paper>
-  );
-};
-
-export const Categories = () => {
-  return (
-    <Box component="section" id="categories" mt="xl">
-      <Container size="xl">
-        {/* Section Header */}
-        <Box
-          mb={rem(60)}
-          style={{ textAlign: 'center', maxWidth: rem(700), margin: '0 auto' }}
+          Browse Jobs Categories
+        </Text>
+        <Text
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 400,
+            fontSize: '20px',
+            lineHeight: '30px',
+            color: '#778984',
+            textAlign: 'center',
+            maxWidth: '948px',
+            margin: 0,
+            width: '100%',
+          }}
         >
-          <Title
-            order={2}
-            size="h2"
-            mb="md"
-            component="section"
-            id="categories"
-            style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-            }}
-          >
-            Browse Jobs Categories
-          </Title>
-        </Box>
+          Find your dream job very easily here by searching the job name. We are
+          providing high demands job for all the job seekars
+        </Text>
+      </Box>
 
-        {/* Categories Grid */}
-        <Grid gutter={{ base: 'md', md: 'lg' }}>
-          {categories.map((category) => (
-            <Grid.Col
-              key={category.id}
-              span={{ base: 12, xs: 6, md: 4, lg: 3 }}
-            >
-              <CategoryCard category={category} />
-            </Grid.Col>
-          ))}
-        </Grid>
-
-        {/* Browse All Button */}
-        <Box mt={rem(60)} style={{ textAlign: 'center' }}>
-          <Button
-            component="a"
-            href="/#categories"
-            size="lg"
-            rightSection={<IconArrowRight size={18} />}
-            variant="gradient"
-            gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
+      {/* Frame 31: 10 Cards in 2 Rows */}
+      <Flex
+        wrap="wrap"
+        justify="center"
+        align="center"
+        style={{
+          width: '100%',
+          maxWidth: '1344px',
+          minHeight: '310px',
+          gap: '30px 22px',
+          margin: '0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
+        {figmaCategories.map((cat) => (
+          <UnstyledButton
+            key={cat.id}
+            onClick={() => handleClick(cat.id)}
             style={{
-              transition: 'all 0.3s ease',
+              width: '217px',
+              height: '140px',
+              boxSizing: 'border-box',
+              border: '2px solid #E0E3E2',
+              borderRadius: '12px',
+              backgroundColor: '#FFFFFF',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              padding: '16px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              flexShrink: 0,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateX(4px)';
+              e.currentTarget.style.borderColor = '#3BA3D3';
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow =
+                '0 6px 18px rgba(59, 163, 211, 0.15)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateX(0)';
+              e.currentTarget.style.borderColor = '#E0E3E2';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            Browse All Categories
-          </Button>
-        </Box>
-      </Container>
+            <Text
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 700,
+                fontSize: '20px',
+                lineHeight: '24px',
+                color: '#204945',
+                textAlign: 'center',
+                margin: 0,
+              }}
+            >
+              {cat.name}
+            </Text>
+
+            <Text
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 400,
+                fontSize: '16px',
+                lineHeight: '24px',
+                color: '#778984',
+                textAlign: 'center',
+                margin: 0,
+              }}
+            >
+              {cat.count}
+            </Text>
+          </UnstyledButton>
+        ))}
+      </Flex>
     </Box>
   );
 };
+
+export default Categories;
