@@ -33,7 +33,7 @@ export const AboutUdyog: React.FC = () => {
             margin: 0,
           }}
         >
-          About UdyogSetu
+          About UdyogSethu
         </Title>
 
         <Text
@@ -53,11 +53,11 @@ export const AboutUdyog: React.FC = () => {
             MozOsxFontSmoothing: 'grayscale',
           }}
         >
-          UdyogSetu is a staffing and recruitment platform built to simplify
+          UdyogSethu is a staffing and recruitment platform built to simplify
           hiring and connect organizations with the right talent across IT and
           Non-IT domains. Developed to create a seamless, technology-driven
-          hiring experience, UdyogSetu brings together recruitment expertise and
-          modern hiring solutions to help organizations find, engage, and
+          hiring experience, UdyogSethu brings together recruitment expertise
+          and modern hiring solutions to help organizations find, engage, and
           onboard the right candidates. The platform focuses on scalable,
           process-driven recruitment, strong candidate connections, and
           long-term partnerships with organizations.

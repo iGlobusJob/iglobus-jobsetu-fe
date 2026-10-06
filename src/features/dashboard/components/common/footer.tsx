@@ -70,7 +70,7 @@ export const FooterSubscribe: React.FC = () => {
               margin: 0,
             }}
           >
-            UdyogSetu transforms years of recruitment expertise into a
+            UdyogSethu transforms years of recruitment expertise into a
             structured, transparent, and scalable digital hiring platform.
           </Text>
         </Stack>

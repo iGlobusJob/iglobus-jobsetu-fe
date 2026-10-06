@@ -17,6 +17,7 @@ import {
 } from '@mantine/core';
 import { IconSearch, IconX, IconAlertCircle } from '@tabler/icons-react';
 import { useEffect, useMemo, useState, type JSX } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { JobCard } from '@/common/pages/jobCard';
 import type { CandidateJobs } from '@/features/dashboard/types/candidate';
@@ -57,12 +58,15 @@ const mapJob = (job: ApiJob): CandidateJobs => ({
 const ITEMS_PER_PAGE = 6;
 
 export const JobListingsSection = (): JSX.Element => {
+  const [urlParams] = useSearchParams();
+  const initialSearch = urlParams.get('search') || '';
+
   const [jobs, setJobs] = useState<CandidateJobs[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [bookmarkedJobs, setBookmarkedJobs] = useState<Set<string>>(new Set());
   const [appliedJobs, setAppliedJobs] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
   const [selectedJobType, setSelectedJobType] = useState<string | null>(null);
   const [salaryRange, setSalaryRange] = useState<[number, number]>([0, 0]);
   const [experienceFilter, setExperienceFilter] = useState<string>('');
