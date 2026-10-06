@@ -34,3 +34,10 @@ export const contactFigmaSchema = z.object({
 });
 
 export type FormValues = z.infer<typeof contactFigmaSchema>;
+
+export interface ContactFormData {
+  name: string;
+  customerEmail: string;
+  subject: string;
+  message: string;
+}
