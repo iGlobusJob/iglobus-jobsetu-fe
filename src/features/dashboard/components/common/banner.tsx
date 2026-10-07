@@ -96,8 +96,8 @@ export const BannerSection: React.FC<BannerSectionProps> = ({ onSearch }) => {
               margin: '8px auto 28px auto',
             }}
           >
-            A Job Mela initiative powered by <b>iGLOBUS JobSetu</b>, in
-            association with the <b>Government of Telangana and TASK</b>.
+            Discover relevant job opportunities, create your profile, and
+            connect with trusted employers-all in one place.
           </Text>
 
           <HeroSearchBar onSearch={onSearch} />
