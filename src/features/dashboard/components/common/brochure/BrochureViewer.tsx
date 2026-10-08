@@ -17,7 +17,6 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import {
   IconChevronLeft,
   IconChevronRight,
-  IconDownload,
   IconEye,
   IconMaximize,
   IconPlayerPause,
@@ -235,21 +234,6 @@ export const BrochureViewer: React.FC<BrochureViewerProps> = ({
                   aria-label="Open fullscreen preview"
                 >
                   <IconMaximize size={18} />
-                </ActionIcon>
-              </Tooltip>
-
-              <Tooltip label="Download Page Image">
-                <ActionIcon
-                  component="a"
-                  href={currentPage.image}
-                  download={`UdyogSethu_Brochure_Page_${currentPage.pageNum}.png`}
-                  variant="light"
-                  color="blue"
-                  size="lg"
-                  radius="md"
-                  aria-label="Download image"
-                >
-                  <IconDownload size={18} />
                 </ActionIcon>
               </Tooltip>
             </Group>

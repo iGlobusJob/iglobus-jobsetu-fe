@@ -28,28 +28,37 @@ export const brochurePages: BrochurePageItem[] = [
   {
     id: 3,
     pageNum: 3,
-    title: 'Employer Advantages & Recruitment Flow',
+    title: 'Employer Advantages',
     subtitle:
-      'AI-assisted bulk screening, curated shortlists, and interview questions',
-    image: '/4.png',
-    tag: 'Hiring Solutions',
+      'AI-assisted screening, bulk resume comparison, curated shortlists, and single dashboard tracking',
+    image: '/5.png',
+    tag: 'Employer Solutions',
   },
   {
     id: 4,
     pageNum: 4,
-    title: 'Enterprise Hiring Workflow',
+    title: 'Process Flow & AI Matcher',
     subtitle:
-      'Scalable city-wide recruitment and single-dashboard applicant tracking',
-    image: '/5.png',
-    tag: 'Enterprise Scale',
+      'Structured facts extraction, skills and domain analysis, and deterministic fit calculation',
+    image: '/6.png',
+    tag: 'Process Flow',
   },
   {
     id: 5,
     pageNum: 5,
-    title: 'AI Matcher Architecture',
+    title: 'Connecting Udyog Sethu with Businesses',
     subtitle:
-      'Deterministic fit score, structured facts extraction, and skills analysis',
-    image: '/6.png',
-    tag: 'AI Technology',
+      'Business network expansion with MSMEs, SMEs, growing organizations, and local employers',
+    image: '/7.png',
+    tag: 'Business Network',
+  },
+  {
+    id: 6,
+    pageNum: 6,
+    title: 'TASK Partnership (Telangana Academy for Skill and Knowledge)',
+    subtitle:
+      'Connecting skilled candidates, IT industry requirements, and employment drives across Telangana',
+    image: '/8.png',
+    tag: 'Skill & Employment',
   },
 ];
