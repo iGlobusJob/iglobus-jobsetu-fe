@@ -12,7 +12,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconDownload, IconFileText } from '@tabler/icons-react';
+import { IconFileText } from '@tabler/icons-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -111,19 +111,6 @@ export const BrochurePage: React.FC = () => {
                 backgroundColor: '#FFFFFF',
               }}
             />
-
-            <Button
-              component="a"
-              href="/2.png"
-              download="UdyogSethu_Brochure_Page_1.png"
-              variant="light"
-              color="blue"
-              size="md"
-              radius="xl"
-              leftSection={<IconDownload size={18} />}
-            >
-              Download Pages
-            </Button>
           </Flex>
         </Container>
       </Box>
